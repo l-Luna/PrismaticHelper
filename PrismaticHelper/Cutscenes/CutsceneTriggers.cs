@@ -93,7 +93,7 @@ namespace PrismaticHelper.Cutscenes {
 					level.Session.Inventory = inv.Value;
 				yield return null;
 			}
-			Register(null, "player_inventory", (player, level, param) => playerInventory(level, GetStringParam(param, 0)));
+			Register(null, "player_inventory", (player, level, param) => playerInventory(level, GetStringParam(param, 0, "Default")));
 		}
 
 		public static void Unload() {
