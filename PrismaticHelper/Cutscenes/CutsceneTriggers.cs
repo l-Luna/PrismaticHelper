@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Celeste;
+using Celeste.Mod.Meta;
 
 using Microsoft.Xna.Framework;
 
@@ -74,6 +75,25 @@ namespace PrismaticHelper.Cutscenes {
 				yield return null;
 			}
 			Register(null, "attach_camera_to_player", (player, level, param) => attachCameraToPlayer(player));
+
+			static IEnumerator playerAnimation(Player p, string anim, bool wait) {
+				p.DummyAutoAnimate = false;
+				if(wait)
+					yield return p.Sprite.PlayRoutine(anim);
+				else {
+					p.Sprite.Play(anim);
+					yield return null;
+				}
+			}
+			Register(null, "player_animation", (player, level, param) => playerAnimation(player, GetStringParam(param, 0, "idle"), GetStringParam(param, 1, "start").Equals("play")));
+
+			static IEnumerator playerInventory(Level level, string inventory) {
+				var inv = MapMeta.GetInventory(inventory);
+				if(inv.HasValue)
+					level.Session.Inventory = inv.Value;
+				yield return null;
+			}
+			Register(null, "player_inventory", (player, level, param) => playerInventory(level, GetStringParam(param, 0)));
 		}
 
 		public static void Unload() {
@@ -100,11 +120,11 @@ namespace PrismaticHelper.Cutscenes {
 		}
 
 		public static float GetFloatParam(List<string> strings, int index, float def = 0) {
-			return strings.Count < index ? def : float.TryParse(strings[index], out float amnt) ? amnt : def;
+			return strings.Count <= index ? def : float.TryParse(strings[index], out float amnt) ? amnt : def;
 		}
 
 		public static string GetStringParam(List<string> strings, int index, string def = "") {
-			return strings.Count < index ? def : strings[index];
+			return strings.Count <= index ? def : strings[index];
 		}
 	}
 }

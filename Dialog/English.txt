@@ -2,6 +2,15 @@ prismatic_helper_cutscene_test=
     [MADELINE left normal]
     Hello!
     This is a test of Prismatic Helper's{n}Slightly Better Cutscenes!
+    {ph_trigger player_animation launch}
+    {2}
+    {ph_trigger player_animation launchRecover play}
+    {ph_trigger player_inventory TheSummit}
+
+prismatic_helper_cutscene_test_alt=
+    [MADELINE left normal]
+    Hello!
+    This is a test of Prismatic Helper's{n}Slightly Better Cutscenes!
     Which allow me to...
     {ph_trigger walk -48}
     Walk!
