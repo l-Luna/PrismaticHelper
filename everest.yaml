@@ -1,0 +1,6 @@
+﻿- Name: PrismaticHelper
+  Version: 1.6.0
+  DLL: PrismaticHelper/bin/Debug/net452/PrismaticHelper.dll
+  Dependencies:
+    - Name: Everest
+      Version: 1.0.0
