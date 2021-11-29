@@ -1,0 +1,26 @@
+prismatic_helper_cutscene_test=
+    [MADELINE left normal]
+    Hello!
+    This is a test of Prismatic Helper's{n}Slightly Better Cutscenes!
+    Which allow me to...
+    {ph_trigger walk -48}
+    Walk!
+    {&ph_trigger run 80}
+    While talking!
+    {ph_trigger camera_pan 36 36}
+    And even look around!
+    {ph_trigger look left}
+    {ph_trigger look right}
+    {ph_trigger look left}
+    {ph_trigger look right}
+    {ph_trigger look left}
+    {ph_trigger look right}
+    {ph_trigger look left}
+    {ph_trigger look right}
+    {ph_trigger look left}
+    {ph_trigger look right}
+    {ph_trigger look left}
+    {ph_trigger look right}
+    {&ph_trigger camera_zoom 2 0.05}
+    So fun.
+    {ph_trigger camera_zoom 1 0.05}

@@ -34,6 +34,10 @@ end
 
 function Ahorn.render(ctx::Ahorn.Cairo.CairoContext, entity::MultiLockedDoor, room::Maple.Room)
     Ahorn.drawSprite(ctx, entity.door, 0, 0)
+    for i in 1:entity.keys
+        kx, ky = Base.Math.cospi(2 * i / entity.keys) * 10, Base.Math.sinpi(2 * i / entity.keys) * 10
+        Ahorn.drawSprite(ctx, entity.lock * "0", kx, ky)
+    end
 end
 
 end
