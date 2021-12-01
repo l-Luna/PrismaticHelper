@@ -25,16 +25,16 @@ Make the player run the specified number of pixels to the right. 1 tile = 8 pixe
 #### `look`, `direction = left`
 Make the player look in the specified direction, either `left` or `right`. Other values are assumed to be right.
 
-#### `camera_zoom`, `zoom = 2`, `speed = 0.05`
-Zooms the camera to the specified zoom level, with higher values zooming in. Zooming out further than `1` won't render outside of the regular screen size. `speed` controls the speed at which the camera zooms.  
+#### `camera_zoom`, `zoom = 2`, `duration = 3`, `easer = cube`
+Zooms the camera to the specified zoom level, with higher values zooming in, over the specified number of seconds. Zooming out further than `1` won't render outside of the regular screen size. The `easer` controls how the zoom progresses during that time.
 
 Note that the camera will not automatically zoom to the normal scale after the cutscene; you will have to reset it yourself.
 
-#### `camera_pan`, `x = 0`, `y = 0`
-Pans the camera by the specified number of pixels on the X and Y axis relative to its current position.
+#### `camera_pan`, `x = 0`, `y = 0`, `duration = 3`, `easer = cube`
+Pans the camera by the specified number of pixels on the X and Y axis relative to its current position, over the specified number of seconds, using the specified easer to control progress.
 
-#### `camera_pan_to`, `x = 0`, `y = 0`
-Pans the camera to the specified X and Y position.
+#### `camera_pan_to`, `x = 0`, `y = 0`, `duration = 3`, `easer = cube`
+Pans the camera to the specified X and Y position, over the specified number of seconds, using the specified easer to control progress.
 
 #### `attach_camera_to_player`
 Reattaches the camera to the player after panning the camera. This is done automatically when a cutscene ends, and this is only needed when moving the player after panning the camera.
@@ -42,5 +42,10 @@ Reattaches the camera to the player after panning the camera. This is done autom
 #### `player_animation`, `anim = idle`, `mode = start`
 Makes the player play the specified animation. See `Sprites.xml` for the available animation. If `mode` is `play`, the cutscene waits for the animation to end; otherwise, the animation continues while other triggers and dialog occurs.
 
-### `player_inventory`, `inventory = Default`
+#### `player_inventory`, `inventory = Default`
 Sets the player's inventory to the specified inventory, from: `Default`, `CH6End`, `Core`, `OldSite`, `Prologue`, `TheSummit` and `Farewell`. Note that the player's inventory is *not* currenty set if the player skips the cutscene, and you will want to use an inventory trigger if the chosen inventory affects gameplay.
+
+### Parameter values
+
+#### Easers
+The available easers are `linear`, `quad`, `cube`, `quint`, `exp`, `back`, `big_back`, `elastic`, and `bounce`. All of these except `linear` have an `_in` and `_out` version.
