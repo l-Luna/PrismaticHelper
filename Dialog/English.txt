@@ -1,4 +1,4 @@
-prismatic_helper_cutscene_test=
+prismatic_helper_cutscene_test_alt=
     [MADELINE left normal]
     Hello!
     This is a test of Prismatic Helper's{n}Slightly Better Cutscenes!
@@ -7,16 +7,16 @@ prismatic_helper_cutscene_test=
     {ph_trigger player_animation launchRecover play}
     {ph_trigger player_inventory TheSummit}
 
-prismatic_helper_cutscene_test_alt=
+prismatic_helper_cutscene_test=
     [MADELINE left normal]
     Hello!
     This is a test of Prismatic Helper's{n}Slightly Better Cutscenes!
     Which allow me to...
     {ph_trigger walk -48}
     Walk!
-    {&ph_trigger run 80}
+    {~ph_trigger run 80}
     While talking!
-    {ph_trigger camera_pan 36 36}
+    {~ph_trigger camera_pan 36 36}
     And even look around!
     {ph_trigger look left}
     {ph_trigger look right}
@@ -30,6 +30,6 @@ prismatic_helper_cutscene_test_alt=
     {ph_trigger look right}
     {ph_trigger look left}
     {ph_trigger look right}
-    {&ph_trigger camera_zoom 2 0.05}
+    {~ph_trigger camera_zoom 2 0.05}
     So fun.
     {ph_trigger camera_zoom 1 0.05}

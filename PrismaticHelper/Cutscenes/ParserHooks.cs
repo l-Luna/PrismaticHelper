@@ -21,8 +21,12 @@ namespace PrismaticHelper.Cutscenes {
 
 			public List<string> Params;
 
-			public PhTrigger(List<string> rawParams, bool silent) {
+			// Whether the trigger should run alongside dialog rather than block it.
+			public bool Concurrent = false;
+
+			public PhTrigger(List<string> rawParams, bool silent, bool concurrent) {
 				Silent = silent;
+				Concurrent = concurrent;
 
 				if(rawParams.Count == 0) {
 					Logger.Log(LogLevel.Warn, "PrismaticHelper", "Found empty ph_trigger!");
@@ -54,7 +58,11 @@ namespace PrismaticHelper.Cutscenes {
 				if(node is PhTrigger ph) {
 					ph.Index = vanillaCount + phEvents.Count;
 					Level level = Engine.Scene as Level;
-					phEvents.Add(CutsceneTriggers.Get(ph.ID, level.Tracker.GetEntity<Player>(), level, ph.Params));
+					var cutscene = CutsceneTriggers.Get(ph.ID, level.Tracker.GetEntity<Player>(), level, ph.Params);
+					var copy = cutscene; // avoid cutscene referencing itself
+					if(ph.Concurrent)
+						cutscene = () => WrapCoroutine(copy());
+					phEvents.Add(cutscene);
 				}
 
 			var newEvents = new Func<System.Collections.IEnumerator>[vanillaCount + phEvents.Count];
@@ -73,10 +81,17 @@ namespace PrismaticHelper.Cutscenes {
 				cursor.Emit(OpCodes.Ldloc_S, il.Method.Body.Variables[7]); // s
 				cursor.Emit(OpCodes.Ldloc_S, il.Method.Body.Variables[8]); // stringList
 				cursor.EmitDelegate<Action<FancyText, string, List<string>>>((text, s, vals) => {
-					if(s.Equals("ph_trigger") || s.Equals("&ph_trigger"))
-						new DynamicData(text).Get<FancyText.Text>("group").Nodes.Add(new PhTrigger(vals, s.StartsWith("&")));
+					if(s.Equals("ph_trigger") || s.Equals("&ph_trigger") || s.Equals("~ph_trigger"))
+						new DynamicData(text).Get<FancyText.Text>("group").Nodes.Add(new PhTrigger(vals, s.StartsWith("&"), s.StartsWith("~")));
 				});
 			}
+		}
+
+		public static System.Collections.IEnumerator WrapCoroutine(System.Collections.IEnumerator orig) {
+			Entity entity = new();
+			entity.Add(new Coroutine(orig));
+			Engine.Scene.Add(entity);
+			yield return null;
 		}
 	}
 }
