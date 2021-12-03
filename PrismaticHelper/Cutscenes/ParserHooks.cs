@@ -37,6 +37,10 @@ namespace PrismaticHelper.Cutscenes {
 			}
 		}
 
+		public class PhRunOnSkip : FancyText.Node {
+
+		}
+
 		public static void LoadHooks() {
 			IL.Celeste.FancyText.Parse += ParsePhTriggers;
 			On.Celeste.Textbox.ctor_string_Language_Func1Array += AddPhEvents;
