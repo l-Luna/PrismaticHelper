@@ -10,7 +10,7 @@ Prismatic Helper allows you to use custom cutscene triggers in dialog, which all
 
 The syntax for custom triggers is `{ph_trigger id param_1 param_2 ... param_n}`, where `id` is the ID of the trigger you're running, and the parameters are space seperated strings. You may specify only as many paramaters as you want to use; all triggers have default values for all parameters. All parameters are positional; to specify a parameter, you must specify all parameters before it.
 
-Example: `{ph_trigger camera_zoom}`, equivalent to `{ph_trigger camera_zoom 2 0.05}`.
+Example: `{ph_trigger camera_zoom}`, equivalent to `{ph_trigger camera_zoom 2 3 cube}`.
 
 You can also use `&ph_trigger` to make a "silent" trigger, which keeps the textbox open while the trigger activates. The text does *not* continue until the trigger ends. Using `~ph_trigger` makes a "concurrent" trigger, which runs seperately to the cutscene, with text and other triggers still continuing.
 
