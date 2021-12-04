@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework;
 
 using Monocle;
 
+using static MonoMod.InlineRT.MonoModRule;
+
 namespace PrismaticHelper.Entities {
 
 	[CustomEntity("PrismaticHelper/Gameshow")]
@@ -29,6 +31,19 @@ namespace PrismaticHelper.Entities {
 
 			public string Label;
 			public List<Choice> Choices;
+
+			public FixedQuestion(string label, List<Choice> choices, bool unclear) {
+				Label = label;
+				Choices = choices;
+				if(unclear) {
+					foreach(var item in Choices)
+						item.Type = 2;
+				} else {
+					foreach(var item in Choices)
+						item.Type = 1;
+					Choices[0].Type = 0;
+				}
+			}
 
 			public override List<Choice> AvailableChoices() => Choices;
 			public override string Text() => Label;
@@ -119,10 +134,6 @@ namespace PrismaticHelper.Entities {
 
 		#region Gameshow question/answer entities
 
-		public class GameshowQuestion : Entity {
-
-		}
-
 		public class GameshowChoice : Entity {
 
 			private readonly Choice choice;
@@ -138,7 +149,22 @@ namespace PrismaticHelper.Entities {
 		}
 
 		public class GameshowLabel : Entity {
+			private readonly Vector2 pos;
+			private readonly string text;
 
+			public GameshowLabel(Vector2 pos, string text) {
+				AddTag(Tags.HUD);
+				AddTag(Tags.PauseUpdate);
+				Position = pos;
+				this.pos = pos;
+				this.text = text;
+			}
+
+			public override void Render() {
+				base.Render();
+				Camera camera = SceneAs<Level>().Camera;
+				ActiveFont.DrawOutline(text, (pos - camera.Position) * 6 - Vector2.UnitY * ActiveFont.LineHeight, Vector2.Zero, Vector2.One, Color.White, 0.5f, Color.White);
+			}
 		}
 
 		#endregion
@@ -150,9 +176,64 @@ namespace PrismaticHelper.Entities {
 		public List<Question> Questions = new();
 		public int CurQuestion = 0;
 
+		List<Vector2> Nodes;
+
 		public Gameshow(EntityData data, Vector2 offset, EntityID id) : base(data.Position + offset) {
 			ID = id;
-			
+			// every node pair is a question, answers
+			// questions are written as: "division; integration; addition; fixed: question, correct answer, incorrect, incorrect); unclear: question, shrug, shrug"
+			string questions = data.Attr("questions");
+			foreach(var item in questions.Split(';')) {
+				var q = item.Trim();
+				var @params = new List<string>();
+				if(q.Contains(":")) {
+					var split = q.Split(':');
+					@params = split[1].Split(',').Select(k => k.Trim()).ToList();
+					q = split[0];
+				}
+				switch(q.ToLowerInvariant()) {
+					case "addition":
+						Questions.Add(new MathsQuestion(MathsQuestion.Type.Addition, 5)); break;
+					case "multiplication":
+						Questions.Add(new MathsQuestion(MathsQuestion.Type.Multiplication, 5)); break;
+					case "division":
+						Questions.Add(new MathsQuestion(MathsQuestion.Type.Division, 5)); break;
+					case "rearranging":
+						Questions.Add(new MathsQuestion(MathsQuestion.Type.Rearranging, 5)); break;
+					case "differentiation":
+						Questions.Add(new MathsQuestion(MathsQuestion.Type.Differentiation, 5)); break;
+					case "integration":
+						Questions.Add(new MathsQuestion(MathsQuestion.Type.Integration, 5)); break;
+					case "fixed":
+					case "unclear":
+						Questions.Add(new FixedQuestion(@params[0], @params.GetRange(1, @params.Count - 1).Select(k => new Choice(0, k)).ToList(), q.ToLowerInvariant().Equals("unclear"))); break;
+					default:
+						break;
+				}
+			}
+
+			PrismaticHelperModule.LogInfo("Added " + Questions.Count + " questions");
+			PrismaticHelperModule.LogInfo("At: " + (data.Position + offset));
+
+			Nodes = data.NodesWithPosition(offset).ToList();
+			Nodes.RemoveAt(0);
+		}
+
+		public override void Awake(Scene scene) {
+			base.Awake(scene);
+			// just assume the number of questions and nodes match
+			for(int k = 0; k < Nodes.Count; k++) {
+				Vector2 item = Nodes[k];
+				if(k % 2 == 0) {
+					scene.Add(new GameshowLabel(item, Questions[k / 2].Text()));
+				} else {
+					List<Choice> list = Questions[(k - 1) / 2].AvailableChoices();
+					for(int i = 0; i < list.Count; i++) {
+						Choice answer = list[i];
+						scene.Add(new GameshowLabel(item + (i - list.Count / 2) * Vector2.UnitX * 40, answer.Text));
+					}
+				}
+			}
 		}
 
 		#endregion
