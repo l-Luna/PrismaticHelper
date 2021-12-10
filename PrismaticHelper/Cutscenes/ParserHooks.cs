@@ -17,9 +17,9 @@ namespace PrismaticHelper.Cutscenes {
 
 		public class PhTrigger : FancyText.Trigger {
 
-			public string ID;
+			public string ID = "";
 
-			public List<string> Params;
+			public List<string> Params = new();
 
 			// Whether the trigger should run alongside dialog rather than block it.
 			public bool Concurrent = false;
@@ -55,6 +55,8 @@ namespace PrismaticHelper.Cutscenes {
 			orig(self, dialog, language, events);
 			var selfData = new DynamicData(self);
 			var text = selfData.Get<FancyText.Text>("text");
+			if(events == null)
+				events = new Func<System.Collections.IEnumerator>[0];
 			int vanillaCount = events.Length; // This should never be >0 with just Prismatic Helper, but other mods may want to use vanilla events like this.
 			var phEvents = new List<Func<System.Collections.IEnumerator>>();
 
