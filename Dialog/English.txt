@@ -23,3 +23,28 @@ prismatic_helper_cutscene_test=
     {ph_trigger player_inventory TheSummit}
     {ph_on_skip player_inventory TheSummit}
     {ph_on_skip goto 100 100}
+
+prismatic_helper_cutscene_hide_stuff=
+    {ph_trigger hide_entities Booster}   
+    {ph_trigger hide_entities LockBlock}
+    {ph_on_skip hide_entities Booster}
+    {ph_on_skip hide_entities LockBlock}
+    {5}
+    {ph_trigger show_next_booster}
+    {1}
+    {ph_trigger show_next_door}
+    {0.7}
+    {ph_trigger show_next_door 2}
+    {0.2}
+    {ph_trigger show_next_door 3}
+    {1}
+    {ph_trigger show_next_door 5}
+
+prismatic_helper_cutscene_show_stuff=
+    oh
+    {ph_trigger show_next_booster}
+    {ph_trigger show_next_door}
+    {ph_trigger show_next_door}
+    {ph_trigger show_next_door}
+    {ph_trigger show_next_door}
+    oh

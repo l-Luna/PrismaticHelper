@@ -114,9 +114,9 @@ namespace PrismaticHelper.Cutscenes {
 
 			static IEnumerator hideEntitiesByName(Level l, string entityName) {
 				l.Entities
-					.Where(k => k.GetType().Name.Equals(entityName))
+					.Where(k => k.GetType().Name.Equals(entityName)) 
 					.ToList()
-					.ForEach(k=>k.Visible = false);
+					.ForEach(k => k.Visible = false);
 				yield return null;
 			}
 			Register(null, "hide_entities", (player, level, param) => hideEntitiesByName(level, GetStringParam(param, 0)));
@@ -130,14 +130,17 @@ namespace PrismaticHelper.Cutscenes {
 			}
 			Register(null, "show_next_booster", (player, level, param) => showNextBooster(level));
 
-			static IEnumerator showNextDoor(Level l) {
-				l.Entities.FindAll<LockBlock>()
+			static IEnumerator showNextDoor(Level l, int soundIdx) {
+				var d = l.Entities.FindAll<LockBlock>()
 					.Where(k => !k.Visible)
-					.FirstOrDefault()?
-					.Appear();
+					.FirstOrDefault();
+				if(d != null) {
+					d?.Appear();
+					Audio.Play("event:/new_content/game/10_farewell/locked_door_appear_" + soundIdx, d.Center);
+				}
 				yield return null;
 			}
-			Register(null, "show_next_door", (player, level, param) => showNextDoor(level));
+			Register(null, "show_next_door", (player, level, param) => showNextDoor(level, (int)GetFloatParam(param, 0, 1)));
 		}
 
 		public static void Unload() {

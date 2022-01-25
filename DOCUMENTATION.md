@@ -58,8 +58,8 @@ Hides all entities of a given type in the room. These entities are invisible, bu
 #### `show_next_booster`
 Reveals the first invisible booster in the room, or does nothing if no boosters have been hidden.
 
-#### `show_next_door`
-Reveals the first invisible door in the room, or does nothing if no doors have been hidden. Only Farewell's doors have a reveal animation by default, but other doors can be given one with a custom `Sprites.xml`.
+#### `show_next_door, soundIndex = 1`
+Reveals the first invisible door in the room, or does nothing if no doors have been hidden. Only Farewell's doors have a reveal animation by default, but other doors can be given one with a custom `Sprites.xml`. `soundIndex` changes the sound used when the door appears; should be between 1-5 inclusive.
 
 #### `player_animation, anim = idle, mode = start`
 Makes the player play the specified animation. See `Sprites.xml` for the available animation. If `mode` is `play`, the cutscene waits for the animation to end; otherwise, the animation continues while other triggers and dialog occurs.
