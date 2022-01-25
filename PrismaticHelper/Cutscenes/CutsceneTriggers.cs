@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using Celeste;
 using Celeste.Mod.Meta;
@@ -48,6 +49,11 @@ namespace PrismaticHelper.Cutscenes {
 				yield return null;
 			}
 			Register(null, "goto", (player, level, param) => @goto(player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0)));
+
+			static IEnumerator cameraZoomBack(Level l, float duration) {
+				return l.ZoomBack(duration);
+			}
+			Register(null, "camera_zoom_back", (player, level, param) => cameraZoomBack(level, GetFloatParam(param, 0, 1)));
 
 			static IEnumerator cameraZoom(Player player, Level level, float zoom, float duration, string easer) {
 				player.ForceCameraUpdate = false;
@@ -99,8 +105,39 @@ namespace PrismaticHelper.Cutscenes {
 				yield return null;
 			}
 			Register(null, "player_inventory", (player, level, param) => playerInventory(level, GetStringParam(param, 0, "Default")));
-			
-			
+
+			static IEnumerator waitForGround(Player p) {
+				while(!p.OnGround())
+					yield return null;
+			}
+			Register(null, "wait_for_ground", (player, level, param) => waitForGround(player));
+
+			static IEnumerator hideEntitiesByName(Level l, string entityName) {
+				l.Entities
+					.Where(k => k.GetType().Name.Equals(entityName))
+					.ToList()
+					.ForEach(k=>k.Visible = false);
+				yield return null;
+			}
+			Register(null, "hide_entities", (player, level, param) => hideEntitiesByName(level, GetStringParam(param, 0)));
+
+			static IEnumerator showNextBooster(Level l) {
+				l.Entities.FindAll<Booster>()
+					.Where(k => !k.Visible)
+					.FirstOrDefault()?
+					.Appear();
+				yield return null;
+			}
+			Register(null, "show_next_booster", (player, level, param) => showNextBooster(level));
+
+			static IEnumerator showNextDoor(Level l) {
+				l.Entities.FindAll<LockBlock>()
+					.Where(k => !k.Visible)
+					.FirstOrDefault()?
+					.Appear();
+				yield return null;
+			}
+			Register(null, "show_next_door", (player, level, param) => showNextDoor(level));
 		}
 
 		public static void Unload() {

@@ -37,6 +37,9 @@ Zooms the camera to the specified zoom level, with higher values zooming in, ove
 
 Note that the camera will not automatically zoom to the normal scale after the cutscene; you will have to reset it yourself.
 
+#### `camera_zoom_back, duration = 1`
+Returns the camera to its regular scale over the given duration.
+
 #### `camera_pan, x = 0, y = 0, duration = 3, easer = cube`
 Pans the camera by the specified number of pixels on the X and Y axis relative to its current position, over the specified number of seconds, using the specified easer to control progress.
 
@@ -46,11 +49,23 @@ Pans the camera to the specified X and Y position, over the specified number of 
 #### `attach_camera_to_player`
 Reattaches the camera to the player after panning the camera. This is done automatically when a cutscene ends, and this is only needed when moving the player after panning the camera.
 
+#### `wait_for_ground`
+Waits for the player to touch the ground before continuing the cutscene.
+
+#### `hide_entities, entityType = `
+Hides all entities of a given type in the room. These entities are invisible, but still have collision and are interactible. The `entityType` parameter should be the short name of the corresponding C# class, like `Booster`, `Player`, `LockBlock`, or `Bird`.
+
+#### `show_next_booster`
+Reveals the first invisible booster in the room, or does nothing if no boosters have been hidden.
+
+#### `show_next_door`
+Reveals the first invisible door in the room, or does nothing if no doors have been hidden. Only Farewell's doors have a reveal animation by default, but other doors can be given one with a custom `Sprites.xml`.
+
 #### `player_animation, anim = idle, mode = start`
 Makes the player play the specified animation. See `Sprites.xml` for the available animation. If `mode` is `play`, the cutscene waits for the animation to end; otherwise, the animation continues while other triggers and dialog occurs.
 
 #### `player_inventory, inventory = Default`
-Sets the player's inventory to the specified inventory. Note that the player's inventory is *not* currenty set if the player skips the cutscene, and you will want to use an inventory trigger if the chosen inventory affects gameplay.
+Sets the player's inventory to the specified inventory. (Note that you will need to also add `{ph_on_skip player_inventory ...}` if you want the inventory to be set on skipping the cutscene.)
 
 ### Parameter values
 
