@@ -1,0 +1,18 @@
+# -- Entities --
+# entities.entityName.placements.name.*
+# entities.entityName.placements.description.*
+# entities.entityName.attributes.name.*
+# entities.entityName.attributes.description.*
+
+# Multi-Locked Door
+entities.PrismaticHelper/MultiLockedDoor.placements.name.multi_locked_door_wood=Multi-Locked Door (Wood) [Prismatic Helper]
+entities.PrismaticHelper/MultiLockedDoor.placements.name.multi_locked_door_temple=Multi-Locked Door (Temple) [Prismatic Helper]
+entities.PrismaticHelper/MultiLockedDoor.placements.name.multi_locked_door_temple_b=Multi-Locked Door (Temple B) [Prismatic Helper]
+entities.PrismaticHelper/MultiLockedDoor.placements.name.multi_locked_door_moon=Multi-Locked Door (Moon) [Prismatic Helper]
+
+# Multi-Locked Door
+entities.PrismaticHelper/CustomPowerSourceNumber.placements.name.custom_power_source_number=Custom Power Source Number [Prismatic Helper]
+entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.cond=The ID of the key that turns off this power source indicator, in the format "room_name:key_id". Right click a key entity to check it's ID.
+entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.base=The base texture.
+entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.glow=The glow texture, which turns on and off with collection and changes brightness over time.
+entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.requiresLightningDisabled=Whether lightning must be persistently disabled for this to turn on.
