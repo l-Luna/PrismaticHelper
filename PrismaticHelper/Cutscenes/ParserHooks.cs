@@ -1,4 +1,7 @@
-﻿using Celeste;
+﻿using System;
+using System.Collections.Generic;
+
+using Celeste;
 using Celeste.Mod;
 
 using Mono.Cecil.Cil;
@@ -7,9 +10,6 @@ using Monocle;
 
 using MonoMod.Cil;
 using MonoMod.Utils;
-
-using System;
-using System.Collections.Generic;
 
 namespace PrismaticHelper.Cutscenes {
 
@@ -39,16 +39,30 @@ namespace PrismaticHelper.Cutscenes {
 
 		public class PhRunOnSkip : FancyText.Node {
 
+			public string ID = "";
+
+			public List<string> Params = new();
+
+			public PhRunOnSkip(List<string> rawParams) {
+				if(rawParams.Count == 0) {
+					Logger.Log(LogLevel.Warn, "PrismaticHelper", "Found empty ph_on_skip!");
+				} else {
+					ID = rawParams[0];
+					Params = rawParams.GetRange(1, rawParams.Count - 1);
+				}
+			}
 		}
 
 		public static void LoadHooks() {
 			IL.Celeste.FancyText.Parse += ParsePhTriggers;
 			On.Celeste.Textbox.ctor_string_Language_Func1Array += AddPhEvents;
+			On.Celeste.Level.SkipCutscene += Level_SkipCutscene;
 		}
 
 		public static void Unload() {
 			IL.Celeste.FancyText.Parse -= ParsePhTriggers;
 			On.Celeste.Textbox.ctor_string_Language_Func1Array -= AddPhEvents;
+			On.Celeste.Level.SkipCutscene -= Level_SkipCutscene;
 		}
 
 		private static void AddPhEvents(On.Celeste.Textbox.orig_ctor_string_Language_Func1Array orig, Textbox self, string dialog, Language language, Func<System.Collections.IEnumerator>[] events) {
@@ -79,6 +93,25 @@ namespace PrismaticHelper.Cutscenes {
 			selfData.Set("events", newEvents);
 		}
 
+		private static void Level_SkipCutscene(On.Celeste.Level.orig_SkipCutscene orig, Level self) {
+			// Assume there is only one textbox entity, or that all textbox entities are being closed
+			self.Entities.With<Textbox>(textbox => {
+				DynamicData boxData = new(textbox);
+				List<FancyText.Node> nodes = boxData.Get<FancyText.Text>("text").Nodes;
+				int index = boxData.Get<int>("index");
+				for(int i = 0; i < nodes.Count; i++) {
+					FancyText.Node node = nodes[i];
+					if(node is PhRunOnSkip skip) {
+						var cutscene = CutsceneTriggers.Get(skip.ID, self.Tracker.GetEntity<Player>(), self, skip.Params)();
+						while(cutscene.MoveNext())
+							; // no delay between actions
+					}
+				}
+			});
+
+			orig(self);
+		}
+
 		private static void ParsePhTriggers(ILContext il) {
 			var cursor = new ILCursor(il);
 			if(cursor.TryGotoNext(MoveType.Before, instr => instr.MatchLdstr("savedata"))) {
@@ -87,8 +120,11 @@ namespace PrismaticHelper.Cutscenes {
 				cursor.Emit(OpCodes.Ldloc_S, il.Method.Body.Variables[7]); // s
 				cursor.Emit(OpCodes.Ldloc_S, il.Method.Body.Variables[8]); // stringList
 				cursor.EmitDelegate<Action<FancyText, string, List<string>>>((text, s, vals) => {
+					List<FancyText.Node> nodes = new DynamicData(text).Get<FancyText.Text>("group").Nodes;
 					if(s.Equals("ph_trigger") || s.Equals("&ph_trigger") || s.Equals("~ph_trigger"))
-						new DynamicData(text).Get<FancyText.Text>("group").Nodes.Add(new PhTrigger(vals, s.StartsWith("&"), s.StartsWith("~")));
+						nodes.Add(new PhTrigger(vals, s.StartsWith("&"), s.StartsWith("~")));
+					if(s.Equals("ph_on_skip"))
+						nodes.Add(new PhRunOnSkip(vals));
 				});
 			}
 		}

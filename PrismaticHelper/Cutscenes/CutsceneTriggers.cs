@@ -42,6 +42,13 @@ namespace PrismaticHelper.Cutscenes {
 			}
 			Register(null, "look", (player, level, param) => look(player, GetStringParam(param, 0, "left") == "left" ? Facings.Left : Facings.Right));
 
+			static IEnumerator @goto(Player player, float x, float y) {
+				player.Position.X = x;
+				player.Position.Y = y;
+				yield return null;
+			}
+			Register(null, "goto", (player, level, param) => @goto(player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0)));
+
 			static IEnumerator cameraZoom(Player player, Level level, float zoom, float duration, string easer) {
 				player.ForceCameraUpdate = false;
 				Ease.Easer ease = GetEaseByName(easer);

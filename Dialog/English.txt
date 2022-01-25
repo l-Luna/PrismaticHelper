@@ -6,10 +6,10 @@ prismatic_helper_cutscene_test_alt=
     {2}
     {ph_trigger player_animation launchRecover play}
     {ph_trigger player_inventory TheSummit}
+    {ph_on_skip player_inventory TheSummit}
 
 prismatic_helper_cutscene_test=
     [MADELINE left normal]
-    {ph_trigger camera_zoom 2 1}
     Hello!
     This is a test of Prismatic Helper's{n}Slightly Better Cutscenes!
     Which allow me to...
@@ -20,21 +20,6 @@ prismatic_helper_cutscene_test=
     {~ph_trigger camera_pan 36 36}
     And even look around!
     {ph_trigger camera_pan -36 12 exp}
-    {ph_trigger camera_pan -20 -40 bounce}
-    {ph_trigger look left}
-    {ph_trigger look right}
-    {ph_trigger look left}
-    {ph_trigger look right}
-    {ph_trigger look left}
-    {ph_trigger look right}
-    {ph_trigger look left}
-    {ph_trigger look right}
-    {ph_trigger look left}
-    {ph_trigger look right}
-    {ph_trigger look left}
-    {ph_trigger look right}
-    {ph_trigger camera_zoom 2 4}
-    So fun.
-    {ph_trigger camera_zoom 1.5 2}
-    {ph_trigger camera_zoom 3 6 quint}
-    {ph_trigger camera_zoom 1 1}
+    {ph_trigger player_inventory TheSummit}
+    {ph_on_skip player_inventory TheSummit}
+    {ph_on_skip goto 100 100}
