@@ -16,3 +16,12 @@ entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.cond=The
 entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.base=The base texture.
 entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.glow=The glow texture, which turns on and off with collection and changes brightness over time.
 entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.requiresLightningDisabled=Whether lightning must be persistently disabled for this to turn on.
+
+# Stylegrounds Panel
+entities.PrismaticHelper/StylegroundsPanel.placements.name.stylegrounds_panel=Stylegrounds Panel [Prismatic Helper]
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.foreground=Whether the panel should render in front of the player and objects.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.scrollX=How quickly the panel moves relative to the camera on the X axis.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.scrollY=How quickly the panel moves relative to the camera on the Y axis.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.opcacity=How opaque the stylegrounds panel and its contained stylegrounds are.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.room=The name of the room this panel will take stylegrounds from. The room does not have to exist, unless this name is only matched by a wildcard.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.tint=The colour that stylegrounds within the mask should be tinted, as a hex code; #ffffff by default.
