@@ -67,6 +67,33 @@ Makes the player play the specified animation. See `Sprites.xml` for the availab
 #### `player_inventory, inventory = Default`
 Sets the player's inventory to the specified inventory. (Note that you will need to also add `{ph_on_skip player_inventory ...}` if you want the inventory to be set on skipping the cutscene.)
 
+#### `baddy_appear, xOffset = 0, yOffset = y`
+Makes Badeline appear at the specified position relative to the player. Only one Badeline can be made by these triggers; attempting to summon another will make the previous one vanish.
+
+#### `baddy_split, xOffset = 0, yOffset = y, facePlayer = true`
+Makes Badeline split from the player, and move to the specified position relative to them. Only one Badeline can be made by these triggers; attempting to summon another will make the previous one vanish. Does not affect the player's inventory or hair colour.
+
+#### `baddy_float_to, x = 0, y = 0, look = true`
+Makes Badeline float to the specified position in map coordinates, optionally facing in the direction they move.
+
+#### `baddy_float_by, x = 0, y = 0, look = true`
+Makes Badeline float to the specified position relative to their current position, optionally facing in the direction they move.
+
+#### `baddy_float_by_player, x = 0, y = 0, look = true`
+Makes Badeline float to the specified position relative to the player's current position, optionally facing in the direction they move.
+
+#### `baddy_look, direction = left`
+Makes Badeline look in the specified direction, either `left` or `right`. Other values are assumed to be right.
+
+#### `baddy_combine`
+Makes Badeline float towards the player and combine, disappearing. Does not affect the player's inventory or hair colour.
+
+#### `baddy_vanish`
+Makes Badeline vanish in-place.
+
+#### `baddy_animation, anim = idle, mode = start`
+Makes Badeline play the specified animation. See `Sprites.xml` for the available animation. If `mode` is `play`, the cutscene waits for the animation to end; otherwise, the animation continues while other triggers and dialog occurs.
+
 ### Parameter values
 
 #### Easers

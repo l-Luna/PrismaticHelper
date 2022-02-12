@@ -1,50 +1,24 @@
-prismatic_helper_cutscene_test_alt=
-    [MADELINE left normal]
-    Hello!
-    This is a test of Prismatic Helper's{n}Slightly Better Cutscenes!
-    {ph_trigger player_animation launch}
-    {2}
-    {ph_trigger player_animation launchRecover play}
-    {ph_trigger player_inventory TheSummit}
-    {ph_on_skip player_inventory TheSummit}
-
 prismatic_helper_cutscene_test=
     [MADELINE left normal]
     Hello!
-    This is a test of Prismatic Helper's{n}Slightly Better Cutscenes!
-    Which allow me to...
-    {ph_trigger walk -48}
-    Walk!
-    {~ph_trigger run 80}
-    While talking!
-    {~ph_trigger camera_pan 36 36}
-    And even look around!
-    {ph_trigger camera_pan -36 12 exp}
-    {ph_trigger player_inventory TheSummit}
-    {ph_on_skip player_inventory TheSummit}
-    {ph_on_skip goto 100 100}
-
-prismatic_helper_cutscene_hide_stuff=
-    {ph_trigger hide_entities Booster}   
-    {ph_trigger hide_entities LockBlock}
-    {ph_on_skip hide_entities Booster}
-    {ph_on_skip hide_entities LockBlock}
-    {5}
-    {ph_trigger show_next_booster}
+    {ph_trigger baddy_split 50 -30 false}
+    [BADELINE left normal]
+    Sup.
+    {ph_trigger baddy_split -50 -30 true}
+    Just flying about.
+    {ph_trigger baddy_vanish}
+    {ph_trigger baddy_appear -10 -50}
     {1}
-    {ph_trigger show_next_door}
-    {0.7}
-    {ph_trigger show_next_door 2}
-    {0.2}
-    {ph_trigger show_next_door 3}
+    {ph_trigger baddy_float_by 0 -100}
     {1}
-    {ph_trigger show_next_door 5}
-
-prismatic_helper_cutscene_show_stuff=
-    oh
-    {ph_trigger show_next_booster}
-    {ph_trigger show_next_door}
-    {ph_trigger show_next_door}
-    {ph_trigger show_next_door}
-    {ph_trigger show_next_door}
-    oh
+    {ph_trigger baddy_float_by_player 40 -20}
+    {ph_trigger baddy_look left}
+    {0.1}
+    {ph_trigger baddy_look right}
+    {0.1}
+    {ph_trigger baddy_animation laugh}
+    {4}
+    {ph_trigger baddy_combine}
+    {1}
+    [MADELINE left normal]
+    Alright!

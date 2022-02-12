@@ -19,6 +19,7 @@ namespace PrismaticHelper.Cutscenes {
 	public static class CutsceneTriggers {
 
 		public static readonly Dictionary<string, Func<Player, Level, List<string>, IEnumerator>> Triggers = new();
+		private static BadelineDummy baddy; // :3
 
 		public static void Load() {
 			ParserHooks.LoadHooks();
@@ -30,30 +31,30 @@ namespace PrismaticHelper.Cutscenes {
 			static IEnumerator walk(Player player, float amount) {
 				return player?.DummyWalkTo(player.X + amount) ?? nothing();
 			}
-			Register(null, "walk", (player, level, param) => walk(player, GetFloatParam(param, 0, 8)));
+			Register("walk", (player, level, param) => walk(player, GetFloatParam(param, 0, 8)));
 
 			static IEnumerator run(Player player, float time) {
 				return player?.DummyRunTo(player.X + time) ?? nothing();
 			}
-			Register(null, "run", (player, level, param) => run(player, GetFloatParam(param, 0, 8)));
+			Register("run", (player, level, param) => run(player, GetFloatParam(param, 0, 8)));
 
 			static IEnumerator look(Player player, Facings direction) {
 				player.Facing = direction;
 				yield return 0.1f;
 			}
-			Register(null, "look", (player, level, param) => look(player, GetStringParam(param, 0, "left") == "left" ? Facings.Left : Facings.Right));
+			Register("look", (player, level, param) => look(player, GetStringParam(param, 0, "left") == "left" ? Facings.Left : Facings.Right));
 
 			static IEnumerator @goto(Player player, float x, float y) {
 				player.Position.X = x;
 				player.Position.Y = y;
 				yield return null;
 			}
-			Register(null, "goto", (player, level, param) => @goto(player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0)));
+			Register("goto", (player, level, param) => @goto(player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0)));
 
 			static IEnumerator cameraZoomBack(Level l, float duration) {
 				return l.ZoomBack(duration);
 			}
-			Register(null, "camera_zoom_back", (player, level, param) => cameraZoomBack(level, GetFloatParam(param, 0, 1)));
+			Register("camera_zoom_back", (player, level, param) => cameraZoomBack(level, GetFloatParam(param, 0, 1)));
 
 			static IEnumerator cameraZoom(Player player, Level level, float zoom, float duration, string easer) {
 				player.ForceCameraUpdate = false;
@@ -66,26 +67,26 @@ namespace PrismaticHelper.Cutscenes {
 
 				level.Camera.Zoom = zoom;
 			}
-			Register(null, "camera_zoom", (player, level, param) => cameraZoom(player, level, GetFloatParam(param, 0, 2), GetFloatParam(param, 1, 2f), GetStringParam(param, 2, "cube")));
+			Register("camera_zoom", (player, level, param) => cameraZoom(player, level, GetFloatParam(param, 0, 2), GetFloatParam(param, 1, 2f), GetStringParam(param, 2, "cube")));
 
 			static IEnumerator cameraPanBy(Player p, Level level, Vector2 amount, float time, string easer) {
 				p.ForceCameraUpdate = false;
 				Vector2 destination = level.Camera.Position + amount;
 				return CutsceneEntity.CameraTo(destination, time, GetEaseByName(easer));
 			}
-			Register(null, "camera_pan", (player, level, param) => cameraPanBy(player, level, new Vector2(GetFloatParam(param, 0), GetFloatParam(param, 1)), GetFloatParam(param, 2, 3), GetStringParam(param, 3, "cube")));
+			Register("camera_pan", (player, level, param) => cameraPanBy(player, level, new Vector2(GetFloatParam(param, 0), GetFloatParam(param, 1)), GetFloatParam(param, 2, 3), GetStringParam(param, 3, "cube")));
 
 			static IEnumerator cameraPanTo(Player p, Level level, Vector2 destination, float time, string easer) {
 				p.ForceCameraUpdate = false;
 				return CutsceneEntity.CameraTo(destination, time, GetEaseByName(easer));
 			}
-			Register(null, "camera_pan_to", (player, level, param) => cameraPanTo(player, level, new Vector2(GetFloatParam(param, 0), GetFloatParam(param, 1)), GetFloatParam(param, 2), GetStringParam(param, 3, "cube")));
+			Register("camera_pan_to", (player, level, param) => cameraPanTo(player, level, new Vector2(GetFloatParam(param, 0), GetFloatParam(param, 1)), GetFloatParam(param, 2), GetStringParam(param, 3, "cube")));
 			
 			static IEnumerator attachCameraToPlayer(Player p) {
 				p.ForceCameraUpdate = true;
 				yield return null;
 			}
-			Register(null, "attach_camera_to_player", (player, level, param) => attachCameraToPlayer(player));
+			Register("attach_camera_to_player", (player, level, param) => attachCameraToPlayer(player));
 
 			static IEnumerator playerAnimation(Player p, string anim, bool wait) {
 				p.DummyAutoAnimate = false;
@@ -96,7 +97,7 @@ namespace PrismaticHelper.Cutscenes {
 					yield return null;
 				}
 			}
-			Register(null, "player_animation", (player, level, param) => playerAnimation(player, GetStringParam(param, 0, "idle"), GetStringParam(param, 1, "start").Equals("play")));
+			Register("player_animation", (player, level, param) => playerAnimation(player, GetStringParam(param, 0, "idle"), GetStringParam(param, 1, "start").Equals("play")));
 
 			static IEnumerator playerInventory(Level level, string inventory) {
 				var inv = MapMeta.GetInventory(inventory);
@@ -104,13 +105,13 @@ namespace PrismaticHelper.Cutscenes {
 					level.Session.Inventory = inv.Value;
 				yield return null;
 			}
-			Register(null, "player_inventory", (player, level, param) => playerInventory(level, GetStringParam(param, 0, "Default")));
+			Register("player_inventory", (player, level, param) => playerInventory(level, GetStringParam(param, 0, "Default")));
 
 			static IEnumerator waitForGround(Player p) {
 				while(!p.OnGround())
 					yield return null;
 			}
-			Register(null, "wait_for_ground", (player, level, param) => waitForGround(player));
+			Register("wait_for_ground", (player, level, param) => waitForGround(player));
 
 			static IEnumerator hideEntitiesByName(Level l, string entityName) {
 				l.Entities
@@ -119,7 +120,7 @@ namespace PrismaticHelper.Cutscenes {
 					.ForEach(k => k.Visible = false);
 				yield return null;
 			}
-			Register(null, "hide_entities", (player, level, param) => hideEntitiesByName(level, GetStringParam(param, 0)));
+			Register("hide_entities", (player, level, param) => hideEntitiesByName(level, GetStringParam(param, 0)));
 
 			static IEnumerator showNextBooster(Level l) {
 				l.Entities.FindAll<Booster>()
@@ -128,7 +129,7 @@ namespace PrismaticHelper.Cutscenes {
 					.Appear();
 				yield return null;
 			}
-			Register(null, "show_next_booster", (player, level, param) => showNextBooster(level));
+			Register("show_next_booster", (player, level, param) => showNextBooster(level));
 
 			static IEnumerator showNextDoor(Level l, int soundIdx) {
 				var d = l.Entities.FindAll<LockBlock>()
@@ -140,11 +141,93 @@ namespace PrismaticHelper.Cutscenes {
 				}
 				yield return null;
 			}
-			Register(null, "show_next_door", (player, level, param) => showNextDoor(level, (int)GetFloatParam(param, 0, 1)));
+			Register("show_next_door", (player, level, param) => showNextDoor(level, (int)GetFloatParam(param, 0, 1)));
+
+			// baddy controls
+
+			static IEnumerator baddyAppear(Level l, Player p, float xOffset, float yOffset) {
+				if(baddy != null && baddy.Scene == Engine.Scene)
+					baddy.Vanish();
+				baddy = new BadelineDummy(p.Center + new Vector2(xOffset, yOffset));
+				l.Add(baddy);
+				baddy.Appear(l);
+				yield return null;
+			}
+			Register("baddy_appear", (player, level, param) => baddyAppear(level, player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0)));
+
+			static IEnumerator baddySplit(Level l, Player p, float xOffset, float yOffset, bool facePlayer) {
+				if(baddy != null && baddy.Scene == Engine.Scene)
+					baddy.Vanish();
+				baddy = new BadelineDummy(p.Center);
+				l.Add(baddy);
+				p.CreateSplitParticles();
+				Input.Rumble(RumbleStrength.Light, RumbleLength.Medium);
+				l.Displacement.AddBurst(p.Center, 0.4f, 8f, 32f, 0.5f);
+				Audio.Play("event:/char/badeline/maddy_split", p.Position);
+				Vector2 target = p.Center + new Vector2(xOffset, yOffset);
+				baddy.Sprite.Scale.X = Math.Sign(target.X - p.X) * (facePlayer ? -1 : 1);
+				return baddy.FloatTo(target, 1, faceDirection: false);
+			}
+			Register("baddy_split", (player, level, param) => baddySplit(level, player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0), GetStringParam(param, 2, "true").Equals("true")));
+
+			static IEnumerator baddyFloatTo(float x, float y, bool look) {
+				if(baddy == null)
+					return nothing();
+				return baddy.FloatTo(new Vector2(x, y), faceDirection: look);
+			}
+			Register("baddy_float_to", (player, level, param) => baddyFloatTo(GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0), GetStringParam(param, 2, "true").Equals("true")));
+			Register("baddy_float_by", (player, level, param) => baddyFloatTo(GetFloatParam(param, 0, 0) + baddy.X, GetFloatParam(param, 1, 0) + baddy.Y, GetStringParam(param, 2, "true").Equals("true")));
+			Register("baddy_float_by_player", (player, level, param) => baddyFloatTo(GetFloatParam(param, 0, 0) + player.X, GetFloatParam(param, 1, 0) + player.Y, GetStringParam(param, 2, "true").Equals("true")));
+
+			static IEnumerator baddyLook(bool left) {
+				if(baddy == null)
+					yield break;
+				baddy.Sprite.X = left ? -1 : 1;
+				yield return null;
+			}
+			Register("baddy_look", (player, level, param) => baddyLook(GetStringParam(param, 0, "left").Equals("left")));
+
+			static IEnumerator baddyCombine(Level l, Player pl) {
+				if(baddy == null)
+					yield break;
+				Vector2 from = baddy.Position;
+				for(float p = 0f; p < 1f; p += Engine.DeltaTime / 0.25f) {
+					baddy.Position = Vector2.Lerp(from, pl.Position, Ease.CubeIn(p));
+					yield return null;
+				}
+
+				baddy.Visible = false;
+				l.Displacement.AddBurst(pl.Position, 0.4f, 8f, 32f, 0.5f);
+			}
+			Register("baddy_combine", (player, level, param) => baddyCombine(level, player));
+
+			static IEnumerator baddyVanish() {
+				baddy.Vanish();
+				Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+				baddy = null;
+				yield return null;
+			}
+			Register("baddy_vanish", (player, level, param) => baddyVanish());
+
+			static IEnumerator baddyAnimation(string anim, bool wait) {
+				if(baddy == null)
+					yield break;
+				if(wait)
+					yield return baddy.Sprite.PlayRoutine(anim);
+				else {
+					baddy.Sprite.Play(anim);
+					yield return null;
+				}
+			}
+			Register("baddy_animation", (player, level, param) => baddyAnimation(GetStringParam(param, 0, "idle"), GetStringParam(param, 1, "start").Equals("play")));
 		}
 
 		public static void Unload() {
 			ParserHooks.Unload();
+		}
+
+		private static void Register(string triggerName, Func<Player, Level, List<string>, IEnumerator> effect) {
+			Register(null, triggerName, effect);
 		}
 
 		public static void Register(string modName, string triggerName, Func<Player, Level, List<string>, IEnumerator> effect) {
