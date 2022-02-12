@@ -39,12 +39,14 @@ namespace PrismaticHelper.Entities {
             
             foreach(var item in toRender) {
                 var room = item.Key;
-                foreach(Backdrop bg in renderer.Backdrops)
-                    if(IsVisible(bg, level as Level, room)) {
+				Level lvl = level as Level;
+				foreach(Backdrop bg in renderer.Backdrops)
+                    if(IsVisible(bg, lvl, room)) {
                         bool wasVisible = bg.Visible, wasForceVisible = bg.ForceVisible;
                         bg.Visible = true;
                         bg.ForceVisible = true;
-                        if(!(level as Level).Paused)
+                        // TODO: also check if visible in any rooms that are part of a room transition
+                        if(!lvl.Paused && !IsVisible(bg, lvl, lvl.Session.Level, true))
                             bg.Update(level);
                         bg.BeforeRender(level);
                         bg.Visible = wasVisible;
@@ -52,7 +54,7 @@ namespace PrismaticHelper.Entities {
                     }
                 // get our styleground mask
                 Engine.Graphics.GraphicsDevice.SetRenderTarget(MaskRenderTarget);
-                Engine.Graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
+                Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
                 Draw.SpriteBatch.Begin();
                 foreach(var panel in item)
                     Draw.Rect((panel.X - camera.Left - (320 / 2)) * panel.ScrollX + (320 / 2),
@@ -61,8 +63,8 @@ namespace PrismaticHelper.Entities {
                 GameplayRenderer.End();
                 // render some styleground
                 Engine.Graphics.GraphicsDevice.SetRenderTarget(StylegroundsRenderTarget);
-                Engine.Graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
-                RenderStylegroundsForRoom(room, renderer, level as Level);
+                Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
+				RenderStylegroundsForRoom(room, renderer, lvl);
                 // apply the mask to the styleground
                 Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, alphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
                 Draw.SpriteBatch.Draw(MaskRenderTarget, Vector2.Zero, Color.White);
@@ -134,8 +136,8 @@ namespace PrismaticHelper.Entities {
             Cleanup();
         }
 
-        private static bool IsVisible(Backdrop styleground, Level level, string room) {
-            if(styleground.ForceVisible) {
+        private static bool IsVisible(Backdrop styleground, Level level, string room, bool ignoreFV = false) {
+            if(!ignoreFV && styleground.ForceVisible) {
                 return true;
             }
             if(!string.IsNullOrEmpty(styleground.OnlyIfNotFlag) && level.Session.GetFlag(styleground.OnlyIfNotFlag)) {
