@@ -36,7 +36,7 @@ namespace PrismaticHelper.Entities {
                 .Where(it => it.Foreground == fg)
                 .GroupBy(it => it.Room)
                 .ToList();
-
+            
             foreach(var item in toRender) {
                 var room = item.Key;
                 foreach(Backdrop bg in renderer.Backdrops)
@@ -44,7 +44,8 @@ namespace PrismaticHelper.Entities {
                         bool wasVisible = bg.Visible, wasForceVisible = bg.ForceVisible;
                         bg.Visible = true;
                         bg.ForceVisible = true;
-                        bg.Update(level);
+                        if(!(level as Level).Paused)
+                            bg.Update(level);
                         bg.BeforeRender(level);
                         bg.Visible = wasVisible;
                         bg.ForceVisible = wasForceVisible;
@@ -57,13 +58,13 @@ namespace PrismaticHelper.Entities {
                     Draw.Rect((panel.X - camera.Left - (320 / 2)) * panel.ScrollX + (320 / 2),
                               (panel.Y - camera.Top - (180 / 2)) * panel.ScrollY + (180 / 2),
                                panel.Width, panel.Height, panel.Tint * panel.Opacity);
-                Draw.SpriteBatch.End();
+                GameplayRenderer.End();
                 // render some styleground
                 Engine.Graphics.GraphicsDevice.SetRenderTarget(StylegroundsRenderTarget);
                 Engine.Graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
                 RenderStylegroundsForRoom(room, renderer, level as Level);
                 // apply the mask to the styleground
-                Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, alphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, ColorGrade.Effect);
+                Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, alphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
                 Draw.SpriteBatch.Draw(MaskRenderTarget, Vector2.Zero, Color.White);
                 Draw.SpriteBatch.End();
                 // render the styleground
