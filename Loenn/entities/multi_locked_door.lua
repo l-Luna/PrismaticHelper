@@ -12,14 +12,14 @@ local doorTypes = {
 multiLockedDoor.name = "PrismaticHelper/MultiLockedDoor"
 multiLockedDoor.placements = {}
 
-for type in doorTypes do
+for idx, type in pairs(doorTypes) do
     table.insert(multiLockedDoor.placements, {
         name = "multi_locked_door_" .. type.id,
         data = {
-            "door" => "PrismaticHelper/multiLockDoor/base_" .. type.id,
-            "lock" => "PrismaticHelper/multiLockDoor/mini_lock",
-            "unlockSfx" => type.sfx,
-            "keys" => 2
+            door = "PrismaticHelper/multiLockDoor/base_" .. type.id,
+            lock = "PrismaticHelper/multiLockDoor/mini_lock",
+            unlockSfx = type.sfx,
+            keys = 2
         }
     })
 end
@@ -31,20 +31,26 @@ multiLockedDoor.fieldInformation = {
 }
 
 function multiLockedDoor.sprite(room, entity)
-    local x, y = entity.x or 0, entity.y or 0
+    local x = entity.x or 0
+    local y = entity.y or 0
     local sprites = {}
 
     local mainSprite = drawableSpriteStruct.fromTexture(entity.door, { x = x, y = y })
-    bodySprite:setJustification(0.5, 0.5)
-    bodySprite.depth = 1
-    table.insert(sprite, mainSprite)
+    if mainSprite then
+        mainSprite:addPosition(16, 16)
+        mainSprite.depth = 1
+        table.insert(sprites, mainSprite)
+    end
 
     for i = 1, entity.keys do
         local kx = math.cos(math.pi * 2 * (i / entity.keys)) * 10
         local ky = math.sin(math.pi * 2 * (i / entity.keys)) * 10
-        local lockSprite = drawableSpriteStruct.fromTexture(entity.lock, { x = x + kx, y = y + ky })
-        lockSprite.depth = 3
-        table.insert(sprites, lockSprite)
+        local lockSprite = drawableSpriteStruct.fromTexture(entity.lock .. "0", { x = x + kx, y = y + ky })
+        if lockSprite then
+            lockSprite.depth = -3
+            lockSprite:addPosition(16, 16)
+            table.insert(sprites, lockSprite)
+        end
     end
 
     return sprites
