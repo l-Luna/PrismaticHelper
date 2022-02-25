@@ -1,24 +1,3 @@
-prismatic_helper_cutscene_test=
-    [MADELINE left normal]
-    Hello!
-    {ph_trigger baddy_split 50 -30 false}
-    [BADELINE left normal]
-    Sup.
-    {ph_trigger baddy_split -50 -30 true}
-    Just flying about.
-    {ph_trigger baddy_vanish}
-    {ph_trigger baddy_appear -10 -50}
-    {1}
-    {ph_trigger baddy_float_by 0 -100}
-    {1}
-    {ph_trigger baddy_float_by_player 40 -20}
-    {ph_trigger baddy_look left}
-    {0.1}
-    {ph_trigger baddy_look right}
-    {0.1}
+prismatic_helper_showcase_baddy=
+    {ph_trigger baddy_split -179 -70 true}
     {ph_trigger baddy_animation laugh}
-    {4}
-    {ph_trigger baddy_combine}
-    {1}
-    [MADELINE left normal]
-    Alright!
