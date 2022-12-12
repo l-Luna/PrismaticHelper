@@ -18,9 +18,9 @@ namespace PrismaticHelper.Entities {
             ColorSourceBlend = Blend.Zero,
             ColorBlendFunction = BlendFunction.Add,
             ColorDestinationBlend = Blend.SourceColor,
-            AlphaSourceBlend = Blend.One,
+            AlphaSourceBlend = Blend.Zero,
             AlphaBlendFunction = BlendFunction.Add,
-            AlphaDestinationBlend = Blend.Zero,
+            AlphaDestinationBlend = Blend.SourceColor
         };
 
         public static void RenderStylegroundsPanels(bool fg, Scene level, BackdropRenderer renderer) {
@@ -82,11 +82,11 @@ namespace PrismaticHelper.Entities {
             bool usingSpritebatch = false;
             foreach(Backdrop backdrop in renderer.Backdrops) {
                 if(IsVisible(backdrop, level, room)) {
-                    if(backdrop is Parallax && (backdrop as Parallax).BlendState != blendState) {
+                    if(backdrop is Parallax p && p.BlendState != blendState) {
                         if(usingSpritebatch)
                             Draw.SpriteBatch.End();
                         usingSpritebatch = false;
-                        blendState = (backdrop as Parallax).BlendState;
+                        blendState = p.BlendState;
                     }
                     if(backdrop.UseSpritebatch && !usingSpritebatch) {
                         Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, blendState, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
