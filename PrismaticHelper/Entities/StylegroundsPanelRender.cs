@@ -14,7 +14,7 @@ namespace PrismaticHelper.Entities {
         private static VirtualRenderTarget MaskRenderTarget;
         private static VirtualRenderTarget StylegroundsRenderTarget;
 
-        private static readonly BlendState alphaMaskBlendState = new() {
+        private static readonly BlendState alphaMaskBlendState = new(){
             ColorSourceBlend = Blend.Zero,
             ColorBlendFunction = BlendFunction.Add,
             ColorDestinationBlend = Blend.SourceColor,
@@ -23,7 +23,32 @@ namespace PrismaticHelper.Entities {
             AlphaDestinationBlend = Blend.SourceColor
         };
 
-        public static void RenderStylegroundsPanels(bool fg, Scene level, BackdropRenderer renderer) {
+        public static void UpdateStylegroundPanels(bool fg, Scene level, BackdropRenderer renderer){
+            List<IGrouping<string, StylegroundsPanel>> toUpdate = level.Entities
+                .FindAll<StylegroundsPanel>()
+                .Where(it => it.Foreground == fg)
+                .GroupBy(it => it.Room)
+                .ToList();
+            
+            foreach(var item in toUpdate){
+                var room = item.Key;
+				Level lvl = level as Level;
+				foreach(Backdrop bg in renderer.Backdrops)
+                    if(IsVisible(bg, lvl, room)){
+                        bool wasVisible = bg.Visible, wasForceVisible = bg.ForceVisible;
+                        bg.Visible = true;
+                        bg.ForceVisible = true;
+                        // TODO: also check if visible in any rooms that are part of a room transition
+                        if(!lvl.Paused && !IsVisible(bg, lvl, lvl.Session.Level, !wasForceVisible))
+                            bg.Update(level);
+                        bg.BeforeRender(level);
+                        bg.Visible = wasVisible;
+                        bg.ForceVisible = wasForceVisible;
+                    }
+            }
+        }
+
+        public static void RenderStylegroundsPanels(bool fg, Scene level, BackdropRenderer renderer){
             if(MaskRenderTarget == null)
                 MaskRenderTarget = VirtualContent.CreateRenderTarget("prismatic-helper-stylegrounds-mask", 320, 180);
             if(StylegroundsRenderTarget == null)
@@ -40,18 +65,6 @@ namespace PrismaticHelper.Entities {
             foreach(var item in toRender) {
                 var room = item.Key;
 				Level lvl = level as Level;
-				foreach(Backdrop bg in renderer.Backdrops)
-                    if(IsVisible(bg, lvl, room)) {
-                        bool wasVisible = bg.Visible, wasForceVisible = bg.ForceVisible;
-                        bg.Visible = true;
-                        bg.ForceVisible = true;
-                        // TODO: also check if visible in any rooms that are part of a room transition
-                        if(!lvl.Paused && !IsVisible(bg, lvl, lvl.Session.Level, true))
-                            bg.Update(level);
-                        bg.BeforeRender(level);
-                        bg.Visible = wasVisible;
-                        bg.ForceVisible = wasForceVisible;
-                    }
                 // get our styleground mask
                 Engine.Graphics.GraphicsDevice.SetRenderTarget(MaskRenderTarget);
                 Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
@@ -114,11 +127,13 @@ namespace PrismaticHelper.Entities {
 
         public static void Load() {
             On.Celeste.BackdropRenderer.Render += OnBackdropRendererRender;
+            On.Celeste.BackdropRenderer.Update += OnBackdropRendererUpdate;
             On.Celeste.BackdropRenderer.Ended += OnBackdropRendererEnded;
         }
 
         public static void Unload() {
             On.Celeste.BackdropRenderer.Render -= OnBackdropRendererRender;
+            On.Celeste.BackdropRenderer.Update -= OnBackdropRendererUpdate;
             On.Celeste.BackdropRenderer.Ended -= OnBackdropRendererEnded;
         }
 
@@ -129,6 +144,15 @@ namespace PrismaticHelper.Entities {
                     RenderStylegroundsPanels(true, level, self);
                 else if(self == level.Background)
                     RenderStylegroundsPanels(false, level, self);
+        }
+        
+        public static void OnBackdropRendererUpdate(On.Celeste.BackdropRenderer.orig_Update orig, BackdropRenderer self, Scene scene) {
+            orig(self, scene);
+            if(scene is Level level)
+                if(self == level.Foreground)
+                    UpdateStylegroundPanels(true, level, self);
+                else if(self == level.Background)
+                    UpdateStylegroundPanels(false, level, self);
         }
 
         public static void OnBackdropRendererEnded(On.Celeste.BackdropRenderer.orig_Ended orig, BackdropRenderer self, Scene scene) {
