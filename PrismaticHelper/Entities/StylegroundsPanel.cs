@@ -29,4 +29,18 @@ public class StylegroundsPanel : Entity{
 		Room = data.Attr("room");
 		Tint = Calc.HexToColor(data.Attr("tint", "#ffffff"));
 	}
+
+	public Rectangle Area(Camera c){
+		return new Rectangle(
+			(int)((X - c.Left - 320 / 2f) * ScrollX + 320 / 2f),
+			(int)((Y - c.Top - 180 / 2f) * ScrollY + 180 / 2f),
+			Width,
+			Height
+		);
+	}
+
+	public bool OnScreen(Camera c){
+		var area = Area(c);
+		return (area.Left < c.Right || area.Right > c.Left) && (area.Top < c.Bottom || area.Bottom > c.Top);
+	}
 }

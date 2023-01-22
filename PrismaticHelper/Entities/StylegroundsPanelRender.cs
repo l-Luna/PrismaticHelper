@@ -58,6 +58,7 @@ public static class StylegroundsPanelRenderer{
 		List<IGrouping<string, StylegroundsPanel>> toRender = level.Entities
 			.FindAll<StylegroundsPanel>()
 			.Where(it => it.Foreground == fg)
+			.Where(it => it.OnScreen(camera))
 			.GroupBy(it => it.Room)
 			.ToList();
 
