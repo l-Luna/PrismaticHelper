@@ -6,7 +6,6 @@ using Celeste;
 using Celeste.Mod.Meta;
 using Microsoft.Xna.Framework;
 using Monocle;
-using Level = Celeste.Level;
 
 namespace PrismaticHelper.Cutscenes;
 
