@@ -26,6 +26,12 @@ Make the player walk the specified number of pixels to the right. 1 tile = 8 pix
 #### `run, amount = 8`
 Make the player run the specified number of pixels to the right. 1 tile = 8 pixels, negative values go left.
 
+#### `walk_to, x = 8`
+Make the player walk until they reach the given x position, relative to the map origin. Useful for lining the player up with a specific pixel
+
+#### `run_to, x = 8`
+Make the player run until they reach the given x position, relative to the map origin. Useful for lining the player up with a specific pixel.
+
 #### `goto, x = 0, y = 0`
 Instantly teleports the player to the specified position in pixels, relative to the map origin. (This is intended for on-skip nodes, to normalize the player's position after skipping a cutscene.)
 
@@ -96,6 +102,9 @@ Makes Badeline play the specified animation. See `Sprites.xml` for the available
 
 #### `set_flag, flag = , value = true`
 Sets the flag with the given name to the given value (`true` or `false`).
+
+#### `run_playback, recording =`
+Makes the player act out the given playback recording, starting from their current position. Collision with solids is disabled during playback, as the player follows the recording exactly. For technical reasons, dashes don't have full visual effects.
 
 ### Parameter values
 
