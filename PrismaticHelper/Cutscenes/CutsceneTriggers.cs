@@ -23,16 +23,18 @@ public static class CutsceneTriggers{
 		}
 
 		static IEnumerator walk(Player player, float amount){
-			return player?.DummyWalkTo(player.X + amount) ?? nothing();
+			return player?.DummyWalkTo(amount) ?? nothing();
 		}
 
-		Register("walk", (player, level, param) => walk(player, GetFloatParam(param, 0, 8)));
+		Register("walk", (player, level, param) => walk(player, player.X + GetFloatParam(param, 0, 8)));
+		Register("walk_to", (player, level, param) => walk(player, GetFloatParam(param, 0, 8)));
 
 		static IEnumerator run(Player player, float time){
-			return player?.DummyRunTo(player.X + time) ?? nothing();
+			return player?.DummyRunTo(time) ?? nothing();
 		}
 
-		Register("run", (player, level, param) => run(player, GetFloatParam(param, 0, 8)));
+		Register("run", (player, level, param) => run(player, player.X + GetFloatParam(param, 0, 8)));
+		Register("run_to", (player, level, param) => run(player, GetFloatParam(param, 0, 8)));
 
 		static IEnumerator look(Player player, Facings direction){
 			player.Facing = direction;
@@ -236,12 +238,60 @@ public static class CutsceneTriggers{
 
 		Register("baddy_animation", (player, level, param) => baddyAnimation(GetStringParam(param, 0, "idle"), GetStringParam(param, 1, "start").Equals("play")));
 
+		// level controls
+		
 		static IEnumerator setFlag(Level l, string name, bool value){
 			l.Session.SetFlag(name, value);
 			yield return null;
 		}
 		
 		Register("set_flag", (player, level, param) => setFlag(level, GetStringParam(param, 0), !GetStringParam(param, 1, "true").Equals("false")));
+		
+		// player playback
+
+		static IEnumerator playback(Level l, Player p, string tutorial){
+			List<Player.ChaserState> playback = PlaybackData.Tutorials[tutorial];
+			float time = 0;
+			int idx = 0;
+			Vector2 initial = p.Position;
+			float lastDashStart = 0;
+			while(idx < playback.Count){
+				time += Engine.DeltaTime;
+				if(time >= playback[idx].TimeStamp){
+					idx++;
+					if(idx == playback.Count)
+						break;
+					var state = playback[idx];
+					p.Position = initial + state.Position;
+					p.Speed = Vector2.Zero;
+					p.Facing = state.Facing;
+					p.Sprite.Scale = state.Scale.Abs();
+					if(p.Sprite.CurrentAnimationID != state.Animation && state.Animation != null && p.Sprite.Has(state.Animation)){
+						p.Sprite.Play(state.Animation, true);
+						
+						// this is how vanilla PlayerPlayback does it /shrug
+						if(state.Animation.Equals("dash") && time - lastDashStart >= 0.15){
+							p.Play(state.Scale.X > 0 ? "event:/char/madeline/dash_red_right" : "event:/char/madeline/dash_red_left");
+							Celeste.Celeste.Freeze(0.05f);
+							lastDashStart = time;
+						}
+					}
+					p.DashDir = state.DashDirection;
+					p.OverrideHairColor = state.HairColor;
+				}
+
+				// back to normal
+				p.OverrideHairColor = null;
+				
+				yield return null;
+			}
+
+			p.OverrideHairColor = null;
+			p.ForceCameraUpdate = true;
+			yield return null;
+		}
+		
+		Register("run_playback", (player, level, param) => playback(level, player, GetStringParam(param, 0)));
 	}
 
 	public static void Unload(){
