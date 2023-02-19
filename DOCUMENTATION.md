@@ -94,6 +94,9 @@ Makes Badeline vanish in-place.
 #### `baddy_animation, anim = idle, mode = start`
 Makes Badeline play the specified animation. See `Sprites.xml` for the available animation. If `mode` is `play`, the cutscene waits for the animation to end; otherwise, the animation continues while other triggers and dialog occurs.
 
+#### `set_flag, flag = , value = true`
+Sets the flag with the given name to the given value (`true` or `false`).
+
 ### Parameter values
 
 #### Easers

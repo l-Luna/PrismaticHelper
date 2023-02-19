@@ -6,6 +6,7 @@ using Celeste;
 using Celeste.Mod.Meta;
 using Microsoft.Xna.Framework;
 using Monocle;
+using Level = Celeste.Level;
 
 namespace PrismaticHelper.Cutscenes;
 
@@ -235,6 +236,13 @@ public static class CutsceneTriggers{
 		}
 
 		Register("baddy_animation", (player, level, param) => baddyAnimation(GetStringParam(param, 0, "idle"), GetStringParam(param, 1, "start").Equals("play")));
+
+		static IEnumerator setFlag(Level l, string name, bool value){
+			l.Session.SetFlag(name, value);
+			yield return null;
+		}
+		
+		Register("set_flag", (player, level, param) => setFlag(level, GetStringParam(param, 0), !GetStringParam(param, 1, "true").Equals("false")));
 	}
 
 	public static void Unload(){
