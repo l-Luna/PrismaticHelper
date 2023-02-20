@@ -9,7 +9,7 @@ using MonoMod.ModInterop;
 
 namespace PrismaticHelper.Cutscenes;
 
-public class PlaybackCutscene{
+public static class PlaybackCutscene{
 	
 	public static IEnumerator Playback(Level l, Player p, string tutorial){
 		List<Player.ChaserState> playback = PlaybackData.Tutorials[tutorial];
