@@ -319,6 +319,11 @@ public static class CutsceneTriggers{
 		ParserHooks.Unload();
 	}
 
+	internal static void CleanupOnSkip(Level l, Player p){
+		baddy?.RemoveSelf();
+		p.OverrideHairColor = null;
+	}
+	
 	private static void Register(string triggerName, Func<Player, Level, List<string>, IEnumerator> effect){
 		Register(null, triggerName, effect);
 	}

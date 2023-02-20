@@ -90,19 +90,21 @@ public static class ParserHooks{
 
 	private static void Level_SkipCutscene(On.Celeste.Level.orig_SkipCutscene orig, Level self){
 		// Assume there is only one textbox entity, or that all textbox entities are being closed
+		var player = self.Tracker.GetEntity<Player>();
 		self.Entities.With<Textbox>(textbox => {
 			DynamicData boxData = new(textbox);
 			List<FancyText.Node> nodes = boxData.Get<FancyText.Text>("text").Nodes;
 			for(int i = 0; i < nodes.Count; i++){
 				FancyText.Node node = nodes[i];
 				if(node is PhRunOnSkip skip){
-					var cutscene = CutsceneTriggers.Get(skip.ID, self.Tracker.GetEntity<Player>(), self, skip.Params)();
+					var cutscene = CutsceneTriggers.Get(skip.ID, player, self, skip.Params)();
 					while(cutscene.MoveNext())
 						; // no delay between actions
 				}
 			}
 		});
 
+		CutsceneTriggers.CleanupOnSkip(self, player);
 		orig(self);
 	}
 
