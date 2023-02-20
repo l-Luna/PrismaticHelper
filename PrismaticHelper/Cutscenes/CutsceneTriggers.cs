@@ -6,6 +6,7 @@ using Celeste;
 using Celeste.Mod.Meta;
 using Microsoft.Xna.Framework;
 using Monocle;
+using MonoMod.ModInterop;
 
 namespace PrismaticHelper.Cutscenes;
 
@@ -386,5 +387,14 @@ public static class CutsceneTriggers{
 			"bounce_out" => Ease.BounceOut,
 			_ => Ease.CubeInOut
 		};
+	}
+	
+	// ModInterop exports
+
+	[ModExportName("PrismaticHelper.CutsceneTriggers")]
+	private static class ModExports{
+		public static void RegisterTrigger(string modName, string triggerName, Func<Player, Level, List<string>, IEnumerator> effect){
+			Register(modName, triggerName, effect);
+		}
 	}
 }
