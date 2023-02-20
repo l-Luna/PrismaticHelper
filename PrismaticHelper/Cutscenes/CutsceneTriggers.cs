@@ -18,6 +18,9 @@ public static class CutsceneTriggers{
 	public static void Load(){
 		
 		ParserHooks.LoadHooks();
+		
+		typeof(ModExports).ModInterop();
+		typeof(PlaybackCutscene.ModExports).ModInterop();
 
 		static IEnumerator nothing(){
 			yield return null;
