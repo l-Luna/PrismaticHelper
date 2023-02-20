@@ -104,7 +104,7 @@ Makes Badeline play the specified animation. See `Sprites.xml` for the available
 Sets the flag with the given name to the given value (`true` or `false`).
 
 #### `run_playback, recording =`
-Makes the player act out the given playback recording, starting from their current position. Collision with solids is disabled during playback, as the player follows the recording exactly. For technical reasons, dashes don't have full visual effects.
+Makes the player act out the given playback recording, starting from their current position. Collision with solids is disabled during playback, as the player follows the recording exactly.
 
 ### Parameter values
 
