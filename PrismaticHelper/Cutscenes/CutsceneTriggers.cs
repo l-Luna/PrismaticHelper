@@ -392,7 +392,7 @@ public static class CutsceneTriggers{
 	// ModInterop exports
 
 	[ModExportName("PrismaticHelper.CutsceneTriggers")]
-	private static class ModExports{
+	public static class ModExports{
 		public static void RegisterTrigger(string modName, string triggerName, Func<Player, Level, List<string>, IEnumerator> effect){
 			Register(modName, triggerName, effect);
 		}
