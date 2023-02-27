@@ -5,6 +5,11 @@
 ### Multi-lock door
 Multi-lock doors are doors that require multiple keys (at least one) to unlock. Keys are only consumed when all of the required keys are collected by the player, and the player is within 60 pixels of the door and has a line of sight to its centre.
 
+### Cassette Kevins
+These Kevins can be hit on their allowed sides like normal, but only begin to charge in their direction when the cassette blocks corresponding to their colour turn on. In the meantime, they can be hit any number of times to change their next direction.
+
+Note that you must include at least one cassette block in rooms with cassette Kevins for them to ever activate. Since Bright Sun (yellow) and Malachite (green) blocks are only given turns if they exist in the current room, you'll need to include those blocks if you want to use correspondingly coloured Kevins.
+
 ## Cutscenes
 Prismatic Helper allows you to use custom cutscene triggers in dialog, which allow you to include some fancy effects in your regular dialog. The available triggers are limited to what is defined by Prismatic Helper (or other mods that add triggers), and more complex cutscenes may require Lua Cutscenes or C# code.
 
@@ -57,6 +62,10 @@ Reattaches the camera to the player after panning the camera. This is done autom
 
 #### `wait_for_ground`
 Waits for the player to touch the ground before continuing the cutscene.
+
+#### `disable_skip`
+Disables the "Skip Cutscene" button for the duration of the cutscene. *Use sparingly*; it it strongly preferable to use `goto` to fix the player's position after a cutscene, and other on-skip nodes to ensure the player is in a valid state after skipping,
+rather than disabling it outright.
 
 #### `hide_entities, entityType = `
 Hides all entities of a given type in the room. These entities are invisible, but still have collision and are interactible. The `entityType` parameter should be the short name of the corresponding C# class, like `Booster`, `Player`, `LockBlock`, or `Bird`.
