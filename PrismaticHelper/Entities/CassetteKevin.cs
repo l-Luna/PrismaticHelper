@@ -1,5 +1,5 @@
-﻿using Celeste;
-using Celeste.Mod;
+﻿using System;
+using Celeste;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
@@ -11,6 +11,10 @@ namespace PrismaticHelper.Entities;
 [Tracked]
 public class CassetteKevin : CrushBlock{
 
+	private static readonly Color[] colors = {
+		Calc.HexToColor("49aaf0"), Calc.HexToColor("f049be"), Calc.HexToColor("fcdc3a"), Calc.HexToColor("38e04e"),
+	};
+	
 	private DashCollision origCollider;
 	private Vector2 pendingAttack;
 	private Player pendingAttacker;
@@ -25,6 +29,21 @@ public class CassetteKevin : CrushBlock{
 		myData = new DynamicData(this);
 
 		index = data.Int("index", 0);
+
+		var color = colors[index];
+		myData.Set("fill", mul(Calc.HexToColor("363636"), color));
+		
+		Remove(myData.Get<Sprite>("face"));
+		Sprite newFace = GFX.SpriteBank.Create(myData.Get<bool>("giant") ? "PrismaticHelper_giant_crushblock_face" : "PrismaticHelper_crushblock_face");
+		Add(newFace);
+		newFace.Play("idle");
+		newFace.OnLastFrame = f => {
+			if(f != "hit")
+				return;
+			newFace.Play(myData.Get<string>("nextFaceDirection"));
+		};
+		newFace.Color = color;
+		myData.Set("face", newFace);
 	}
 
 	private bool CanActivate0(Vector2 direction) => (bool)myData.Invoke("CanActivate", direction);
@@ -65,5 +84,9 @@ public class CassetteKevin : CrushBlock{
 			var kevin = (CassetteKevin)entity;
 			kevin.activated |= kevin.index == i; // kevins shouldn't be unactivated, they deactivate themselves appropriately
 		}
+	}
+
+	private static Color mul(Color l, Color r){
+		return new Color((l.R / 255f) * (r.R / 255f), (l.G / 255f) * (r.G / 255f), (l.B / 255f) * (r.B / 255f), (l.A / 255f) * (r.A / 255f));
 	}
 }
