@@ -83,6 +83,7 @@ public class CassetteKevin : CrushBlock{
 	}
 
 	private bool CanActivate0(Vector2 direction) => (bool)myData.Invoke("CanActivate", direction);
+	private void ActivateParticles0(Vector2 direction) => myData.Invoke("ActivateParticles", direction);
 	private void AddImage0(MTexture idle, int x, int y, int tx, int ty, int borderX = 0, int borderY = 0) => myData.Invoke("AddImage", idle, x, y, tx, ty, borderX, borderY);
 	
 	// note that you do need cassette blocks in the room to actually make these work
@@ -91,6 +92,7 @@ public class CassetteKevin : CrushBlock{
 		base.Update();
 		if(activated){
 			if(pendingAttack != Vector2.Zero){
+				IndicateLitSides(Vector2.Zero);
 				origCollider(pendingAttacker, pendingAttack);
 				pendingAttack = Vector2.Zero; pendingAttacker = null;
 			}
@@ -104,7 +106,30 @@ public class CassetteKevin : CrushBlock{
 			return DashCollisionResults.NormalCollision;
 		pendingAttack = direction;
 		pendingAttacker = player;
+		IndicateLitSides(-direction);
+		ActivateParticles0(-direction);
+		Audio.Play("event:/game/06_reflection/crushblock_rest_waypoint", Center);
 		return DashCollisionResults.Rebound;
+	}
+
+	private void IndicateLitSides(Vector2 hitSide){
+		IndicateSide(hitSide.X < 0, myData.Get<List<Image>>("activeLeftImages"));
+		IndicateSide(hitSide.X > 0, myData.Get<List<Image>>("activeRightImages"));
+		IndicateSide(hitSide.Y < 0, myData.Get<List<Image>>("activeTopImages"));
+		IndicateSide(hitSide.Y > 0, myData.Get<List<Image>>("activeBottomImages"));
+	}
+
+	private void IndicateSide(bool on, List<Image> sideImgs){
+		var color = colors[index];
+		foreach(var img in sideImgs){
+			if(on){
+				img.Visible = true;
+				img.Color = darken(color);
+			}else{
+				img.Visible = false;
+				img.Color = color;
+			}
+		}
 	}
 
 	public static void Load(){
@@ -125,5 +150,9 @@ public class CassetteKevin : CrushBlock{
 
 	private static Color mul(Color l, Color r){
 		return new Color((l.R / 255f) * (r.R / 255f), (l.G / 255f) * (r.G / 255f), (l.B / 255f) * (r.B / 255f), (l.A / 255f) * (r.A / 255f));
+	}
+
+	private static Color darken(Color c){
+		return new Color(c.R * (0.6f/255f), c.G * (0.6f/255f), c.B * (0.6f/255f), 1);
 	}
 }
