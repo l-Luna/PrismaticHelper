@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Celeste;
+using Celeste.Mod;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 using MonoMod.Utils;
 
@@ -42,11 +46,48 @@ public class CassetteKevin : CrushBlock{
 				return;
 			newFace.Play(myData.Get<string>("nextFaceDirection"));
 		};
-		newFace.Color = color;
 		myData.Set("face", newFace);
+
+		// easier to just readd borders
+		foreach(var c in Components.ToArray())
+			if(c is Image i && i != newFace)
+				Remove(i);
+		
+		List<MTexture> atlasSubtextures = GFX.Game.GetAtlasSubtextures("PrismaticHelper/cassetteKevin/block");
+		MTexture idle;
+		switch(data.Attr("axes")){
+			case "both":
+				idle = atlasSubtextures[3]; break;
+			case "horizontal":
+				idle = atlasSubtextures[1]; break;
+			case "vertical":
+				idle = atlasSubtextures[2]; break;
+			default:
+				idle = atlasSubtextures[0]; break;
+		}
+		
+		var x1 = (int) (Width / 8.0) - 1;
+		var y1 = (int) (Height / 8.0) - 1;
+		AddImage0(idle, 0, 0, 0, 0, -1, -1);
+		AddImage0(idle, x1, 0, 3, 0, 1, -1);
+		AddImage0(idle, 0, y1, 0, 3, -1, 1);
+		AddImage0(idle, x1, y1, 3, 3, 1, 1);
+		for(int x2 = 1; x2 < x1; ++x2){
+			AddImage0(idle, x2, 0, Calc.Random.Choose(1, 2), 0, borderY: -1);
+			AddImage0(idle, x2, y1, Calc.Random.Choose(1, 2), 3, borderY: 1);
+		}
+		for(int y2 = 1; y2 < y1; ++y2){
+			AddImage0(idle, 0, y2, 0, Calc.Random.Choose(1, 2), -1);
+			AddImage0(idle, x1, y2, 3, Calc.Random.Choose(1, 2), 1);
+		}
+		
+		foreach(var c in Components)
+			if(c is Image i)
+				i.Color = color;
 	}
 
 	private bool CanActivate0(Vector2 direction) => (bool)myData.Invoke("CanActivate", direction);
+	private void AddImage0(MTexture idle, int x, int y, int tx, int ty, int borderX = 0, int borderY = 0) => myData.Invoke("AddImage", idle, x, y, tx, ty, borderX, borderY);
 	
 	// note that you do need cassette blocks in the room to actually make these work
 
