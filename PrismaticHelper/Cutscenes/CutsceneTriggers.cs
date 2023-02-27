@@ -7,6 +7,7 @@ using Celeste.Mod.Meta;
 using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.ModInterop;
+using MonoMod.Utils;
 
 namespace PrismaticHelper.Cutscenes;
 
@@ -124,6 +125,13 @@ public static class CutsceneTriggers{
 		}
 
 		Register("wait_for_ground", (player, level, param) => waitForGround(player));
+
+		static IEnumerator disableSkip(Level l){
+			new DynamicData(l).Set("PrismaticHelper:force_unskippable", true);
+			yield return null;
+		}
+		
+		Register("disable_skip", (player, level, param) => disableSkip(level));
 
 		static IEnumerator hideEntitiesByName(Level l, string entityName){
 			l.Entities
@@ -261,6 +269,7 @@ public static class CutsceneTriggers{
 	}
 
 	internal static void CleanupOnSkip(Level l, Player p){
+		// TODO: only run if there was actually any PH triggers
 		baddy?.RemoveSelf();
 		p.OverrideHairColor = null;
 	}

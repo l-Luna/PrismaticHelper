@@ -53,12 +53,16 @@ public static class ParserHooks{
 		IL.Celeste.FancyText.Parse += ParsePhTriggers;
 		On.Celeste.Textbox.ctor_string_Language_Func1Array += AddPhEvents;
 		On.Celeste.Level.SkipCutscene += Level_SkipCutscene;
+		On.Celeste.Level.Pause += LevelOnPause;
+		On.Celeste.Textbox.Removed += TextboxOnRemoved;
 	}
 
 	public static void Unload(){
 		IL.Celeste.FancyText.Parse -= ParsePhTriggers;
 		On.Celeste.Textbox.ctor_string_Language_Func1Array -= AddPhEvents;
 		On.Celeste.Level.SkipCutscene -= Level_SkipCutscene;
+		On.Celeste.Level.Pause -= LevelOnPause;
+		On.Celeste.Textbox.Removed -= TextboxOnRemoved;
 	}
 
 	private static void AddPhEvents(On.Celeste.Textbox.orig_ctor_string_Language_Func1Array orig, Textbox self, string dialog, Language language, Func<System.Collections.IEnumerator>[] events){
@@ -123,6 +127,22 @@ public static class ParserHooks{
 					nodes.Add(new PhRunOnSkip(vals));
 			});
 		}
+	}
+	
+	private static void LevelOnPause(On.Celeste.Level.orig_Pause orig, Level self, int startindex, bool minimal, bool quickreset){
+		bool wasInCutscene = self.InCutscene, couldRetry = self.CanRetry;
+		if(new DynamicData(self).TryGet("PrismaticHelper:force_unskippable", out bool? noSkip) && noSkip == true){
+			self.InCutscene = false;
+			self.CanRetry = false;
+		}
+		orig(self, startindex, minimal, quickreset);
+		self.InCutscene = wasInCutscene;
+		self.CanRetry = couldRetry;
+	}
+	
+	private static void TextboxOnRemoved(On.Celeste.Textbox.orig_Removed orig, Textbox self, Scene scene){
+		new DynamicData(scene).Set("PrismaticHelper:force_unskippable", false);
+		orig(self, scene);
 	}
 
 	public static System.Collections.IEnumerator WrapCoroutine(System.Collections.IEnumerator orig){
