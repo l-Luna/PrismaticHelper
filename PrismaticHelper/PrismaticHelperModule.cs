@@ -9,11 +9,13 @@ namespace PrismaticHelper {
 		public override void Load() {
 			Cutscenes.CutsceneTriggers.Load();
 			StylegroundsPanelRenderer.Load();
+			CassetteKevin.Load();
 		}
 
 		public override void Unload() {
 			Cutscenes.CutsceneTriggers.Unload();
 			StylegroundsPanelRenderer.Unload();
+			CassetteKevin.Unload();
 		}
 
 		public static void LogInfo(string message) {
