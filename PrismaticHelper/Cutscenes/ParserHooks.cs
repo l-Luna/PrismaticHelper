@@ -257,7 +257,7 @@ public static class ParserHooks{
 			exactPos.X -= padding;
 			width += padding * 2;
 			
-			Draw.Rect(exactPos, width * closing.Fade, height, highlightColour * closing.Fade * .5f);
+			Draw.Rect(exactPos, width * closing.Fade, height, highlightColour * closing.Fade * .75f);
 		}
 	}
 
