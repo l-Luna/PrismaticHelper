@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Celeste;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
@@ -147,10 +148,8 @@ public class CassetteKevin : CrushBlock{
 	
 	private static void CsActive(On.Celeste.CassetteBlockManager.orig_SetActiveIndex orig, CassetteBlockManager self, int i){
 		orig(self, i);
-		foreach(var entity in self.Scene.Tracker.GetEntities<CassetteKevin>()){
-			var kevin = (CassetteKevin)entity;
+		foreach(var kevin in self.Scene.Tracker.GetEntities<CassetteKevin>().Cast<CassetteKevin>())
 			kevin.activated |= kevin.index == i; // kevins shouldn't be unactivated, they deactivate themselves appropriately
-		}
 	}
 
 	private static Color mul(Color l, Color r){
