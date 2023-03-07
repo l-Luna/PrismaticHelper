@@ -19,6 +19,8 @@ public class CassetteKevin : CrushBlock{
 	private Vector2 pendingAttack;
 	private Player pendingAttacker;
 	private readonly DynamicData myData;
+
+	private readonly Color color;
 	
 	public int index;
 	public bool activated;
@@ -30,7 +32,11 @@ public class CassetteKevin : CrushBlock{
 
 		index = data.Int("index", 0);
 
-		var color = colors[index];
+		color = index < colors.Length ? colors[index] : colors[0];
+		var customColor = data.Attr("colour");
+		if(!string.IsNullOrWhiteSpace(customColor) && customColor.Length == 6)
+			color = Calc.HexToColor(customColor);
+
 		myData.Set("fill", mul(Calc.HexToColor("363636"), color));
 		
 		Remove(myData.Get<Sprite>("face"));
@@ -120,7 +126,6 @@ public class CassetteKevin : CrushBlock{
 	}
 
 	private void IndicateSide(bool on, List<Image> sideImgs){
-		var color = colors[index];
 		foreach(var img in sideImgs){
 			if(on){
 				img.Visible = true;

@@ -3,6 +3,7 @@
 local drawableNinePatch = require("structs.drawable_nine_patch")
 local drawableRectangle = require("structs.drawable_rectangle")
 local drawableSprite = require("structs.drawable_sprite")
+local utils = require("utils")
 
 local kevin = {}
 
@@ -42,6 +43,9 @@ kevin.fieldInformation = {
         fieldType = "integer",
         options = colorNames,
         editable = false
+    },
+    colour = {
+        fieldType = "color"
     }
 }
 kevin.placements = {}
@@ -54,7 +58,8 @@ for _, axis in pairs(axesOptions) do
             height = 24,
             axes = axis,
             chillout = false,
-            index = 0
+            index = 0,
+            colour = "00000000"
         }
     })
 end
@@ -84,6 +89,13 @@ function kevin.sprite(room, entity)
     
     local index = entity.index or 0
     local color = colors[index + 1] or colors[1]
+
+    if entity.colour and string.len(entity.colour) == 6 then
+        success, r, g, b, a = utils.parseHexColor(entity.colour)
+        if success then
+            color = { r, g, b, a }
+        end
+    end
 
     local giant = height >= 48 and width >= 48 and chillout
     local faceTexture = giant and giantFaceTexture or smallFaceTexture
