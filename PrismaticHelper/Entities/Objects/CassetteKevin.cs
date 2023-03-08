@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Utils;
 
-namespace PrismaticHelper.Entities;
+namespace PrismaticHelper.Entities.Objects;
 
 [CustomEntity("PrismaticHelper/CassetteKevin")]
 [Tracked]

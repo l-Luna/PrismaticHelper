@@ -4,7 +4,7 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 
-namespace PrismaticHelper.Entities;
+namespace PrismaticHelper.Entities.Objects;
 
 [CustomEntity("PrismaticHelper/CustomPowerSourceNumber")]
 public class CustomPowerSourceNumber : Entity{
