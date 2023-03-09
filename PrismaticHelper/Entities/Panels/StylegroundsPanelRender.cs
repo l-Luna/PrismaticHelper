@@ -1,26 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 using Celeste;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 
-namespace PrismaticHelper.Entities;
+namespace PrismaticHelper.Entities.Panels;
 
 // third time's the charm
 public static class StylegroundsPanelRenderer{
-	
-	private static VirtualRenderTarget MaskRenderTarget;
-	private static VirtualRenderTarget StylegroundsRenderTarget;
-
-	private static readonly BlendState alphaMaskBlendState = new(){
-		ColorSourceBlend = Blend.Zero,
-		ColorBlendFunction = BlendFunction.Add,
-		ColorDestinationBlend = Blend.SourceColor,
-		AlphaSourceBlend = Blend.Zero,
-		AlphaBlendFunction = BlendFunction.Add,
-		AlphaDestinationBlend = Blend.SourceColor
-	};
 
 	public static void UpdateStylegroundPanels(bool fg, Scene level, BackdropRenderer renderer){
 		List<IGrouping<string, StylegroundsPanel>> toUpdate = level.Entities
@@ -48,10 +36,6 @@ public static class StylegroundsPanelRenderer{
 	}
 
 	public static void RenderStylegroundsPanels(bool fg, Scene level, BackdropRenderer renderer){
-		if(MaskRenderTarget == null)
-			MaskRenderTarget = VirtualContent.CreateRenderTarget("prismatic-helper-stylegrounds-mask", 320, 180);
-		if(StylegroundsRenderTarget == null)
-			StylegroundsRenderTarget = VirtualContent.CreateRenderTarget("prismatic-helper-stylegrounds-target", 320, 180);
 
 		Camera camera = (level as Level).Camera;
 		// find all of the panels we want to fill
@@ -66,7 +50,7 @@ public static class StylegroundsPanelRenderer{
 			var room = item.Key;
 			Level lvl = level as Level;
 			// get our styleground mask
-			Engine.Graphics.GraphicsDevice.SetRenderTarget(MaskRenderTarget);
+			Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.MaskRenderTarget);
 			Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 			Draw.SpriteBatch.Begin();
 			foreach(var panel in item)
@@ -75,17 +59,17 @@ public static class StylegroundsPanelRenderer{
 					panel.Width, panel.Height, panel.Tint * panel.Opacity);
 			GameplayRenderer.End();
 			// render some styleground
-			Engine.Graphics.GraphicsDevice.SetRenderTarget(StylegroundsRenderTarget);
+			Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 			Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 			RenderStylegroundsForRoom(room, renderer, lvl);
 			// apply the mask to the styleground
-			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, alphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
-			Draw.SpriteBatch.Draw(MaskRenderTarget, Vector2.Zero, Color.White);
+			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, Stencils.AlphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
+			Draw.SpriteBatch.Draw(Stencils.MaskRenderTarget, Vector2.Zero, Color.White);
 			Draw.SpriteBatch.End();
 			// render the styleground
 			Engine.Graphics.GraphicsDevice.SetRenderTarget(GameplayBuffers.Level);
 			GameplayRenderer.Begin();
-			Draw.SpriteBatch.Draw(StylegroundsRenderTarget, camera.Position, Color.White);
+			Draw.SpriteBatch.Draw(Stencils.ObjectRenderTarget, camera.Position, Color.White);
 			GameplayRenderer.End();
 		}
 	}
@@ -121,22 +105,14 @@ public static class StylegroundsPanelRenderer{
 			Draw.SpriteBatch.End();
 	}
 
-	public static void Cleanup(){
-		MaskRenderTarget?.Dispose();
-		StylegroundsRenderTarget?.Dispose();
-		MaskRenderTarget = StylegroundsRenderTarget = null;
-	}
-
 	public static void Load(){
 		On.Celeste.BackdropRenderer.Render += OnBackdropRendererRender;
 		On.Celeste.BackdropRenderer.Update += OnBackdropRendererUpdate;
-		On.Celeste.BackdropRenderer.Ended += OnBackdropRendererEnded;
 	}
 
 	public static void Unload(){
 		On.Celeste.BackdropRenderer.Render -= OnBackdropRendererRender;
 		On.Celeste.BackdropRenderer.Update -= OnBackdropRendererUpdate;
-		On.Celeste.BackdropRenderer.Ended -= OnBackdropRendererEnded;
 	}
 
 	public static void OnBackdropRendererRender(On.Celeste.BackdropRenderer.orig_Render orig, BackdropRenderer self, Scene scene){
@@ -155,11 +131,6 @@ public static class StylegroundsPanelRenderer{
 				UpdateStylegroundPanels(true, level, self);
 			else if(self == level.Background)
 				UpdateStylegroundPanels(false, level, self);
-	}
-
-	public static void OnBackdropRendererEnded(On.Celeste.BackdropRenderer.orig_Ended orig, BackdropRenderer self, Scene scene){
-		orig(self, scene);
-		Cleanup();
 	}
 
 	private static bool IsVisible(Backdrop styleground, Level level, string room, bool ignoreFV = false){

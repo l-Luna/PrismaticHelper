@@ -33,3 +33,10 @@ entities.PrismaticHelper/CassetteKevin.placements.name.horizontal=Cassette Kevin
 entities.PrismaticHelper/CassetteKevin.attributes.description.axes=Determines which sides of the Kevin block are hittable.
 entities.PrismaticHelper/CassetteKevin.attributes.description.chillout=Whether the block should have the large face and get tired after being hit.
 entities.PrismaticHelper/CassetteKevin.attributes.description.index=Which colour's beat the Cassette Kevin should activate on. (Blue/Rose/Bright Sun/Malachite)
+
+# Windowpane
+entities.PrismaticHelper/Windowpane.placements.name.windowpane=Windowpane
+entities.PrismaticHelper/Windowpane.attributes.description.room=The name of the room visible through this windowpane.
+
+# Observer
+entities.PrismaticHelper/Observer.placements.name.observer=Observer

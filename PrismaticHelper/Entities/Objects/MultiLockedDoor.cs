@@ -7,7 +7,7 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 
-namespace PrismaticHelper.Entities;
+namespace PrismaticHelper.Entities.Objects;
 
 [CustomEntity("PrismaticHelper/MultiLockedDoor")]
 internal class MultiLockedDoor : Solid{

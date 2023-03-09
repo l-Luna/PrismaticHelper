@@ -2,6 +2,7 @@
 
 using PrismaticHelper.Entities;
 using PrismaticHelper.Entities.Objects;
+using PrismaticHelper.Entities.Panels;
 
 namespace PrismaticHelper;
 
@@ -17,6 +18,8 @@ public class PrismaticHelperModule : EverestModule {
 		Cutscenes.CutsceneTriggers.Unload();
 		StylegroundsPanelRenderer.Unload();
 		CassetteKevin.Unload();
+		
+		Stencils.Unload();
 	}
 
 	public static void LogInfo(string message) {

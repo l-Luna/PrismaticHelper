@@ -11,7 +11,7 @@ stylegroundsPanel.placements = {
         foreground = false,
         scrollX = 1,
         scrollY = 1,
-        opcacity = 1,
+        opacity = 1,
         room = "a-01",
         tint = "#ffffff"
     }
