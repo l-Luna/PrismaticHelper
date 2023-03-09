@@ -36,7 +36,7 @@ public class WindowpaneManager : SceneWrappingEntity<Level>{
 		LevelLoader fakeLevelLoader = new LevelLoader(fakeSession, target.DefaultSpawn);
 		new DynamicData(fakeLevelLoader).Invoke("LoadingThread_Safe");
 		Level fake = fakeLevelLoader.Level;
-		fake.LoadLevel(Player.IntroTypes.None);
+		fake.LoadLevel(Player.IntroTypes.None, true);
 		fake.Entities.UpdateLists();
 		//fake.Update();
 
@@ -76,21 +76,22 @@ public class WindowpaneManager : SceneWrappingEntity<Level>{
 			.Cast<Windowpane>()
 			.Where(x => x.Room == RoomName);
 		
+		Draw.SpriteBatch.End();
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.MaskRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 		Draw.SpriteBatch.Begin();
 		foreach(var panel in myPanes)
 			Draw.Rect(panel.X - camera.Left, panel.Y - camera.Top,
 				panel.Width, panel.Height, Color.White);
-		GameplayRenderer.End();
+		Draw.SpriteBatch.End();
 		
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
-		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
+		//Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 		Renderer.BeforeRender(WrappedScene);
 		Renderer.Render(WrappedScene);
 		Renderer.AfterRender(WrappedScene);
-		Draw.SpriteBatch.End();
+		//Draw.SpriteBatch.End();
 		
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, Stencils.AlphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
 		Draw.SpriteBatch.Draw(Stencils.MaskRenderTarget, Vector2.Zero, Color.White);
@@ -99,6 +100,7 @@ public class WindowpaneManager : SceneWrappingEntity<Level>{
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(GameplayBuffers.Level);
 		GameplayRenderer.Begin();
 		Draw.SpriteBatch.Draw(Stencils.ObjectRenderTarget, camera.Position, Color.White);
-		GameplayRenderer.End();
+		// GameplayRenderer.End();
+		
 	}
 }
