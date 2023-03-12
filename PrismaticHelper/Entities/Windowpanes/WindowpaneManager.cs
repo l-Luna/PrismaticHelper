@@ -68,7 +68,6 @@ public class WindowpaneManager : Entity{
 				e.SceneEnd(level);
 			level.Background.Ended(level);
 			level.Foreground.Ended(level);
-			Windowpanes.WpRemoved(Scene);
 		}
 	}
 
