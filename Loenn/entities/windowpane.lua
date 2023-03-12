@@ -12,4 +12,4 @@ windowpane.placements = {
     --  }
 }
 
-return windowpane
+return nil --windowpane
