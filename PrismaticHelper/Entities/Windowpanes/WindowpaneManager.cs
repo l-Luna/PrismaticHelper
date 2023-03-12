@@ -7,15 +7,16 @@ using MonoMod.Utils;
 
 namespace PrismaticHelper.Entities.Windowpanes;
 
-[Tracked]
 public class WindowpaneManager : Entity{
-
-	private readonly string RoomName;
+	
+	public static VirtualRenderTarget Displacement2;
+	
+	private readonly string RoomName; 
 	private readonly Level level;
 
 	private bool active = true;
 	
-	public static WindowpaneManager ofRoom(string roomName, Scene owner){
+	public static WindowpaneManager ofRoom(string roomName, Scene owner, bool bg){
 		if(owner is not Level l)
 			return null;
 		
@@ -42,21 +43,29 @@ public class WindowpaneManager : Entity{
 			Audio.SetCamera(l.Camera);
 			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
 			
-			return new WindowpaneManager(roomName, fake);
+			return new WindowpaneManager(roomName, fake, bg);
 		}finally{
 			Windowpanes.IgnoreSessionStarts = false;
 		}
 	}
 
-	private WindowpaneManager(string roomName, Level scene){
+	public static void Unload(){
+		Displacement2?.Dispose();
+	}
+
+	private WindowpaneManager(string roomName, Level scene, bool bg){
 		RoomName = roomName;
 		level = scene;
+		
+		Depth = bg ? 8500 : Depths.FGDecals + 1;
 	}
 
 	private void SetupLevel(){
 		if(level != null)
 			foreach(var e in level.Entities)
 				e.SceneBegin(level);
+		
+		Displacement2 ??= VirtualContent.CreateRenderTarget("PrismaticHelper:displacement2", 320, 180);
 	}
 
 	private void TeardownLevel(){
@@ -99,7 +108,7 @@ public class WindowpaneManager : Entity{
 		
 		Camera camera = SceneAs<Level>().Camera;
 		// i Love stencils
-		var myPanes = SceneAs<Level>().Entities.FindAll<Windowpane>()
+		var myPanes = SceneAs<Level>().Tracker.GetEntities<Windowpane>().Cast<Windowpane>()
 			.Where(x => x.Room == RoomName);
 		
 		Draw.SpriteBatch.End();
@@ -115,13 +124,16 @@ public class WindowpaneManager : Entity{
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 		level.BeforeRender();
+		
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
-		var oldGm = GameplayBuffers.Gameplay;
-		GameplayBuffers.Gameplay = Stencils.ObjectRenderTarget;
+		VirtualRenderTarget oldGm = GameplayBuffers.Gameplay, oldDisp = GameplayBuffers.Displacement;
+		GameplayBuffers.Gameplay = Stencils.ObjectRenderTarget; GameplayBuffers.Displacement = Displacement2;
+		
 		level.Background.Render(level);
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, level.GameplayRenderer.Camera.Matrix);
 		level.Entities.RenderExcept((int) Tags.HUD | (int) TagsExt.SubHUD);
-		GameplayBuffers.Gameplay = oldGm;
+		
+		GameplayBuffers.Gameplay = oldGm; GameplayBuffers.Displacement = oldDisp;
 		GameplayRenderer.End();
 		level.Lighting.Render(level);
 		level.Foreground.Render(level);
