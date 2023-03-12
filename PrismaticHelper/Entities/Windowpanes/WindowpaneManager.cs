@@ -32,7 +32,11 @@ public class WindowpaneManager : Entity{
 			Session fakeSession = new Session(l.Session.Area){
 				Level = target.Name
 			};
+
+			string oldErr = LevelEnter.ErrorMessage;
+			LevelEnter.ErrorMessage = "";
 			LevelLoader fakeLevelLoader = new LevelLoader(fakeSession, target.DefaultSpawn);
+			LevelEnter.ErrorMessage = oldErr;
 			new DynamicData(fakeLevelLoader).Invoke("LoadingThread_Safe");
 			Level fake = fakeLevelLoader.Level;
 			fake.LoadLevel(Player.IntroTypes.None, true);
@@ -40,6 +44,7 @@ public class WindowpaneManager : Entity{
 			
 			Audio.SetCamera(((Level)owner).Camera);
 			GFX.FGAutotiler = oldTiler;
+			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
 			
 			return new WindowpaneManager(roomName, fake);
 		}finally{
@@ -53,12 +58,13 @@ public class WindowpaneManager : Entity{
 	}
 
 	private void SetupLevel(){
-		foreach(var e in level.Entities)
-			e.SceneBegin(level);
+		if(level != null)
+			foreach(var e in level.Entities)
+				e.SceneBegin(level);
 	}
 
 	private void TeardownLevel(){
-		if(active){
+		if(active && level != null){
 			active = false;
 			DynamicData levelData = DynamicData.For(level);
 			levelData.Invoke("set_Focused", false);
@@ -81,20 +87,20 @@ public class WindowpaneManager : Entity{
 	}
 
 	public override void Removed(Scene scene){
-		level.UnloadLevel();
+		level?.UnloadLevel();
 		TeardownLevel();
 		base.Removed(scene);
 	}
 
 	public override void SceneEnd(Scene scene){
-		level.UnloadLevel();
+		level?.UnloadLevel();
 		TeardownLevel();
 		base.SceneEnd(scene);
 	}
 
 	public override void Render(){
 		base.Render();
-		return;
+		//return;
 		
 		Camera camera = SceneAs<Level>().Camera;
 		// i Love stencils
