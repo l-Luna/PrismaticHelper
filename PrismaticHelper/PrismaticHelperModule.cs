@@ -3,6 +3,7 @@
 using PrismaticHelper.Entities;
 using PrismaticHelper.Entities.Objects;
 using PrismaticHelper.Entities.Panels;
+using PrismaticHelper.Entities.Windowpanes;
 
 namespace PrismaticHelper;
 
@@ -12,12 +13,14 @@ public class PrismaticHelperModule : EverestModule {
 		Cutscenes.CutsceneTriggers.Load();
 		StylegroundsPanelRenderer.Load();
 		CassetteKevin.Load();
+		Windowpanes.Load();
 	}
 
 	public override void Unload() {
 		Cutscenes.CutsceneTriggers.Unload();
 		StylegroundsPanelRenderer.Unload();
 		CassetteKevin.Unload();
+		Windowpanes.Unload();
 		
 		Stencils.Unload();
 	}

@@ -22,6 +22,6 @@ public class Windowpane : Entity{
 
 	public override void Awake(Scene scene){
 		base.Awake(scene);
-		Windowpanes.Awake(scene);
+		Windowpanes.WpAwake(scene);
 	}
 }
