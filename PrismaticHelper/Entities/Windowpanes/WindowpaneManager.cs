@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Celeste;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,8 +25,6 @@ public class WindowpaneManager : Entity{
 
 		try{
 			Windowpanes.IgnoreSessionStarts = true;
-
-			var oldTiler = GFX.FGAutotiler;
 			
 			Session fakeSession = new Session(l.Session.Area){
 				Level = target.Name
@@ -42,8 +39,7 @@ public class WindowpaneManager : Entity{
 			fake.LoadLevel(Player.IntroTypes.None, true);
 			fake.Update();
 			
-			Audio.SetCamera(((Level)owner).Camera);
-			GFX.FGAutotiler = oldTiler;
+			Audio.SetCamera(l.Camera);
 			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
 			
 			return new WindowpaneManager(roomName, fake);
@@ -78,7 +74,7 @@ public class WindowpaneManager : Entity{
 
 	public override void Update(){
 		base.Update();
-		//level.Update();
+		level?.Update();
 	}
 
 	public override void Added(Scene scene){
@@ -104,11 +100,11 @@ public class WindowpaneManager : Entity{
 		
 		Camera camera = SceneAs<Level>().Camera;
 		// i Love stencils
-		var myPanes = SceneAs<Level>().Tracker.GetEntities<Windowpane>()
-			.Cast<Windowpane>()
+		var myPanes = SceneAs<Level>().Entities.FindAll<Windowpane>()
 			.Where(x => x.Room == RoomName);
 		
 		Draw.SpriteBatch.End();
+		
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.MaskRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 		Draw.SpriteBatch.Begin();
@@ -117,21 +113,28 @@ public class WindowpaneManager : Entity{
 				panel.Width, panel.Height, Color.White);
 		Draw.SpriteBatch.End();
 		
+		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
-		Windowpanes.CurrentSubstitute = Stencils.ObjectRenderTarget;
 		level.BeforeRender();
-		level.Render();
+		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
+		var oldGm = GameplayBuffers.Gameplay;
+		GameplayBuffers.Gameplay = Stencils.ObjectRenderTarget;
+		level.Background.Render(level);
+		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, level.GameplayRenderer.Camera.Matrix);
+		level.Entities.RenderExcept((int) Tags.HUD | (int) TagsExt.SubHUD);
+		GameplayBuffers.Gameplay = oldGm;
+		GameplayRenderer.End();
+		level.Lighting.Render(level);
+		level.Foreground.Render(level);
 		level.AfterRender();
-		Windowpanes.CurrentSubstitute = null;
 		
+		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, Stencils.AlphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
 		Draw.SpriteBatch.Draw(Stencils.MaskRenderTarget, Vector2.Zero, Color.White);
 		Draw.SpriteBatch.End();
 		
-		Engine.Graphics.GraphicsDevice.SetRenderTarget(GameplayBuffers.Level);
+		Engine.Graphics.GraphicsDevice.SetRenderTarget(GameplayBuffers.Gameplay);
 		GameplayRenderer.Begin();
 		Draw.SpriteBatch.Draw(Stencils.ObjectRenderTarget, camera.Position, Color.White);
-		// GameplayRenderer.End();
-		
 	}
 }

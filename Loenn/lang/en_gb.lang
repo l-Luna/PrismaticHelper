@@ -38,9 +38,6 @@ entities.PrismaticHelper/CassetteKevin.attributes.description.index=Which colour
 entities.PrismaticHelper/Windowpane.placements.name.windowpane=Windowpane
 entities.PrismaticHelper/Windowpane.attributes.description.room=The name of the room visible through this windowpane.
 
-# Observer
-entities.PrismaticHelper/Observer.placements.name.observer=Observer
-
 # Attached Watchtower
 entities.PrismaticHelper/AttachedWatchtower.placements.name.attached_watchtower=Attached Watchtower
 entities.PrismaticHelper/AttachedWatchtower.attributes.description.summit=Whether the watchtower should zoom on the final node or not. Requires nodes to function, otherwise game will crash.
