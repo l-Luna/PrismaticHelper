@@ -29,9 +29,7 @@ public class AttachedWatchtower : Lookout{
 		base.Awake(scene);
 		if(mover.Platform is CassetteBlock cb){
 			VisibleWhenDisabled = true;
-			Color cColour = DynamicData.For(cb).Get<Color>("color");
-			// TODO: move to a separate utility class
-			ColourWhenDisabled = CassetteKevin.mul(Calc.HexToColor("667da5"), cColour);
+			ColourWhenDisabled = Colours.mul(Calc.HexToColor("667da5"), DynamicData.For(cb).Get<Color>("color"));
 		}
 	}
 

@@ -38,7 +38,7 @@ public class CassetteKevin : CrushBlock{
 		if(!string.IsNullOrWhiteSpace(customColor) && customColor.Length == 6)
 			color = Calc.HexToColor(customColor);
 
-		myData.Set("fill", mul(Calc.HexToColor("363636"), color));
+		myData.Set("fill", Colours.mul(Calc.HexToColor("363636"), color));
 		
 		Remove(myData.Get<Sprite>("face"));
 		Sprite newFace = GFX.SpriteBank.Create(myData.Get<bool>("giant") ? "PrismaticHelper_giant_crushblock_face" : "PrismaticHelper_crushblock_face");
@@ -130,7 +130,7 @@ public class CassetteKevin : CrushBlock{
 		foreach(var img in sideImgs){
 			if(on){
 				img.Visible = true;
-				img.Color = darken(color);
+				img.Color = Colours.darken(color);
 			}else{
 				img.Visible = false;
 				img.Color = color;
@@ -150,13 +150,5 @@ public class CassetteKevin : CrushBlock{
 		orig(self, i);
 		foreach(var kevin in self.Scene.Tracker.GetEntities<CassetteKevin>().Cast<CassetteKevin>())
 			kevin.activated |= kevin.index == i; // kevins shouldn't be unactivated, they deactivate themselves appropriately
-	}
-
-	public static Color mul(Color l, Color r){
-		return new Color((l.R / 255f) * (r.R / 255f), (l.G / 255f) * (r.G / 255f), (l.B / 255f) * (r.B / 255f), (l.A / 255f) * (r.A / 255f));
-	}
-
-	public static Color darken(Color c){
-		return new Color(c.R * (0.6f/255f), c.G * (0.6f/255f), c.B * (0.6f/255f), 1);
 	}
 }
