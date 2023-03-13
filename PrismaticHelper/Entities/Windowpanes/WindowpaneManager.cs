@@ -40,6 +40,10 @@ public class WindowpaneManager : Entity{
 			fake.LoadLevel(Player.IntroTypes.None, true);
 			fake.Update();
 			
+			foreach(var player in fake.Entities.FindAll<Player>()){
+				player.Active = false;
+			}
+			
 			Audio.SetCamera(l.Camera);
 			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
 			
