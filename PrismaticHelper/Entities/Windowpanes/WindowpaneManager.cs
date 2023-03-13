@@ -40,10 +40,9 @@ public class WindowpaneManager : Entity{
 			fake.LoadLevel(Player.IntroTypes.None, true);
 			fake.Update();
 			
-			foreach(var player in fake.Entities.FindAll<Player>()){
+			foreach(var player in fake.Entities.FindAll<Player>())
 				player.Active = false;
-			}
-			
+
 			Audio.SetCamera(l.Camera);
 			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
 			
@@ -108,7 +107,6 @@ public class WindowpaneManager : Entity{
 
 	public override void Render(){
 		base.Render();
-		//return;
 		
 		Camera camera = SceneAs<Level>().Camera;
 		// i Love stencils
@@ -137,11 +135,12 @@ public class WindowpaneManager : Entity{
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, level.GameplayRenderer.Camera.Matrix);
 		level.Entities.RenderExcept((int) Tags.HUD | (int) TagsExt.SubHUD);
 		
-		GameplayBuffers.Gameplay = oldGm; GameplayBuffers.Displacement = oldDisp;
 		GameplayRenderer.End();
 		level.Lighting.Render(level);
+		level.Displacement.Render(level);
 		level.Foreground.Render(level);
 		level.AfterRender();
+		GameplayBuffers.Gameplay = oldGm; GameplayBuffers.Displacement = oldDisp;
 		
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, Stencils.AlphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
