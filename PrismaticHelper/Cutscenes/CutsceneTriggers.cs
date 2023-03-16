@@ -56,6 +56,15 @@ public static class CutsceneTriggers{
 
 		Register("goto", (player, level, param) => @goto(player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0)));
 
+		static IEnumerator gotoRoom(Player player, Level l, string roomName, string intro){
+			l.EndCutscene();
+			l.OnEndOfFrame += () => l.TeleportTo(player, roomName, GetIntroByName(intro));
+			DynamicData.For(l).Set("PrismaticHelper:force_unskippable", false);
+			yield return null;
+		}
+		
+		Register("goto_room", (player, level, param) => gotoRoom(player, level, GetStringParam(param, 0), GetStringParam(param, 1, "None")));
+
 		static IEnumerator cameraZoomBack(Level l, float duration){
 			return l.ZoomBack(duration);
 		}
@@ -127,7 +136,7 @@ public static class CutsceneTriggers{
 		Register("wait_for_ground", (player, level, param) => waitForGround(player));
 
 		static IEnumerator disableSkip(Level l){
-			new DynamicData(l).Set("PrismaticHelper:force_unskippable", true);
+			DynamicData.For(l).Set("PrismaticHelper:force_unskippable", true);
 			yield return null;
 		}
 		
@@ -262,6 +271,16 @@ public static class CutsceneTriggers{
 		// player playback
 
 		Register("run_playback", (player, level, param) => PlaybackCutscene.Playback(level, player, GetStringParam(param, 0)));
+		
+		// visual effects
+
+		static IEnumerator glitchEffect(float duration){
+			Glitch.Value = 0.3f;
+			yield return duration;
+			Glitch.Value = 0;
+		}
+		
+		Register("glitch_effect", (player, level, param) => glitchEffect(GetFloatParam(param, 0, 0.5f)));
 	}
 
 	public static void Unload(){
@@ -336,6 +355,10 @@ public static class CutsceneTriggers{
 			"bounce_out" => Ease.BounceOut,
 			_ => Ease.CubeInOut
 		};
+	}
+
+	public static Player.IntroTypes GetIntroByName(string name){
+		return Enum.TryParse(name, true, out Player.IntroTypes type) ? type : Player.IntroTypes.None;
 	}
 	
 	// ModInterop exports
