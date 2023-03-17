@@ -38,6 +38,7 @@ public class WindowpaneManager : Entity{
 			new DynamicData(fakeLevelLoader).Invoke("LoadingThread_Safe");
 			Level fake = fakeLevelLoader.Level;
 			fake.LoadLevel(Player.IntroTypes.None, true);
+			fake.Wipe?.Cancel();
 			fake.Update();
 			
 			foreach(var player in fake.Entities.FindAll<Player>()){
