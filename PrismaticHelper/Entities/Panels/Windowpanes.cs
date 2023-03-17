@@ -3,7 +3,7 @@ using Celeste;
 using Monocle;
 using MonoMod.Utils;
 
-namespace PrismaticHelper.Entities.Windowpanes;
+namespace PrismaticHelper.Entities.Panels;
 
 public static class Windowpanes{
 	
@@ -45,14 +45,21 @@ public static class Windowpanes{
 	
 	public static void Load(){
 		On.Celeste.SaveData.StartSession += SaveStartSession;
+		On.Celeste.AudioState.Apply += AudioStateApply;
 	}
 
 	public static void Unload(){
 		On.Celeste.SaveData.StartSession -= SaveStartSession;
+		On.Celeste.AudioState.Apply -= AudioStateApply;
 		
 		WindowpaneManager.Unload();
 	}
 	
+	private static void AudioStateApply(On.Celeste.AudioState.orig_Apply orig, AudioState self){
+		if(!IgnoreSessionStarts)
+			orig(self);
+	}
+
 	private static void SaveStartSession(On.Celeste.SaveData.orig_StartSession orig, SaveData self, Session session){
 		if(!IgnoreSessionStarts)
 			orig(self, session);

@@ -13,7 +13,11 @@ stylegroundsPanel.placements = {
         scrollY = 1,
         opacity = 1,
         room = "a-01",
-        tint = "#ffffff"
+        tint = "#ffffff",
+        image = "",
+        mask = "",
+        attached = false,
+        name = ""
     }
 }
 

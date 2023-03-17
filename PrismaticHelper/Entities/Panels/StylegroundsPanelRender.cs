@@ -14,7 +14,7 @@ public static class StylegroundsPanelRenderer{
 		List<IGrouping<string, StylegroundsPanel>> toUpdate = level.Entities
 			.FindAll<StylegroundsPanel>()
 			.Where(it => it.Foreground == fg)
-			.GroupBy(it => it.Room)
+			.GroupBy(it => it.RoomName)
 			.ToList();
 
 		foreach(var item in toUpdate){
@@ -42,8 +42,8 @@ public static class StylegroundsPanelRenderer{
 		List<IGrouping<string, StylegroundsPanel>> toRender = level.Entities
 			.FindAll<StylegroundsPanel>()
 			.Where(it => it.Foreground == fg)
-			.Where(it => it.OnScreen(camera))
-			.GroupBy(it => it.Room)
+			.Where(it => it.VisibleOnScreen(camera))
+			.GroupBy(it => it.RoomName)
 			.ToList();
 
 		foreach(var item in toRender){
@@ -54,9 +54,7 @@ public static class StylegroundsPanelRenderer{
 			Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 			Draw.SpriteBatch.Begin();
 			foreach(var panel in item)
-				Draw.Rect((panel.X - camera.Left - (320 / 2)) * panel.ScrollX + (320 / 2),
-					(panel.Y - camera.Top - (180 / 2)) * panel.ScrollY + (180 / 2),
-					panel.Width, panel.Height, panel.Tint * panel.Opacity);
+				panel.DrawMask(camera);
 			GameplayRenderer.End();
 			// render some styleground
 			Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);

@@ -8,12 +8,34 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.ModInterop;
 using MonoMod.Utils;
+using PrismaticHelper.Entities.Cutscenes;
+using PrismaticHelper.Entities.Panels;
 
 namespace PrismaticHelper.Cutscenes;
 
 public static class CutsceneTriggers{
 	
 	public static readonly Dictionary<string, Func<Player, Level, List<string>, IEnumerator>> Triggers = new();
+	public static readonly List<Action<Level, List<Scriptable>>> ScriptableProviders = new();
+
+	// NOT looking forward to making these customisable
+	private static readonly ParticleType scratch = new ParticleType()
+	{
+		Color = Calc.HexToColor("3C7913"),
+		Color2 = Calc.HexToColor("D2D2D2"),
+		ColorMode = ParticleType.ColorModes.Blink,
+		FadeMode = ParticleType.FadeModes.Late,
+		Size = 1f,
+		Direction = 0.0f,
+		DirectionRange = 6.2831855f,
+		SpeedMin = 5f,
+		SpeedMax = 10f,
+		LifeMin = 0.6f,
+		LifeMax = 1.2f,
+		SpeedMultiplier = 0.3f
+	};
+	
+	// TODO: scriptable baddy, player
 	private static BadelineDummy baddy; // :3
 
 	public static void Load(){
@@ -58,7 +80,10 @@ public static class CutsceneTriggers{
 
 		static IEnumerator gotoRoom(Player player, Level l, string roomName, string intro){
 			l.EndCutscene();
-			l.OnEndOfFrame += () => l.TeleportTo(player, roomName, GetIntroByName(intro));
+			l.OnEndOfFrame += () => {
+				l.TeleportTo(player, roomName, GetIntroByName(intro));
+				l.Wipe?.Cancel();
+			};
 			DynamicData.For(l).Set("PrismaticHelper:force_unskippable", false);
 			yield return null;
 		}
@@ -102,6 +127,7 @@ public static class CutsceneTriggers{
 
 		static IEnumerator attachCameraToPlayer(Player p){
 			p.ForceCameraUpdate = true;
+			p.DummyAutoAnimate = true;
 			yield return null;
 		}
 
@@ -281,6 +307,55 @@ public static class CutsceneTriggers{
 		}
 		
 		Register("glitch_effect", (player, level, param) => glitchEffect(GetFloatParam(param, 0, 0.5f)));
+		
+		// TODO: WIP controls
+
+		static IEnumerator introduce(Player p, Level l, string name, string sprite, float offX, float offY){
+			l.Add(new Puppet(name, sprite){
+				Position = p.Position + new Vector2(offX, offY)
+			});
+			yield return null;
+		}
+		
+		Register("tmp", "introduce", (player, level, param) => introduce(player, level, GetStringParam(param, 0, null), GetStringParam(param, 1, null), GetFloatParam(param, 2), GetFloatParam(param, 3)));
+
+		static IEnumerator scare(Level l, string puppetName){
+			var puppet = l.Tracker.GetEntities<Puppet>().Cast<Puppet>().FirstOrDefault(x => x.ScName() == puppetName);
+			if(puppet != null){
+				var point = puppet.Center + puppet.ScSprite().Center;
+				Audio.Play("event:/char/badeline/appear", point);
+				l.Displacement.AddBurst(point, 0.5f, 24f, 96f, 0.4f);
+				l.Particles.Emit(scratch, 30, point, Vector2.One * 12f);
+			}
+			yield return null;
+		}
+		
+		Register("tmp", "scare", (player, level, param) => scare(level, GetStringParam(param, 0, null)));
+
+		static IEnumerator spt(Player p, Level l, string targetName, string puppetName, string maskName, float duration, string introType){
+			var puppet = l.Tracker.GetEntities<Puppet>().Cast<Puppet>().FirstOrDefault(x => x.ScName() == puppetName);
+			if(puppet != null){
+				AbstractPanel panel = new Windowpane(new EntityData(), Vector2.Zero){
+					Position = puppet.Position + puppet.ScSprite().Center,
+					Opacity = 1,
+					RoomName = targetName,
+					Mask = maskName,
+					Foreground = true
+				};
+				l.Add(panel);
+				yield return null;
+				for(float progress = 0.0f; progress < 1.0; progress += Engine.DeltaTime / duration){
+					panel.Scale = 1 + Ease.CubeIn(progress) * 80;
+					yield return null;
+				}
+				panel.Opacity = 1;
+				yield return null;
+				yield return gotoRoom(p, l, targetName, introType);
+			}else
+				yield return gotoRoom(p, l, targetName, introType);
+		}
+		
+		Register("tmp", "spt", (player, level, param) => spt(player, level, GetStringParam(param, 0, null), GetStringParam(param, 1, null), GetStringParam(param, 2), GetFloatParam(param, 3), GetStringParam(param, 4)));
 	}
 
 	public static void Unload(){
@@ -302,6 +377,10 @@ public static class CutsceneTriggers{
 			Triggers.Add(modName.Trim().ToLower() + ":" + triggerName.Trim().ToLower(), effect);
 		else
 			Triggers.Add(triggerName.Trim().ToLower(), effect);
+	}
+
+	private static void RegisterScriptProvider(Action<Level, List<Scriptable>> provider){
+		ScriptableProviders.Add(provider);
 	}
 
 	public static Func<IEnumerator> Get(string id, Player player, Level level, List<string> p){

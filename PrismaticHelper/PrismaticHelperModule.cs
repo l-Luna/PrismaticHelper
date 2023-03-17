@@ -3,7 +3,6 @@
 using PrismaticHelper.Entities;
 using PrismaticHelper.Entities.Objects;
 using PrismaticHelper.Entities.Panels;
-using PrismaticHelper.Entities.Windowpanes;
 
 namespace PrismaticHelper;
 

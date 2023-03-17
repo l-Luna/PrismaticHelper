@@ -8,10 +8,18 @@ windowpane.placements = {
       data = {
           width = 8,
           height = 8,
+          foreground = true,
+          scrollX = 1,
+          scrollY = 1,
+          opacity = 1,
           room = "a-01",
-          bg = false
+          tint = "#ffffff",
+          image = "",
+          mask = "",
+          attached = false,
+          name = ""
       }
 }
 
---return windowpane
-return nil
+return windowpane
+--return nil

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 using MonoMod.Utils;
 
-namespace PrismaticHelper.Entities.Windowpanes;
+namespace PrismaticHelper.Entities.Panels;
 
 public class WindowpaneManager : Entity{
 	
@@ -40,8 +40,10 @@ public class WindowpaneManager : Entity{
 			fake.LoadLevel(Player.IntroTypes.None, true);
 			fake.Update();
 			
-			foreach(var player in fake.Entities.FindAll<Player>())
+			foreach(var player in fake.Entities.FindAll<Player>()){
 				player.Active = false;
+				player.Visible = false;
+			}
 
 			Audio.SetCamera(l.Camera);
 			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
@@ -60,7 +62,7 @@ public class WindowpaneManager : Entity{
 		RoomName = roomName;
 		level = scene;
 		
-		Depth = bg ? 8500 : Depths.FGDecals + 1;
+		Depth = bg ? 8500 : Depths.FGDecals - 1;
 	}
 
 	private void SetupLevel(){
@@ -111,7 +113,7 @@ public class WindowpaneManager : Entity{
 		Camera camera = SceneAs<Level>().Camera;
 		// i Love stencils
 		var myPanes = SceneAs<Level>().Tracker.GetEntities<Windowpane>().Cast<Windowpane>()
-			.Where(x => x.Room == RoomName);
+			.Where(x => x.RoomName == RoomName);
 		
 		Draw.SpriteBatch.End();
 		
@@ -119,8 +121,7 @@ public class WindowpaneManager : Entity{
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 		Draw.SpriteBatch.Begin();
 		foreach(var panel in myPanes)
-			Draw.Rect(panel.X - camera.Left, panel.Y - camera.Top,
-				panel.Width, panel.Height, Color.White);
+			panel.DrawMask(camera);
 		Draw.SpriteBatch.End();
 		
 		VirtualRenderTarget oldGm = GameplayBuffers.Gameplay, oldDisp = GameplayBuffers.Displacement;
