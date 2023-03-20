@@ -9,7 +9,9 @@ namespace PrismaticHelper.Entities.Panels;
 [Tracked]
 public class Windowpane : AbstractPanel{
 
-	public Windowpane(EntityData data, Vector2 pos) : base(data, pos){}
+	public Windowpane(EntityData data, Vector2 pos) : base(data, pos){
+		SpeedrunToolInterop.NonSavestatable(this);
+	}
 
 	public override void Added(Scene scene){
 		base.Added(scene);

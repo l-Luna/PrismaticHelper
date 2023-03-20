@@ -14,7 +14,7 @@ public class WindowpaneManager : Entity{
 	private readonly string RoomName; 
 	private readonly Level level;
 
-	private bool active = true;
+	private bool active = true, bg = false;
 	
 	public static WindowpaneManager ofRoom(string roomName, Scene owner, bool bg){
 		if(owner is not Level l)
@@ -59,8 +59,20 @@ public class WindowpaneManager : Entity{
 	private WindowpaneManager(string roomName, Level scene, bool bg){
 		RoomName = roomName;
 		level = scene;
+		this.bg = bg;
 		
 		Depth = bg ? 8500 : Depths.FGDecals - 1;
+		
+		SpeedrunToolInterop.NonSavestatable(this);
+	}
+
+	public void Reload(){
+		if(Scene is not Level l)
+			return;
+		l.OnEndOfFrame += () => {
+			l.Add(ofRoom(RoomName, l, bg));
+		};
+		RemoveSelf();
 	}
 
 	private void SetupLevel(){

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Celeste;
-using Celeste.Mod.Meta;
 using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Utils;
@@ -50,6 +49,11 @@ public static class Windowpanes{
 		On.Celeste.SaveData.StartSession += SaveStartSession;
 		On.Celeste.AudioState.Apply += AudioStateApply;
 		On.Celeste.LevelLoader.ctor += LevelLoaderConstruct;
+		
+		SpeedrunToolInterop.AddPostSavestateLoadAction(level => {
+			foreach(var manager in level.Tracker.GetEntities<WindowpaneManager>().Cast<WindowpaneManager>())
+				manager.Reload();
+		});
 	}
 
 	public static void Unload(){
