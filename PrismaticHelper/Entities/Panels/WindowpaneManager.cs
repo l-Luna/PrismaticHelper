@@ -25,16 +25,13 @@ public class WindowpaneManager : Entity{
 			return null;
 
 		try{
-			Windowpanes.IgnoreSessionStarts = true;
+			Windowpanes.ManipulateLevelLoads = true;
 			
 			Session fakeSession = new Session(l.Session.Area){
 				Level = target.Name
 			};
 
-			string oldErr = LevelEnter.ErrorMessage;
-			LevelEnter.ErrorMessage = "";
 			LevelLoader fakeLevelLoader = new LevelLoader(fakeSession, target.DefaultSpawn);
-			LevelEnter.ErrorMessage = oldErr;
 			new DynamicData(fakeLevelLoader).Invoke("LoadingThread_Safe");
 			Level fake = fakeLevelLoader.Level;
 			fake.LoadLevel(Player.IntroTypes.None, true);
@@ -51,7 +48,7 @@ public class WindowpaneManager : Entity{
 			
 			return new WindowpaneManager(roomName, fake, bg);
 		}finally{
-			Windowpanes.IgnoreSessionStarts = false;
+			Windowpanes.ManipulateLevelLoads = false;
 		}
 	}
 

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Celeste;
+using Celeste.Mod.Meta;
+using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Utils;
 
@@ -41,27 +44,36 @@ public static class Windowpanes{
 		requiredManagers.Clear();
 	}
 	
-	public static bool IgnoreSessionStarts = false;
+	public static bool ManipulateLevelLoads = false;
 	
 	public static void Load(){
 		On.Celeste.SaveData.StartSession += SaveStartSession;
 		On.Celeste.AudioState.Apply += AudioStateApply;
+		On.Celeste.LevelLoader.ctor += LevelLoaderConstruct;
 	}
 
 	public static void Unload(){
 		On.Celeste.SaveData.StartSession -= SaveStartSession;
 		On.Celeste.AudioState.Apply -= AudioStateApply;
+		On.Celeste.LevelLoader.ctor -= LevelLoaderConstruct;
 		
 		WindowpaneManager.Unload();
 	}
-	
+
 	private static void AudioStateApply(On.Celeste.AudioState.orig_Apply orig, AudioState self){
-		if(!IgnoreSessionStarts)
+		if(!ManipulateLevelLoads)
 			orig(self);
 	}
 
 	private static void SaveStartSession(On.Celeste.SaveData.orig_StartSession orig, SaveData self, Session session){
-		if(!IgnoreSessionStarts)
+		if(!ManipulateLevelLoads)
 			orig(self, session);
+	}
+	
+	private static void LevelLoaderConstruct(On.Celeste.LevelLoader.orig_ctor orig, LevelLoader self, Session session, Vector2? startposition){
+		if(ManipulateLevelLoads)
+			self.orig_ctor(session, startposition);
+		else
+			orig(self, session, startposition);
 	}
 }
