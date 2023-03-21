@@ -8,25 +8,25 @@ using MonoMod.Utils;
 namespace PrismaticHelper.Entities.Panels;
 
 public class WindowpaneManager : Entity{
-	
+
 	public static VirtualRenderTarget Displacement2;
-	
-	private readonly string RoomName; 
+
+	private readonly string RoomName;
 	private readonly Level level;
 
 	private bool active = true, bg = false;
-	
+
 	public static WindowpaneManager ofRoom(string roomName, Scene owner, bool bg){
 		if(owner is not Level l)
 			return null;
-		
+
 		var target = l.Session.MapData.Levels.Find(d => d.Name.Equals(roomName));
 		if(target == null)
 			return null;
 
 		try{
 			Windowpanes.ManipulateLevelLoads = true;
-			
+
 			Session fakeSession = new Session(l.Session.Area){
 				Level = target.Name
 			};
@@ -37,7 +37,7 @@ public class WindowpaneManager : Entity{
 			fake.LoadLevel(Player.IntroTypes.None, true);
 			fake.Wipe?.Cancel();
 			fake.Update();
-			
+
 			foreach(var player in fake.Entities.FindAll<Player>()){
 				player.Active = false;
 				player.Visible = false;
@@ -45,7 +45,7 @@ public class WindowpaneManager : Entity{
 
 			Audio.SetCamera(l.Camera);
 			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
-			
+
 			return new WindowpaneManager(roomName, fake, bg);
 		}finally{
 			Windowpanes.ManipulateLevelLoads = false;
@@ -60,10 +60,10 @@ public class WindowpaneManager : Entity{
 		RoomName = roomName;
 		level = scene;
 		this.bg = bg;
-		
+
 		Depth = bg ? 8500 : Depths.FGDecals - 1;
-		
-		SpeedrunToolInterop.NonSavestatable(this);
+
+		SpeedrunToolInterop.IgnoreSaveState(this, true);
 	}
 
 	public void Reload(){
@@ -79,7 +79,7 @@ public class WindowpaneManager : Entity{
 		if(level != null)
 			foreach(var e in level.Entities)
 				e.SceneBegin(level);
-		
+
 		Displacement2 ??= VirtualContent.CreateRenderTarget("PrismaticHelper:displacement2", 320, 180);
 	}
 
@@ -119,45 +119,45 @@ public class WindowpaneManager : Entity{
 
 	public override void Render(){
 		base.Render();
-		
+
 		Camera camera = SceneAs<Level>().Camera;
 		// i Love stencils
 		var myPanes = SceneAs<Level>().Tracker.GetEntities<Windowpane>().Cast<Windowpane>()
 			.Where(x => x.RoomName == RoomName);
-		
+
 		Draw.SpriteBatch.End();
-		
+
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.MaskRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 		Draw.SpriteBatch.Begin();
 		foreach(var panel in myPanes)
 			panel.DrawMask(camera);
 		Draw.SpriteBatch.End();
-		
+
 		VirtualRenderTarget oldGm = GameplayBuffers.Gameplay, oldDisp = GameplayBuffers.Displacement;
 		GameplayBuffers.Gameplay = Stencils.ObjectRenderTarget; GameplayBuffers.Displacement = Displacement2;
-		
+
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 		level.BeforeRender();
-		
+
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 		level.Background.Render(level);
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, level.GameplayRenderer.Camera.Matrix);
 		level.Entities.RenderExcept((int) Tags.HUD | (int) TagsExt.SubHUD);
-		
+
 		GameplayRenderer.End();
 		level.Lighting.Render(level);
 		level.Displacement.Render(level);
 		level.Foreground.Render(level);
 		level.AfterRender();
 		GameplayBuffers.Gameplay = oldGm; GameplayBuffers.Displacement = oldDisp;
-		
+
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, Stencils.AlphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
 		Draw.SpriteBatch.Draw(Stencils.MaskRenderTarget, Vector2.Zero, Color.White);
 		Draw.SpriteBatch.End();
-		
+
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(GameplayBuffers.Gameplay);
 		GameplayRenderer.Begin();
 		Draw.SpriteBatch.Draw(Stencils.ObjectRenderTarget, camera.Position, Color.White);
