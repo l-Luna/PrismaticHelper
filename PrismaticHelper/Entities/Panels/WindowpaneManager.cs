@@ -63,7 +63,7 @@ public class WindowpaneManager : Entity{
 
 		Depth = bg ? 8500 : Depths.FGDecals - 1;
 
-		SpeedrunToolInterop.IgnoreSaveState(this, true);
+		SpeedrunToolInterop.IgnoreSaveState?.Invoke(this, true);
 	}
 
 	public void Reload(){
