@@ -97,7 +97,12 @@ public class WindowpaneManager : Entity{
 
 	public override void Update(){
 		base.Update();
-		level?.Update();
+		var levelEntities = level?.Entities;
+		if(levelEntities != null)
+			DynamicData.For(levelEntities).Invoke("Update");
+		
+		level?.Foreground?.Update(level);
+		level?.Background?.Update(level);
 	}
 
 	public override void Added(Scene scene){
