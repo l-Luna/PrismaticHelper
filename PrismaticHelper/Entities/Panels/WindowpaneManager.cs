@@ -37,6 +37,7 @@ public class WindowpaneManager : Entity{
 			fake.LoadLevel(Player.IntroTypes.None, true);
 			fake.Wipe?.Cancel();
 			fake.Update();
+			fake.Entities.UpdateLists();
 
 			foreach(var e in fake.Entities)
 				if(e is CrystalStaticSpinner css)
