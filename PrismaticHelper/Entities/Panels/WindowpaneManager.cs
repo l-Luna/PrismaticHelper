@@ -38,6 +38,10 @@ public class WindowpaneManager : Entity{
 			fake.Wipe?.Cancel();
 			fake.Update();
 
+			foreach(var e in fake.Entities)
+				if(e is CrystalStaticSpinner css)
+					css.ForceInstantiate();
+
 			foreach(var player in fake.Entities.FindAll<Player>()){
 				player.Active = false;
 				player.Visible = false;
@@ -66,15 +70,6 @@ public class WindowpaneManager : Entity{
 		SpeedrunToolInterop.IgnoreSaveState?.Invoke(this, true);
 	}
 
-	public void Reload(){
-		if(Scene is not Level l)
-			return;
-		l.OnEndOfFrame += () => {
-			l.Add(ofRoom(RoomName, l, bg));
-		};
-		RemoveSelf();
-	}
-
 	private void SetupLevel(){
 		if(level != null)
 			foreach(var e in level.Entities)
@@ -97,12 +92,10 @@ public class WindowpaneManager : Entity{
 
 	public override void Update(){
 		base.Update();
+
 		var levelEntities = level?.Entities;
 		if(levelEntities != null)
 			DynamicData.For(levelEntities).Invoke("Update");
-		
-		level?.Foreground?.Update(level);
-		level?.Background?.Update(level);
 	}
 
 	public override void Added(Scene scene){
@@ -124,6 +117,8 @@ public class WindowpaneManager : Entity{
 
 	public override void Render(){
 		base.Render();
+		if(Scene is not Level l)
+			return;
 
 		Camera camera = SceneAs<Level>().Camera;
 		// i Love stencils
@@ -143,18 +138,20 @@ public class WindowpaneManager : Entity{
 		GameplayBuffers.Gameplay = Stencils.ObjectRenderTarget; GameplayBuffers.Displacement = Displacement2;
 
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
-		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
+		Engine.Graphics.GraphicsDevice.Clear(level.BackgroundColor);
 		level.BeforeRender();
 
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
-		level.Background.Render(level);
+		//level.Background.Render(level);
+		StylegroundsPanelRenderer.RenderStylegroundsForRoom(RoomName, l.Background, l);
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, level.GameplayRenderer.Camera.Matrix);
 		level.Entities.RenderExcept((int) Tags.HUD | (int) TagsExt.SubHUD);
 
 		GameplayRenderer.End();
 		level.Lighting.Render(level);
 		level.Displacement.Render(level);
-		level.Foreground.Render(level);
+		//level.Foreground.Render(level);
+		StylegroundsPanelRenderer.RenderStylegroundsForRoom(RoomName, l.Foreground, l);
 		level.AfterRender();
 		GameplayBuffers.Gameplay = oldGm; GameplayBuffers.Displacement = oldDisp;
 

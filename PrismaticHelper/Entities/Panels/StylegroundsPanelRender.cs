@@ -11,9 +11,11 @@ namespace PrismaticHelper.Entities.Panels;
 public static class StylegroundsPanelRenderer{
 
 	public static void UpdateStylegroundPanels(bool fg, Scene level, BackdropRenderer renderer){
-		List<IGrouping<string, StylegroundsPanel>> toUpdate = level.Entities
-			.FindAll<StylegroundsPanel>()
+		List<IGrouping<string, AbstractPanel>> toUpdate = level.Tracker
+			.GetEntities<StylegroundsPanel>()
+			.Cast<AbstractPanel>()
 			.Where(it => it.Foreground == fg)
+			.Concat(level.Tracker.GetEntities<Windowpane>().Cast<AbstractPanel>())
 			.GroupBy(it => it.RoomName)
 			.ToList();
 
@@ -21,7 +23,7 @@ public static class StylegroundsPanelRenderer{
 			var room = item.Key;
 			Level lvl = level as Level;
 			foreach(Backdrop bg in renderer.Backdrops)
-				if(IsVisible(bg, lvl, room)){
+				if(IsVisible(bg, lvl, room) && !bg.Visible){
 					bool wasVisible = bg.Visible, wasForceVisible = bg.ForceVisible;
 					bg.Visible = true;
 					bg.ForceVisible = true;

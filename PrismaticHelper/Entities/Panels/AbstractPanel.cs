@@ -1,4 +1,5 @@
-﻿using Celeste;
+﻿using System;
+using Celeste;
 using Microsoft.Xna.Framework;
 using Monocle;
 using PrismaticHelper.Entities.Cutscenes;
@@ -51,6 +52,22 @@ public abstract class AbstractPanel : Entity, Scriptable{
 		}
 	}
 
+	public int RealWidth{
+		get{
+			if(string.IsNullOrEmpty(Mask) || GFX.Game[Mask] == null)
+				return Width;
+			return Math.Max(GFX.Game[Mask].Width, Width);
+		}
+	}
+	
+	public int RealHeight{
+		get{
+			if(string.IsNullOrEmpty(Mask) || GFX.Game[Mask] == null)
+				return Height;
+			return Math.Max(GFX.Game[Mask].Height, Height);
+		}
+	}
+
 	public void DrawMask(Camera camera){
 		if(Tint.A == 0 || Opacity == 0)
 			return;
@@ -69,8 +86,8 @@ public abstract class AbstractPanel : Entity, Scriptable{
 		return new Rectangle(
 			(int)((X - c.Left - 320 / 2f) * ScrollX + 320 / 2f),
 			(int)((Y - c.Top - 180 / 2f) * ScrollY + 180 / 2f),
-			Width,
-			Height
+			RealWidth,
+			RealHeight
 		);
 	}
 	
