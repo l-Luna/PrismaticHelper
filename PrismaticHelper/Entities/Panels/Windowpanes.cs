@@ -8,7 +8,7 @@ using MonoMod.Utils;
 namespace PrismaticHelper.Entities.Panels;
 
 public static class Windowpanes{
-	
+
 	private const string windowpaneRoomNames = "PrismaticHelper:windowpane_rooms";
 	private const string bgRoomNames = "PrismaticHelper:background_rooms";
 
@@ -27,7 +27,7 @@ public static class Windowpanes{
 	public static List<string> RequiredManagers(Scene s){
 		return DynamicData.For(s).TryGet<List<string>>(windowpaneRoomNames, out var list) ? list : new List<string>();
 	}
-	
+
 	public static List<string> BackgroundRooms(Scene s){
 		return DynamicData.For(s).TryGet<List<string>>(bgRoomNames, out var list) ? list : new List<string>();
 	}
@@ -42,25 +42,20 @@ public static class Windowpanes{
 		}
 		requiredManagers.Clear();
 	}
-	
+
 	public static bool ManipulateLevelLoads = false;
-	
+
 	public static void Load(){
 		On.Celeste.SaveData.StartSession += SaveStartSession;
 		On.Celeste.AudioState.Apply += AudioStateApply;
 		On.Celeste.LevelLoader.ctor += LevelLoaderConstruct;
-		
-		SpeedrunToolInterop.AddPostSavestateLoadAction(level => {
-			foreach(var manager in level.Tracker.GetEntities<WindowpaneManager>().Cast<WindowpaneManager>())
-				manager.Reload();
-		});
 	}
 
 	public static void Unload(){
 		On.Celeste.SaveData.StartSession -= SaveStartSession;
 		On.Celeste.AudioState.Apply -= AudioStateApply;
 		On.Celeste.LevelLoader.ctor -= LevelLoaderConstruct;
-		
+
 		WindowpaneManager.Unload();
 	}
 
@@ -73,7 +68,7 @@ public static class Windowpanes{
 		if(!ManipulateLevelLoads)
 			orig(self, session);
 	}
-	
+
 	private static void LevelLoaderConstruct(On.Celeste.LevelLoader.orig_ctor orig, LevelLoader self, Session session, Vector2? startposition){
 		if(ManipulateLevelLoads)
 			self.orig_ctor(session, startposition);

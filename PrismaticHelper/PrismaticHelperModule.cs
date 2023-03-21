@@ -7,6 +7,9 @@ using PrismaticHelper.Entities.Panels;
 namespace PrismaticHelper;
 
 public class PrismaticHelperModule : EverestModule {
+	public override void Initialize() {
+		SpeedrunToolInterop.Initialize();
+	}
 
 	public override void Load() {
 		Cutscenes.CutsceneTriggers.Load();
@@ -20,7 +23,7 @@ public class PrismaticHelperModule : EverestModule {
 		StylegroundsPanelRenderer.Unload();
 		CassetteKevin.Unload();
 		Windowpanes.Unload();
-		
+
 		Stencils.Unload();
 	}
 
