@@ -11,8 +11,9 @@ public static class Windowpanes{
 
 	private const string windowpaneRoomNames = "PrismaticHelper:windowpane_rooms";
 	private const string bgRoomNames = "PrismaticHelper:background_rooms";
+	private const string noTintRoomNames = "PrismaticHelper:no_tint_rooms";
 
-	public static void RegisterManagerRequired(Scene s, string room, bool background){
+	public static void RegisterManagerRequired(Scene s, string room, bool background, bool noTint){
 		List<string> req = RequiredManagers(s);
 		if(!req.Contains(room))
 			req.Add(room);
@@ -22,25 +23,41 @@ public static class Windowpanes{
 		if(background && !bgs.Contains(room))
 			bgs.Add(room);
 		DynamicData.For(s).Set(bgRoomNames, bgs);
+		
+		List<string> nts = NoTintRooms(s);
+		if(noTint && !nts.Contains(room))
+			nts.Add(room);
+		DynamicData.For(s).Set(noTintRoomNames, nts);
 	}
 
 	public static List<string> RequiredManagers(Scene s){
-		return DynamicData.For(s).TryGet<List<string>>(windowpaneRoomNames, out var list) ? list : new List<string>();
+		return RoomsTagged(s, windowpaneRoomNames);
 	}
 
 	public static List<string> BackgroundRooms(Scene s){
-		return DynamicData.For(s).TryGet<List<string>>(bgRoomNames, out var list) ? list : new List<string>();
+		return RoomsTagged(s, bgRoomNames);
+	}
+	
+	public static List<string> NoTintRooms(Scene s){
+		return RoomsTagged(s, bgRoomNames);
+	}
+	
+	public static List<string> RoomsTagged(Scene s, string tag){
+		return DynamicData.For(s).TryGet<List<string>>(tag, out var list) ? list : new List<string>();
 	}
 
 	public static void WpAwake(Scene s){
 		var requiredManagers = RequiredManagers(s);
 		var bgRooms = BackgroundRooms(s);
+		var noTintRooms = NoTintRooms(s);
 		foreach(var required in requiredManagers){
-			var manager = WindowpaneManager.ofRoom(required, s, bgRooms.Contains(required));
+			var manager = WindowpaneManager.ofRoom(required, s, bgRooms.Contains(required), noTintRooms.Contains(required));
 			if(manager != null)
 				s.Add(manager);
 		}
 		requiredManagers.Clear();
+		bgRooms.Clear();
+		noTintRooms.Clear();
 	}
 
 	public static bool ManipulateLevelLoads = false;

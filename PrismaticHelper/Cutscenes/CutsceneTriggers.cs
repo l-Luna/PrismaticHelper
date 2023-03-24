@@ -16,10 +16,10 @@ namespace PrismaticHelper.Cutscenes;
 public static class CutsceneTriggers{
 	
 	public static readonly Dictionary<string, Func<Player, Level, List<string>, IEnumerator>> Triggers = new();
-	public static readonly List<Action<Level, List<Scriptable>>> ScriptableProviders = new();
+	public static readonly List<Func<Level, List<Scriptable>>> ScriptableProviders = new();
 
 	// NOT looking forward to making these customisable
-	private static readonly ParticleType scratch = new ParticleType()
+	private static readonly ParticleType scratch = new()
 	{
 		Color = Calc.HexToColor("3C7913"),
 		Color2 = Calc.HexToColor("D2D2D2"),
@@ -35,8 +35,7 @@ public static class CutsceneTriggers{
 		SpeedMultiplier = 0.3f
 	};
 	
-	// TODO: scriptable baddy, player
-	private static BadelineDummy baddy; // :3
+	private static BadelinePuppet baddy; // :3
 
 	public static void Load(){
 		
@@ -205,7 +204,7 @@ public static class CutsceneTriggers{
 		static IEnumerator baddyAppear(Level l, Player p, float xOffset, float yOffset){
 			if(baddy != null && baddy.Scene == Engine.Scene)
 				baddy.Vanish();
-			baddy = new BadelineDummy(p.Center + new Vector2(xOffset, yOffset));
+			baddy = new BadelinePuppet(p.Center + new Vector2(xOffset, yOffset), "baddy");
 			l.Add(baddy);
 			baddy.Appear(l);
 			yield return null;
@@ -216,7 +215,7 @@ public static class CutsceneTriggers{
 		static IEnumerator baddySplit(Level l, Player p, float xOffset, float yOffset, bool facePlayer){
 			if(baddy != null && baddy.Scene == Engine.Scene)
 				baddy.Vanish();
-			baddy = new BadelineDummy(p.Center);
+			baddy = new BadelinePuppet(p.Center, "baddy");
 			l.Add(baddy);
 			p.CreateSplitParticles();
 			Input.Rumble(RumbleStrength.Light, RumbleLength.Medium);
@@ -311,18 +310,20 @@ public static class CutsceneTriggers{
 		// TODO: WIP controls
 
 		static IEnumerator introduce(Player p, Level l, string name, string sprite, float offX, float offY){
-			l.Add(new Puppet(name, sprite){
-				Position = p.Position + new Vector2(offX, offY)
-			});
+			if(GetScriptableByName(l, name) == null)
+				l.Add(new Puppet(name, sprite){
+					Position = p.Position + new Vector2(offX, offY)
+				});
+
 			yield return null;
 		}
 		
 		Register("tmp", "introduce", (player, level, param) => introduce(player, level, GetStringParam(param, 0, null), GetStringParam(param, 1, null), GetFloatParam(param, 2), GetFloatParam(param, 3)));
 
 		static IEnumerator scare(Level l, string puppetName){
-			var puppet = l.Tracker.GetEntities<Puppet>().Cast<Puppet>().FirstOrDefault(x => x.ScName() == puppetName);
+			var puppet = GetScriptableByName(l, puppetName);
 			if(puppet != null){
-				var point = puppet.Center + puppet.ScSprite().Center;
+				var point = puppet.ScPosition + puppet.ScSprite().Center;
 				Audio.Play("event:/char/badeline/appear", point);
 				l.Displacement.AddBurst(point, 0.5f, 24f, 96f, 0.4f);
 				l.Particles.Emit(scratch, 30, point, Vector2.One * 12f);
@@ -332,30 +333,42 @@ public static class CutsceneTriggers{
 		
 		Register("tmp", "scare", (player, level, param) => scare(level, GetStringParam(param, 0, null)));
 
-		static IEnumerator spt(Player p, Level l, string targetName, string puppetName, string maskName, float duration, string introType){
-			var puppet = l.Tracker.GetEntities<Puppet>().Cast<Puppet>().FirstOrDefault(x => x.ScName() == puppetName);
+		static IEnumerator spt(Player p, Level l, string targetName, string puppetName, Vector2? origin, float duration, string introType){
+			var puppet = GetScriptableByName(l, puppetName);
 			if(puppet != null){
 				AbstractPanel panel = new Windowpane(new EntityData(), Vector2.Zero){
-					Position = puppet.Position + puppet.ScSprite().Center,
+					Position = puppet.ScPosition + puppet.ScBasePosition(),
 					Opacity = 1,
 					RoomName = targetName,
-					Mask = maskName,
-					Foreground = true
+					Foreground = true,
+					Origin = origin ?? puppet.ScBaseJustify(),
+					IgnoreColours = true
 				};
+				panel.Add(panel.Mask = puppet.ScSprite());
+				if(puppet is Entity pe)
+					pe.Visible = false;
+				if(panel.Mask != null)
+					panel.Mask.Color = Color.White * 0;
 				l.Add(panel);
 				yield return null;
 				for(float progress = 0.0f; progress < 1.0; progress += Engine.DeltaTime / duration){
 					panel.Scale = 1 + Ease.CubeIn(progress) * 80;
 					yield return null;
 				}
-				panel.Opacity = 1;
 				yield return null;
 				yield return gotoRoom(p, l, targetName, introType);
 			}else
 				yield return gotoRoom(p, l, targetName, introType);
 		}
 		
-		Register("tmp", "spt", (player, level, param) => spt(player, level, GetStringParam(param, 0, null), GetStringParam(param, 1, null), GetStringParam(param, 2), GetFloatParam(param, 3), GetStringParam(param, 4)));
+		Register("tmp", "spt", (player, level, param) => spt(player, level, GetStringParam(param, 0, null), GetStringParam(param, 1, null), GetVectorParam(param, 2), GetFloatParam(param, 3), GetStringParam(param, 4)));
+		
+		// scriptable providers
+		
+		RegisterScriptableProvider(l => l.Tracker.GetEntities<BadelinePuppet>().Cast<Scriptable>().ToList());
+		RegisterScriptableProvider(l => l.Tracker.GetEntities<Puppet>().Cast<Scriptable>().ToList());
+		RegisterScriptableProvider(l => l.Tracker.GetEntities<Windowpane>().Cast<Scriptable>().ToList());
+		RegisterScriptableProvider(l => l.Tracker.GetEntities<StylegroundsPanel>().Cast<Scriptable>().ToList());
 	}
 
 	public static void Unload(){
@@ -379,10 +392,19 @@ public static class CutsceneTriggers{
 			Triggers.Add(triggerName.Trim().ToLower(), effect);
 	}
 
-	private static void RegisterScriptProvider(Action<Level, List<Scriptable>> provider){
+	public static void RegisterScriptableProvider(Func<Level, List<Scriptable>> provider){
 		ScriptableProviders.Add(provider);
 	}
 
+	public static Scriptable GetScriptableByName(Level l, string name){
+		foreach(var prov in ScriptableProviders)
+			foreach(var p in prov(l))
+				if(p.ScName() == name)
+					return p;
+
+		return null;
+	}
+	
 	public static Func<IEnumerator> Get(string id, Player player, Level level, List<string> p){
 		static IEnumerator nothing(){
 			yield return null;
@@ -400,6 +422,16 @@ public static class CutsceneTriggers{
 
 	public static string GetStringParam(List<string> strings, int index, string def = ""){
 		return strings.Count <= index ? def : strings[index];
+	}
+
+	public static Vector2? GetVectorParam(List<String> strings, int index, Vector2? def = null){
+		if(strings.Count > index){
+			string[] parts = strings[index].Split(',');
+			if(parts.Length == 2 && float.TryParse(parts[0], out float x) && float.TryParse(parts[1], out float y))
+				return new Vector2(x, y);
+		}
+
+		return def;
 	}
 
 	public static Ease.Easer GetEaseByName(string name){

@@ -13,10 +13,11 @@ public abstract class AbstractPanel : Entity, Scriptable{
 	public string RoomName, Name;
 	public bool Foreground;
 	public float ScrollX, ScrollY, Opacity, Scale = 1;
-	public string Mask;
 	public Color Tint;
-	public Image Image;
+	public Image Image, Mask;
 	public bool Attached;
+
+	public Vector2? Origin = null;
 
 	protected AbstractPanel(EntityData data, Vector2 pos) : base(data.Position + pos){
 		Width = data.Width;
@@ -31,16 +32,15 @@ public abstract class AbstractPanel : Entity, Scriptable{
 		
 		Depth = Foreground ? Depths.FGDecals + 1 : 8500;
 		
-		var image = data.Attr("image");
-		Mask = data.Attr("mask");
+		string imageName = data.Attr("image");
+		string maskName = data.Attr("mask");
 
-		if(Mask.Trim() == "")
-			Mask = null;
-		if(image.Trim() == "")
-			image = null;
-
-		if(image != null)
-			Add(Image = new Image(GFX.Game[image]));
+		if(!string.IsNullOrEmpty(maskName)){
+			Add(Mask = new Image(GFX.Game[maskName]));
+			Mask.Visible = false;
+		}
+		if(!string.IsNullOrEmpty(imageName))
+			Add(Image = new Image(GFX.Game[imageName]));
 
 		Attached = data.Bool("attached");
 		if(Attached){
@@ -54,17 +54,17 @@ public abstract class AbstractPanel : Entity, Scriptable{
 
 	public int RealWidth{
 		get{
-			if(string.IsNullOrEmpty(Mask) || GFX.Game[Mask] == null)
+			if(Mask == null)
 				return Width;
-			return Math.Max(GFX.Game[Mask].Width, Width);
+			return (int)Math.Max(Mask.Width, Width);
 		}
 	}
 	
 	public int RealHeight{
 		get{
-			if(string.IsNullOrEmpty(Mask) || GFX.Game[Mask] == null)
+			if(Mask == null)
 				return Height;
-			return Math.Max(GFX.Game[Mask].Height, Height);
+			return (int)Math.Max(Mask.Height, Height);
 		}
 	}
 
@@ -77,8 +77,8 @@ public abstract class AbstractPanel : Entity, Scriptable{
 		if(Mask == null)
 			Draw.Rect(realX, realY, Width, Height, Tint * Opacity);
 		else{
-			var texture = GFX.Game[Mask];
-			texture.Draw(new Vector2(realX, realY), new Vector2(texture.Width, texture.Height) / 2, Tint * Opacity, Scale);
+			var texture = Mask.Texture;
+			texture.Draw(new Vector2(realX, realY) + Mask.Position, Origin ?? texture.Center, Tint * Opacity, Mask.Scale * Scale);
 		}
 	}
 
@@ -104,4 +104,6 @@ public abstract class AbstractPanel : Entity, Scriptable{
 	public Sprite? ScSprite() => null;
 	public Vector2 ScPosition{ get => Position; set => Position = value; }
 	public float ScScale{ get => Scale; set => Scale = value; }
+	public Vector2 ScBasePosition() => Vector2.Zero;
+	public Vector2 ScBaseJustify() => Vector2.Zero;
 }

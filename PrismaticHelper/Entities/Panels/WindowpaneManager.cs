@@ -14,9 +14,9 @@ public class WindowpaneManager : Entity{
 	private readonly string RoomName;
 	private readonly Level level;
 
-	private bool active = true, bg = false;
+	private bool active = true, bg = false, noTint = false;
 
-	public static WindowpaneManager ofRoom(string roomName, Scene owner, bool bg){
+	public static WindowpaneManager ofRoom(string roomName, Scene owner, bool bg, bool noTint){
 		if(owner is not Level l)
 			return null;
 
@@ -51,7 +51,7 @@ public class WindowpaneManager : Entity{
 			Audio.SetCamera(l.Camera);
 			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
 
-			return new WindowpaneManager(roomName, fake, bg);
+			return new WindowpaneManager(roomName, fake, bg, noTint);
 		}finally{
 			Windowpanes.ManipulateLevelLoads = false;
 		}
@@ -61,12 +61,14 @@ public class WindowpaneManager : Entity{
 		Displacement2?.Dispose();
 	}
 
-	private WindowpaneManager(string roomName, Level scene, bool bg){
+	private WindowpaneManager(string roomName, Level scene, bool bg, bool noTint){
 		RoomName = roomName;
 		level = scene;
 		this.bg = bg;
+		this.noTint = noTint;
 
-		Depth = bg ? 8500 : Depths.FGDecals - 1;
+		// TODO; breaks spt
+		Depth = /*bg ? 8500 :*/ Depths.FGDecals - 1;
 
 		SpeedrunToolInterop.IgnoreSaveState?.Invoke(this, true);
 	}
@@ -135,6 +137,14 @@ public class WindowpaneManager : Entity{
 			panel.DrawMask(camera);
 		Draw.SpriteBatch.End();
 
+		if(noTint){
+			Color[] data = new Color[Stencils.MaskRenderTarget.Width * Stencils.MaskRenderTarget.Height];
+			Stencils.MaskRenderTarget.Target.GetData(data);
+			for(var idx = 0; idx < data.Length; idx++)
+				data[idx] = new Color(1f, 1f, 1f) * (data[idx].A / 255f);
+			Stencils.MaskRenderTarget.Target.SetData(data);
+		}
+
 		VirtualRenderTarget oldGm = GameplayBuffers.Gameplay, oldDisp = GameplayBuffers.Displacement;
 		GameplayBuffers.Gameplay = Stencils.ObjectRenderTarget; GameplayBuffers.Displacement = Displacement2;
 
@@ -143,7 +153,6 @@ public class WindowpaneManager : Entity{
 		level.BeforeRender();
 
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
-		//level.Background.Render(level);
 		StylegroundsPanelRenderer.RenderStylegroundsForRoom(RoomName, l.Background, l);
 		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, level.GameplayRenderer.Camera.Matrix);
 		level.Entities.RenderExcept((int) Tags.HUD | (int) TagsExt.SubHUD);
@@ -151,7 +160,6 @@ public class WindowpaneManager : Entity{
 		GameplayRenderer.End();
 		level.Lighting.Render(level);
 		level.Displacement.Render(level);
-		//level.Foreground.Render(level);
 		StylegroundsPanelRenderer.RenderStylegroundsForRoom(RoomName, l.Foreground, l);
 		level.AfterRender();
 		GameplayBuffers.Gameplay = oldGm; GameplayBuffers.Displacement = oldDisp;

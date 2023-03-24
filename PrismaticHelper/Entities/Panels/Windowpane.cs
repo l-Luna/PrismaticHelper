@@ -9,13 +9,15 @@ namespace PrismaticHelper.Entities.Panels;
 [Tracked]
 public class Windowpane : AbstractPanel{
 
+	public bool IgnoreColours;
+
 	public Windowpane(EntityData data, Vector2 pos) : base(data, pos){
 		SpeedrunToolInterop.IgnoreSaveState?.Invoke(this, true);
 	}
 
 	public override void Added(Scene scene){
 		base.Added(scene);
-		Windowpanes.RegisterManagerRequired(scene, RoomName, !Foreground);
+		Windowpanes.RegisterManagerRequired(scene, RoomName, !Foreground, IgnoreColours);
 	}
 
 	public override void Awake(Scene scene){

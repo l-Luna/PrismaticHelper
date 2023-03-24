@@ -24,6 +24,8 @@ public class Puppet : Entity, Scriptable{
 	// Scriptable
 	public string ScName() => name;
 	public Sprite? ScSprite() => sprite;
+	public Vector2 ScBasePosition() => ScSprite()?.Center ?? Vector2.Zero;
+	public Vector2 ScBaseJustify() => ScBasePosition();
 	
 	public Vector2 ScPosition{
 		get => Position;

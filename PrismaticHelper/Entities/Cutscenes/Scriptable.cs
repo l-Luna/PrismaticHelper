@@ -11,4 +11,7 @@ public interface Scriptable{
 
 	public Vector2 ScPosition{ get; set; }
 	public float ScScale{ get; set; }
+
+	public Vector2 ScBasePosition();
+	public Vector2 ScBaseJustify();
 }
