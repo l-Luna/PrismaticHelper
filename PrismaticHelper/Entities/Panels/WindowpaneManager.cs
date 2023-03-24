@@ -130,7 +130,7 @@ public class WindowpaneManager : Entity{
 
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.MaskRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
-		Draw.SpriteBatch.Begin();
+		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 		foreach(var panel in myPanes)
 			panel.DrawMask(camera);
 		Draw.SpriteBatch.End();
