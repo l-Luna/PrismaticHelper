@@ -1,7 +1,6 @@
 ﻿using Celeste.Mod;
 
 using PrismaticHelper.Entities;
-using PrismaticHelper.Entities.Objects;
 using PrismaticHelper.Entities.Panels;
 
 namespace PrismaticHelper;
@@ -14,14 +13,14 @@ public class PrismaticHelperModule : EverestModule {
 	public override void Load() {
 		Cutscenes.CutsceneTriggers.Load();
 		StylegroundsPanelRenderer.Load();
-		CassetteKevin.Load();
+		CassetteListener.Load();
 		Windowpanes.Load();
 	}
 
 	public override void Unload() {
 		Cutscenes.CutsceneTriggers.Unload();
 		StylegroundsPanelRenderer.Unload();
-		CassetteKevin.Unload();
+		CassetteListener.Unload();
 		Windowpanes.Unload();
 
 		Stencils.Unload();

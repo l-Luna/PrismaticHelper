@@ -27,6 +27,10 @@ public class CassetteKevin : CrushBlock{
 	public bool activated;
 	
 	public CassetteKevin(EntityData data, Vector2 pos) : base(data, pos){
+		Add(new CassetteListener{
+			OnBeat = i => activated |= index == i
+		});
+		
 		origCollider = OnDashCollide;
 		OnDashCollide = OnDashed;
 		myData = new DynamicData(this);
@@ -136,19 +140,5 @@ public class CassetteKevin : CrushBlock{
 				img.Color = color;
 			}
 		}
-	}
-
-	public static void Load(){
-		On.Celeste.CassetteBlockManager.SetActiveIndex += CsActive;
-	}
-
-	public static void Unload(){
-		On.Celeste.CassetteBlockManager.SetActiveIndex -= CsActive;
-	}
-	
-	private static void CsActive(On.Celeste.CassetteBlockManager.orig_SetActiveIndex orig, CassetteBlockManager self, int i){
-		orig(self, i);
-		foreach(var kevin in self.Scene.Tracker.GetEntities<CassetteKevin>().Cast<CassetteKevin>())
-			kevin.activated |= kevin.index == i; // kevins shouldn't be unactivated, they deactivate themselves appropriately
 	}
 }
