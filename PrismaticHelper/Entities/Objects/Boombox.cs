@@ -56,6 +56,7 @@ public class Boombox : Entity{
 			Add(mover = new StaticMover{
 				SolidChecker = solid => CollideCheck(solid, Position + (Direction ?? Entities.Direction.Down).Offset()),
 				JumpThruChecker = jumpThru => CollideCheck(jumpThru, Position + Direction?.Offset() ?? Vector2.Zero),
+				OnShake = v => image.Position += v
 				//OnEnable = OnEnable,
 				//OnDisable = OnDisable
 			});
