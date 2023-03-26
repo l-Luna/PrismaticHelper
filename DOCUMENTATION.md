@@ -5,10 +5,38 @@
 ### Multi-lock door
 Multi-lock doors are doors that require multiple keys (at least one) to unlock. Keys are only consumed when all of the required keys are collected by the player, and the player is within 60 pixels of the door and has a line of sight to its centre.
 
-### Cassette Kevins
+### Custom Power Source Number
+These act like the indicators in Farewell's *Power Source* checkpoint, that light up when you collect certain keys. You can specify a texture to use as its background and one that should be it up, as well as activate it even when lightning is present.
+
+### Attached Watchtower
+Watchtowers that attach to solid blocks below them. Intended for use with Floaty Space Blocks or other non-gameplay entities.
+
+### Cassette Kevin
 These Kevins can be hit on their allowed sides like normal, but only begin to charge in their direction when the cassette blocks corresponding to their colour turn on. In the meantime, they can be hit any number of times to change their next direction.
 
 Note that you must include at least one cassette block in rooms with cassette Kevins for them to ever activate. Since Bright Sun (yellow) and Malachite (green) blocks are only given turns if they exist in the current room, you'll need to include those blocks if you want to use correspondingly coloured Kevins.
+
+### Boombox
+Boomboxes activate on cassette block beats corresponding to their colour, creating an explosion similar to pufferfish/bumpers/respawning seekers. They can be attached to solids below them.
+
+Big Boomboxes give exactly the same boost as other entities. Small ones:
+- don't refill your dash or stamina
+- provide less speed
+- have a smaller radius
+- don't provide a puffer/bumper boost
+- don't create a dash cooldown.
+
+Like Cassette Kevins, you must include cassette blocks in the room for these to activate, of at least the same index.
+
+### Stylegrounds Panels
+These display the stylegrounds of another room, restricted to an area; by default rectangular, but you can specify a mask image to use another shape. You may also specify a tint and opacity (which work on top of a mask, if present), attach them to entities, and modify their parallax.
+
+### World Panels
+These display another room, restricted to an area. The options here are identical to Stylegrounds Panels.
+
+The room will always be viewed from its default spawn point (which can be forced using an option on Spawn Points). The player in the room will be unable to react to input, and should generally be placed offscreen or in solid tiles. Allowing the confined player to die or move between rooms is Undefined Behaviour - AKA, don't do that.
+
+For now, World Panels always appear in the foreground, ignoring the Foreground option. This will be fixed in a future release.
 
 ## Cutscenes
 Prismatic Helper allows you to use custom cutscene triggers in dialog, which allow you to include some fancy effects in your regular dialog. The available triggers are limited to what is defined by Prismatic Helper (or other mods that add triggers), and more complex cutscenes may require Lua Cutscenes or C# code.
