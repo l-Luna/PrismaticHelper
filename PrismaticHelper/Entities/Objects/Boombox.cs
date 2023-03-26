@@ -12,12 +12,12 @@ public class Boombox : Entity{
 	protected int Index;
 	protected Direction? Direction;
 	protected bool Big, Attached;
-
+	
 	protected StaticMover mover;
 	protected Hitbox attachCollider;
 	protected Circle explodeCollider;
-
 	protected Image image;
+
 	protected ParticleType pBoom;
 	
 	public Boombox(EntityData data, Vector2 pos) : base(data.Position + pos){
@@ -31,6 +31,7 @@ public class Boombox : Entity{
 		explodeCollider = new Circle(size * 1.5f, size / 2f, size / 2f + 4);
 		
 		Add(new CassetteListener{
+			PreBeat = PreBeat,
 			OnBeat = OnBeat
 		});
 		
@@ -61,8 +62,15 @@ public class Boombox : Entity{
 		}
 	}
 
+	protected void PreBeat(int idx){
+		if(idx == Index)
+			image.Position += Vector2.UnitY;
+	}
+
 	protected void OnBeat(int idx){
 		if(idx == Index){
+			image.Position -= Vector2.UnitY;
+			
 			Level level = SceneAs<Level>();
 			var radius = explodeCollider.Radius;
 			
