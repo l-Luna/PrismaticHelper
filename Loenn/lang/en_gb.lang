@@ -19,12 +19,29 @@ entities.PrismaticHelper/CustomPowerSourceNumber.attributes.description.requires
 
 # Stylegrounds Panel
 entities.PrismaticHelper/StylegroundsPanel.placements.name.stylegrounds_panel=Stylegrounds Panel
-entities.PrismaticHelper/StylegroundsPanel.attributes.description.foreground=Whether the panel should render in front of the player and objects.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.foreground=Whether the panel should display foreground stylegrounds in front of the player and objects, or background ones behind.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.attached=Whether the panel should attach to solids.
 entities.PrismaticHelper/StylegroundsPanel.attributes.description.scrollX=How quickly the panel moves relative to the camera on the X axis.
 entities.PrismaticHelper/StylegroundsPanel.attributes.description.scrollY=How quickly the panel moves relative to the camera on the Y axis.
-entities.PrismaticHelper/StylegroundsPanel.attributes.description.opcacity=How opaque the stylegrounds panel and its contained stylegrounds are.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.opacity=How opaque the stylegrounds panel and its contained stylegrounds are.
 entities.PrismaticHelper/StylegroundsPanel.attributes.description.room=The name of the room this panel will take stylegrounds from. The room does not have to exist, unless this name is only matched by a wildcard.
-entities.PrismaticHelper/StylegroundsPanel.attributes.description.tint=The colour that stylegrounds within the mask should be tinted, as a hex code; #ffffff by default.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.tint=The colour that stylegrounds within the panel should be tinted, as a hex code; #ffffff by default.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.mask=An optional image; the stylegrounds will be displayed in the non-transparent parts of this image and tinted by its colours.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.name=An optional name used in dialog triggers to refer to this panel.
+entities.PrismaticHelper/StylegroundsPanel.attributes.description.image=An optional image displayed at this panel's position.
+
+# World Panel
+entities.PrismaticHelper/WorldPanel.placements.name.world_panel=World Panel
+entities.PrismaticHelper/WorldPanel.attributes.description.foreground=Whether the panel should display the room in front of the player and objects or behind.
+entities.PrismaticHelper/WorldPanel.attributes.description.attached=Whether the panel should attach to solids.
+entities.PrismaticHelper/WorldPanel.attributes.description.scrollX=How quickly the panel moves relative to the camera on the X axis.
+entities.PrismaticHelper/WorldPanel.attributes.description.scrollY=How quickly the panel moves relative to the camera on the Y axis.
+entities.PrismaticHelper/WorldPanel.attributes.description.opacity=How opaque the world panel and its confined room are.
+entities.PrismaticHelper/WorldPanel.attributes.description.room=The name of the room that will be confined within this panel.
+entities.PrismaticHelper/WorldPanel.attributes.description.tint=The colour that the room within the panel should be tinted, as a hex code; #ffffff by default.
+entities.PrismaticHelper/WorldPanel.attributes.description.mask=An optional image; the room will be displayed in the non-transparent parts of this image and tinted by its colours.
+entities.PrismaticHelper/WorldPanel.attributes.description.name=An optional name used in dialog triggers to refer to this panel.
+entities.PrismaticHelper/WorldPanel.attributes.description.image=An optional image displayed at this panel's position.
 
 # Cassette Kevin
 entities.PrismaticHelper/CassetteKevin.placements.name.both=Cassette Kevin (Both)
@@ -34,11 +51,14 @@ entities.PrismaticHelper/CassetteKevin.attributes.description.axes=Determines wh
 entities.PrismaticHelper/CassetteKevin.attributes.description.chillout=Whether the block should have the large face and get tired after being hit.
 entities.PrismaticHelper/CassetteKevin.attributes.description.index=Which colour's beat the Cassette Kevin should activate on. (Blue/Rose/Bright Sun/Malachite)
 
-# Windowpane
-entities.PrismaticHelper/Windowpane.placements.name.windowpane=Windowpane
-entities.PrismaticHelper/Windowpane.attributes.description.room=The name of the room visible through this windowpane.
-
 # Attached Watchtower
 entities.PrismaticHelper/AttachedWatchtower.placements.name.attached_watchtower=Attached Watchtower
 entities.PrismaticHelper/AttachedWatchtower.attributes.description.summit=Whether the watchtower should zoom on the final node or not. Requires nodes to function, otherwise game will crash.
 entities.PrismaticHelper/AttachedWatchtower.attributes.description.onlyY=Whether the watchtower can only move vertically. If the watch tower has nodes it will still follow them.
+
+# Boombox
+entities.PrismaticHelper/Boombox.placements.name.boombox=Boombox
+entities.PrismaticHelper/Boombox.attributes.description.index=Which colour's beat the Boombox should activate on. (Blue/Rose/Bright Sun/Malachite)
+entities.PrismaticHelper/Boombox.attributes.description.big=Big Boomboxes are larger, and give more speed & refill on beat.
+entities.PrismaticHelper/Boombox.attributes.description.direction=(TODO) Which direction the Boombox should boost you in and attach from.
+entities.PrismaticHelper/Boombox.attributes.description.attached=Whether the Boombox should attach to solids.

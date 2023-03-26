@@ -14,5 +14,4 @@ a_watchtower.placements = {
     }
 }
 
---return a_watchtower
-return nil
+return a_watchtower

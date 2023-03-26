@@ -14,14 +14,14 @@ public class PrismaticHelperModule : EverestModule {
 		Cutscenes.CutsceneTriggers.Load();
 		StylegroundsPanelRenderer.Load();
 		CassetteListener.Load();
-		Windowpanes.Load();
+		WorldPanels.Load();
 	}
 
 	public override void Unload() {
 		Cutscenes.CutsceneTriggers.Unload();
 		StylegroundsPanelRenderer.Unload();
 		CassetteListener.Unload();
-		Windowpanes.Unload();
+		WorldPanels.Unload();
 
 		Stencils.Unload();
 	}

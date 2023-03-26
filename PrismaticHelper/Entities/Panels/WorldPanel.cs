@@ -5,23 +5,23 @@ using Monocle;
 
 namespace PrismaticHelper.Entities.Panels;
 
-[CustomEntity("PrismaticHelper/Windowpane")]
+[CustomEntity("PrismaticHelper/Windowpane", "PrismaticHelper/WorldPanel")]
 [Tracked]
-public class Windowpane : AbstractPanel{
+public class WorldPanel : AbstractPanel{
 
 	public bool IgnoreColours;
 
-	public Windowpane(EntityData data, Vector2 pos) : base(data, pos){
+	public WorldPanel(EntityData data, Vector2 pos) : base(data, pos){
 		SpeedrunToolInterop.IgnoreSaveState?.Invoke(this, true);
 	}
 
 	public override void Added(Scene scene){
 		base.Added(scene);
-		Windowpanes.RegisterManagerRequired(scene, RoomName, !Foreground, IgnoreColours);
+		WorldPanels.RegisterManagerRequired(scene, RoomName, !Foreground, IgnoreColours);
 	}
 
 	public override void Awake(Scene scene){
 		base.Awake(scene);
-		Windowpanes.WpAwake(scene);
+		WorldPanels.WpAwake(scene);
 	}
 }

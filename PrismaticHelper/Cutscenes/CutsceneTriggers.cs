@@ -336,7 +336,7 @@ public static class CutsceneTriggers{
 		static IEnumerator spt(Player p, Level l, string targetName, string puppetName, Vector2? origin, float duration, string introType){
 			var puppet = GetScriptableByName(l, puppetName);
 			if(puppet != null){
-				AbstractPanel panel = new Windowpane(new EntityData(), Vector2.Zero){
+				AbstractPanel panel = new WorldPanel(new EntityData(), Vector2.Zero){
 					Position = puppet.ScPosition + puppet.ScBasePosition(),
 					Opacity = 1,
 					RoomName = targetName,
@@ -367,7 +367,7 @@ public static class CutsceneTriggers{
 		
 		RegisterScriptableProvider(l => l.Tracker.GetEntities<BadelinePuppet>().Cast<Scriptable>().ToList());
 		RegisterScriptableProvider(l => l.Tracker.GetEntities<Puppet>().Cast<Scriptable>().ToList());
-		RegisterScriptableProvider(l => l.Tracker.GetEntities<Windowpane>().Cast<Scriptable>().ToList());
+		RegisterScriptableProvider(l => l.Tracker.GetEntities<WorldPanel>().Cast<Scriptable>().ToList());
 		RegisterScriptableProvider(l => l.Tracker.GetEntities<StylegroundsPanel>().Cast<Scriptable>().ToList());
 	}
 

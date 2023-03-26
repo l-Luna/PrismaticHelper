@@ -1,10 +1,10 @@
-local windowpane = {}
+local world_panel = {}
 
-windowpane.name = "PrismaticHelper/Windowpane"
-windowpane.fillColor = {0.5, 0.4, 0.6, 0.6}
-windowpane.borderColor = {0.2, 0.15, 0.25, 0.4}
-windowpane.placements = {
-      name = "windowpane",
+world_panel.name = "PrismaticHelper/WorldPanel"
+world_panel.fillColor = {0.5, 0.4, 0.6, 0.6}
+world_panel.borderColor = {0.2, 0.15, 0.25, 0.4}
+world_panel.placements = {
+      name = "world_panel",
       data = {
           width = 8,
           height = 8,
@@ -21,5 +21,4 @@ windowpane.placements = {
       }
 }
 
-return windowpane
---return nil
+return world_panel

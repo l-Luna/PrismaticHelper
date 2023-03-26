@@ -15,7 +15,7 @@ public static class StylegroundsPanelRenderer{
 			.GetEntities<StylegroundsPanel>()
 			.Cast<AbstractPanel>()
 			.Where(it => it.Foreground == fg)
-			.Concat(level.Tracker.GetEntities<Windowpane>().Cast<AbstractPanel>())
+			.Concat(level.Tracker.GetEntities<WorldPanel>().Cast<AbstractPanel>())
 			.GroupBy(it => it.RoomName)
 			.ToList();
 

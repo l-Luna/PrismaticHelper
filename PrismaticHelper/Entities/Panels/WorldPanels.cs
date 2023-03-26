@@ -7,9 +7,9 @@ using MonoMod.Utils;
 
 namespace PrismaticHelper.Entities.Panels;
 
-public static class Windowpanes{
+public static class WorldPanels{
 
-	private const string windowpaneRoomNames = "PrismaticHelper:windowpane_rooms";
+	private const string worldPanelRoomNames = "PrismaticHelper:world_panel_rooms";
 	private const string bgRoomNames = "PrismaticHelper:background_rooms";
 	private const string noTintRoomNames = "PrismaticHelper:no_tint_rooms";
 
@@ -17,7 +17,7 @@ public static class Windowpanes{
 		List<string> req = RequiredManagers(s);
 		if(!req.Contains(room))
 			req.Add(room);
-		DynamicData.For(s).Set(windowpaneRoomNames, req);
+		DynamicData.For(s).Set(worldPanelRoomNames, req);
 
 		List<string> bgs = BackgroundRooms(s);
 		if(background && !bgs.Contains(room))
@@ -31,7 +31,7 @@ public static class Windowpanes{
 	}
 
 	public static List<string> RequiredManagers(Scene s){
-		return RoomsTagged(s, windowpaneRoomNames);
+		return RoomsTagged(s, worldPanelRoomNames);
 	}
 
 	public static List<string> BackgroundRooms(Scene s){
@@ -51,7 +51,7 @@ public static class Windowpanes{
 		var bgRooms = BackgroundRooms(s);
 		var noTintRooms = NoTintRooms(s);
 		foreach(var required in requiredManagers){
-			var manager = WindowpaneManager.ofRoom(required, s, bgRooms.Contains(required), noTintRooms.Contains(required));
+			var manager = WorldPanelManager.ofRoom(required, s, bgRooms.Contains(required), noTintRooms.Contains(required));
 			if(manager != null)
 				s.Add(manager);
 		}
@@ -73,7 +73,7 @@ public static class Windowpanes{
 		On.Celeste.AudioState.Apply -= AudioStateApply;
 		On.Celeste.LevelLoader.ctor -= LevelLoaderConstruct;
 
-		WindowpaneManager.Unload();
+		WorldPanelManager.Unload();
 	}
 
 	private static void AudioStateApply(On.Celeste.AudioState.orig_Apply orig, AudioState self){

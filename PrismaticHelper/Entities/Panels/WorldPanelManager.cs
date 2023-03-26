@@ -7,7 +7,7 @@ using MonoMod.Utils;
 
 namespace PrismaticHelper.Entities.Panels;
 
-public class WindowpaneManager : Entity{
+public class WorldPanelManager : Entity{
 
 	public static VirtualRenderTarget Displacement2;
 
@@ -16,7 +16,7 @@ public class WindowpaneManager : Entity{
 
 	private bool active = true, bg = false, noTint = false;
 
-	public static WindowpaneManager ofRoom(string roomName, Scene owner, bool bg, bool noTint){
+	public static WorldPanelManager ofRoom(string roomName, Scene owner, bool bg, bool noTint){
 		if(owner is not Level l)
 			return null;
 
@@ -25,7 +25,7 @@ public class WindowpaneManager : Entity{
 			return null;
 
 		try{
-			Windowpanes.ManipulateLevelLoads = true;
+			WorldPanels.ManipulateLevelLoads = true;
 
 			Session fakeSession = new Session(l.Session.Area){
 				Level = target.Name
@@ -51,9 +51,9 @@ public class WindowpaneManager : Entity{
 			Audio.SetCamera(l.Camera);
 			new DynamicData(typeof(GameplayRenderer)).Set("instance", l.GameplayRenderer);
 
-			return new WindowpaneManager(roomName, fake, bg, noTint);
+			return new WorldPanelManager(roomName, fake, bg, noTint);
 		}finally{
-			Windowpanes.ManipulateLevelLoads = false;
+			WorldPanels.ManipulateLevelLoads = false;
 		}
 	}
 
@@ -61,7 +61,7 @@ public class WindowpaneManager : Entity{
 		Displacement2?.Dispose();
 	}
 
-	private WindowpaneManager(string roomName, Level scene, bool bg, bool noTint){
+	private WorldPanelManager(string roomName, Level scene, bool bg, bool noTint){
 		RoomName = roomName;
 		level = scene;
 		this.bg = bg;
@@ -125,7 +125,7 @@ public class WindowpaneManager : Entity{
 
 		Camera camera = SceneAs<Level>().Camera;
 		// i Love stencils
-		var myPanes = SceneAs<Level>().Tracker.GetEntities<Windowpane>().Cast<Windowpane>()
+		var myPanes = SceneAs<Level>().Tracker.GetEntities<WorldPanel>().Cast<WorldPanel>()
 			.Where(x => x.RoomName == RoomName);
 
 		Draw.SpriteBatch.End();
