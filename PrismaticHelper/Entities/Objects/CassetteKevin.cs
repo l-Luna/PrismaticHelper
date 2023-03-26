@@ -12,9 +12,7 @@ namespace PrismaticHelper.Entities.Objects;
 [Tracked]
 public class CassetteKevin : CrushBlock{
 
-	private static readonly Color[] colors = {
-		Calc.HexToColor("49aaf0"), Calc.HexToColor("f049be"), Calc.HexToColor("fcdc3a"), Calc.HexToColor("38e04e"),
-	};
+	
 	
 	private DashCollision origCollider;
 	private Vector2 pendingAttack;
@@ -37,7 +35,7 @@ public class CassetteKevin : CrushBlock{
 
 		index = data.Int("index", 0);
 
-		color = index < colors.Length ? colors[index] : colors[0];
+		color = CassetteListener.GetByIndex(index);
 		var customColor = data.Attr("colour");
 		if(!string.IsNullOrWhiteSpace(customColor) && customColor.Length == 6)
 			color = Calc.HexToColor(customColor);

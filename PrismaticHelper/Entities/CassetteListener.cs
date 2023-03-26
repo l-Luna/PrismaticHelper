@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Celeste;
+using Microsoft.Xna.Framework;
 using Monocle;
 
 namespace PrismaticHelper.Entities;
@@ -8,10 +9,18 @@ namespace PrismaticHelper.Entities;
 [Tracked]
 public class CassetteListener : Component{
 
+	public static readonly Color[] CassetteColours = {
+		Calc.HexToColor("49aaf0"), Calc.HexToColor("f049be"), Calc.HexToColor("fcdc3a"), Calc.HexToColor("38e04e")
+	};
+	
 	public Action<int> OnBeat;
 
 	public CassetteListener() : base(false, false){}
-	
+
+	public static Color GetByIndex(int index){
+		return CassetteColours[index < CassetteColours.Length ? index : 0];
+	}
+
 	public static void Load(){
 		On.Celeste.CassetteBlockManager.SetActiveIndex += CsActive;
 	}
