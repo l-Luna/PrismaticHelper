@@ -17,6 +17,15 @@ public class Stencils{
 		AlphaDestinationBlend = Blend.SourceColor
 	};
 	
+	public static readonly BlendState AlphaMaskClearBlendState = new(){
+		ColorSourceBlend = Blend.Zero,
+		ColorBlendFunction = BlendFunction.Add,
+		ColorDestinationBlend = Blend.SourceAlpha,
+		AlphaSourceBlend = Blend.Zero,
+		AlphaBlendFunction = BlendFunction.Add,
+		AlphaDestinationBlend = Blend.SourceAlpha
+	};
+	
 	public static VirtualRenderTarget MaskRenderTarget{
 		get{
 			return _MaskRenderTarget ??= VirtualContent.CreateRenderTarget("PrismaticHelper:mask", 320, 180);

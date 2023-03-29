@@ -137,14 +137,6 @@ public class WorldPanelManager : Entity{
 			panel.DrawMask(camera);
 		Draw.SpriteBatch.End();
 
-		if(noTint){
-			Color[] data = new Color[Stencils.MaskRenderTarget.Width * Stencils.MaskRenderTarget.Height];
-			Stencils.MaskRenderTarget.Target.GetData(data);
-			for(var idx = 0; idx < data.Length; idx++)
-				data[idx] = new Color(1f, 1f, 1f) * (data[idx].A / 255f);
-			Stencils.MaskRenderTarget.Target.SetData(data);
-		}
-
 		VirtualRenderTarget oldGm = GameplayBuffers.Gameplay, oldDisp = GameplayBuffers.Displacement;
 		GameplayBuffers.Gameplay = Stencils.ObjectRenderTarget; GameplayBuffers.Displacement = Displacement2;
 
@@ -165,7 +157,7 @@ public class WorldPanelManager : Entity{
 		GameplayBuffers.Gameplay = oldGm; GameplayBuffers.Displacement = oldDisp;
 
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.ObjectRenderTarget);
-		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, Stencils.AlphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
+		Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, noTint ? Stencils.AlphaMaskClearBlendState : Stencils.AlphaMaskBlendState, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
 		Draw.SpriteBatch.Draw(Stencils.MaskRenderTarget, Vector2.Zero, Color.White);
 		Draw.SpriteBatch.End();
 
