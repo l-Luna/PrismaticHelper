@@ -1,8 +1,4 @@
-# -- Entities --
-# entities.entityName.placements.name.*
-# entities.entityName.placements.description.*
-# entities.entityName.attributes.name.*
-# entities.entityName.attributes.description.*
+# Entities
 
 # Multi-Locked Door
 entities.PrismaticHelper/MultiLockedDoor.placements.name.multi_locked_door_wood=Multi-Locked Door (Wood)
@@ -62,3 +58,8 @@ entities.PrismaticHelper/Boombox.attributes.description.index=Which colour's bea
 entities.PrismaticHelper/Boombox.attributes.description.big=Big Boomboxes are larger, and give more speed & refill on beat.
 entities.PrismaticHelper/Boombox.attributes.description.direction=(TODO) Which direction the Boombox should boost you in and attach from.
 entities.PrismaticHelper/Boombox.attributes.description.attached=Whether the Boombox should attach to solids.
+
+# Effects
+
+# Flyaway
+style.effects.PrismaticHelper/Flyaway.name=Flyaway Parallax
