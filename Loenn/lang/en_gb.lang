@@ -62,4 +62,5 @@ entities.PrismaticHelper/Boombox.attributes.description.attached=Whether the Boo
 # Effects
 
 # Flyaway
-style.effects.PrismaticHelper/Flyaway.name=Flyaway Parallax
+style.effects.PrismaticHelper/Flyaway.name=Flyaway
+style.effects.PrismaticHelper/RotatingParallax.name=Rotating Parallax
