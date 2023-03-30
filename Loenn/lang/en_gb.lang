@@ -63,4 +63,28 @@ entities.PrismaticHelper/Boombox.attributes.description.attached=Whether the Boo
 
 # Flyaway
 style.effects.PrismaticHelper/Flyaway.name=Flyaway
+style.effects.PrismaticHelper/Flyaway.description.limit=The maximum number of objects that may be created at once.
+style.effects.PrismaticHelper/Flyaway.description.chance=The chance of an object being created every frame.
+style.effects.PrismaticHelper/Flyaway.description.speed=The speed that objects fly towards the centre of the screen at, as a multiplier.
+style.effects.PrismaticHelper/Flyaway.description.spawnDistance=The distance from the centre of the screen that objects spawn at, as a multiple of the screen's diagonal size.
+style.effects.PrismaticHelper/Flyaway.description.baseScale=How much objects are scaled compared to their texture size, at the edges of the screen.
+style.effects.PrismaticHelper/Flyaway.description.bonusScale=The maximum amount that an object's scale can be randomly increased by.
+style.effects.PrismaticHelper/Flyaway.description.baseAlpha=The alpha of objects. If Scale Alpha is enabled, this refers to their alpha at the screen's edges.
+style.effects.PrismaticHelper/Flyaway.description.canFlipX=Whether objects can be randomly flipped horizontally.
+style.effects.PrismaticHelper/Flyaway.description.canFlipY=Whether objects can be randomly flipped vertically.
+style.effects.PrismaticHelper/Flyaway.description.scaleAlpha=Whether the opacity of objects should decrease as they approach the centre of the screen, multiplied by their scale.
+
+# Rotating Parallax
 style.effects.PrismaticHelper/RotatingParallax.name=Rotating Parallax
+style.effects.PrismaticHelper/RotatingParallax.description.alpha=Determines opacity between 0 (Translucent) and 1 (Opaque).
+style.effects.PrismaticHelper/RotatingParallax.description.scrollX=Determines the parallax scrolling of a styleground along the X axis.
+style.effects.PrismaticHelper/RotatingParallax.description.scrollY=Determines the parallax scrolling of a styleground along the Y axis.
+style.effects.PrismaticHelper/RotatingParallax.description.speedX=Automatically moves the styleground along the X axis in-game.
+style.effects.PrismaticHelper/RotatingParallax.description.speedY=Automatically moves the styleground along the Y axis in-game.
+style.effects.PrismaticHelper/RotatingParallax.description.x=Determines the position of the styleground's appearance on screen in-game on the X axis.
+style.effects.PrismaticHelper/RotatingParallax.description.y=Determines the position of the styleground's appearance on screen in-game on the Y axis.
+style.effects.PrismaticHelper/RotatingParallax.description.texture=The texture that the styleground should use.
+style.effects.PrismaticHelper/RotatingParallax.description.atlas=The atlas that the texture should be drawn from.
+style.effects.PrismaticHelper/RotatingParallax.description.scale=The scale that the texture should be drawn at.
+style.effects.PrismaticHelper/RotatingParallax.description.fadeIn=Determines whether the styleground should fade in when transitioning to it.
+style.effects.PrismaticHelper/RotatingParallax.description.rotationSpeed=The speed that the styleground should rotate at.

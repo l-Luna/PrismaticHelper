@@ -26,6 +26,8 @@ public class RotatingParallax : Backdrop{
 		Position.Y = e.AttrFloat("y");
 		Scroll.X = e.AttrFloat("scrollX");
 		Scroll.Y = e.AttrFloat("scrollY");
+		Speed.X = e.AttrFloat("speedX");
+		Speed.Y = e.AttrFloat("speedY");
 	}
 
 	public override void Update(Scene scene){

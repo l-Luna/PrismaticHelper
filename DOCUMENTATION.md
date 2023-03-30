@@ -38,6 +38,16 @@ The room will always be viewed from its default spawn point (which can be forced
 
 For now, World Panels always appear in the foreground, ignoring the Foreground option. This will be fixed in a future release.
 
+## Stylegrounds
+
+### Flyaway
+The Flyaway effect creates objects at the edges of the screen that fly towards the middle, shrinking as they approach it. You can specify a set of textures to be randomly picked from, as well as their frequency, number, speed, opacity...
+
+### Rotating Parallax
+Like it says on the tin. Rotating Parallax effects simply draw an image, rotating from their centre over time at a chosen speed.
+
+Unlike ordinary Parallaxes, Rotating Parallax effects can't be made to loop; what exactly that would mean is ambiguous and unlikely to be what you intended.
+
 ## Cutscenes
 Prismatic Helper allows you to use custom cutscene triggers in dialog, which allow you to include some fancy effects in your regular dialog. The available triggers are limited to what is defined by Prismatic Helper (or other mods that add triggers), and more complex cutscenes may require Lua Cutscenes or C# code.
 
