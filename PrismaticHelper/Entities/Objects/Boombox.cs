@@ -21,6 +21,8 @@ public class Boombox : Entity{
 	protected ParticleType pBoom;
 	
 	public Boombox(EntityData data, Vector2 pos) : base(data.Position + pos){
+		Depth = 1;
+		
 		Index = data.Int("index");
 		Direction = data.AttrDirection("direction");
 		Big = data.Bool("big");
