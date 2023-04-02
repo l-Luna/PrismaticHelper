@@ -336,11 +336,15 @@ public static class CutsceneTriggers{
 		static IEnumerator spt(Player p, Level l, string targetName, string puppetName, Vector2? origin, float duration, string introType){
 			var puppet = GetScriptableByName(l, puppetName);
 			if(puppet != null){
-				AbstractPanel panel = new WorldPanel(new EntityData(), Vector2.Zero){
+				var data = new EntityData{
+					Values = new Dictionary<string, object>{
+						["foreground"] = true,
+						["opacity"] = 1,
+						["room"] = targetName
+					}
+				};
+				AbstractPanel panel = new WorldPanel(data, Vector2.Zero){
 					Position = puppet.ScPosition + puppet.ScBasePosition(),
-					Opacity = 1,
-					RoomName = targetName,
-					Foreground = true,
 					Origin = origin ?? puppet.ScBaseJustify(),
 					IgnoreColours = true
 				};
@@ -351,7 +355,7 @@ public static class CutsceneTriggers{
 					panel.Mask.Color = Color.White * 0;
 				l.Add(panel);
 				yield return null;
-				for(float progress = 0.0f; progress < 1.0; progress += Engine.DeltaTime / duration){
+				for(float progress = 0; progress < 1; progress += Engine.DeltaTime / duration){
 					panel.Scale = 1 + Ease.CubeIn(progress) * 80;
 					yield return null;
 				}

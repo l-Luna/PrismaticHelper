@@ -67,8 +67,7 @@ public class WorldPanelManager : Entity{
 		this.bg = bg;
 		this.noTint = noTint;
 
-		// TODO; breaks spt
-		Depth = /*bg ? 8500 :*/ Depths.FGDecals - 1;
+		Depth = bg ? Depths.BGTerrain + 1 : Depths.Enemy - 1;
 
 		SpeedrunToolInterop.IgnoreSaveState?.Invoke(this, true);
 	}

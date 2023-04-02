@@ -1,3 +1,5 @@
+local depths = require("utils.depths")
+
 local world_panel = {}
 
 world_panel.name = "PrismaticHelper/WorldPanel"
@@ -20,5 +22,9 @@ world_panel.placements = {
           name = ""
       }
 }
+
+function world_panel.depth(room, entity)
+    return entity.foreground and -12501 or 10001
+end
 
 return world_panel

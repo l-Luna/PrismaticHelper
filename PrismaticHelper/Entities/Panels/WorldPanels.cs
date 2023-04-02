@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Celeste;
 using Microsoft.Xna.Framework;
 using Monocle;
@@ -39,7 +38,7 @@ public static class WorldPanels{
 	}
 	
 	public static List<string> NoTintRooms(Scene s){
-		return RoomsTagged(s, bgRoomNames);
+		return RoomsTagged(s, noTintRoomNames);
 	}
 	
 	public static List<string> RoomsTagged(Scene s, string tag){

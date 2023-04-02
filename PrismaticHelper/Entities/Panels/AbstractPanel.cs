@@ -30,7 +30,7 @@ public abstract class AbstractPanel : Entity, Scriptable{
 		Name = data.Attr("name");
 		Tint = Calc.HexToColor(data.Attr("tint", "#ffffff"));
 		
-		Depth = Foreground ? Depths.FGDecals + 1 : 8500;
+		Depth = Foreground ? Depths.Enemy - 1 : Depths.BGTerrain + 1;
 		
 		string imageName = data.Attr("image");
 		string maskName = data.Attr("mask");
