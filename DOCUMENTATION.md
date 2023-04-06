@@ -36,7 +36,10 @@ These display another room, restricted to an area. The options here are identica
 
 The room will always be viewed from its default spawn point (which can be forced using an option on Spawn Points). The player in the room will be unable to react to input, and should generally be placed offscreen or in solid tiles. Allowing the confined player to die or move between rooms is Undefined Behaviour - AKA, don't do that.
 
-For now, World Panels always appear in the foreground, ignoring the Foreground option. This will be fixed in a future release.
+## Triggers
+
+### Underwater Interaction
+While inside, the player can interact with interactible entities (i.e. watchtowers, NPCs, anything that uses the ... popup) while underwater, and not while above water like usual.
 
 ## Stylegrounds
 

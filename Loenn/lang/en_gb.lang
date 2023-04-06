@@ -59,6 +59,12 @@ entities.PrismaticHelper/Boombox.attributes.description.big=Big Boomboxes are la
 entities.PrismaticHelper/Boombox.attributes.description.direction=(TODO) Which direction the Boombox should boost you in and attach from.
 entities.PrismaticHelper/Boombox.attributes.description.attached=Whether the Boombox should attach to solids.
 
+# Triggers
+
+# Underwater Interaction
+triggers.PrismaticHelper/UnderwaterInteractionTrigger.placements.name.trigger=Underwater Interaction
+triggers.PrismaticHelper/UnderwaterInteractionTrigger.placements.descriptions.trigger=Allows interacting with watchtowers, NPCs, and such while underwater.
+
 # Effects
 
 # Flyaway

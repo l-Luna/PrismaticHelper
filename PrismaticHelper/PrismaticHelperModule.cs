@@ -2,6 +2,7 @@
 
 using PrismaticHelper.Entities;
 using PrismaticHelper.Entities.Panels;
+using PrismaticHelper.Triggers;
 
 namespace PrismaticHelper;
 
@@ -15,6 +16,7 @@ public class PrismaticHelperModule : EverestModule {
 		StylegroundsPanelRenderer.Load();
 		CassetteListener.Load();
 		WorldPanels.Load();
+		UnderwaterInteractionTrigger.Load();
 	}
 
 	public override void Unload() {
@@ -22,10 +24,15 @@ public class PrismaticHelperModule : EverestModule {
 		StylegroundsPanelRenderer.Unload();
 		CassetteListener.Unload();
 		WorldPanels.Unload();
+		UnderwaterInteractionTrigger.Unload();
 
 		Stencils.Unload();
 	}
 
+	public static void LogError(string message) {
+		Logger.Log(LogLevel.Error, "Prismatic Helper", message);
+	}
+	
 	public static void LogInfo(string message) {
 		Logger.Log(LogLevel.Info, "Prismatic Helper", message);
 	}
