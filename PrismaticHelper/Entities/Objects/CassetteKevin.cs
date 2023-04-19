@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Celeste;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
@@ -12,8 +11,6 @@ namespace PrismaticHelper.Entities.Objects;
 [Tracked]
 public class CassetteKevin : CrushBlock{
 
-	
-	
 	private DashCollision origCollider;
 	private Vector2 pendingAttack;
 	private Player pendingAttacker;

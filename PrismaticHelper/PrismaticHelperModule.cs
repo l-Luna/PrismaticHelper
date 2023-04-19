@@ -1,6 +1,7 @@
 ﻿using Celeste.Mod;
 
 using PrismaticHelper.Entities;
+using PrismaticHelper.Entities.Objects;
 using PrismaticHelper.Entities.Panels;
 using PrismaticHelper.Triggers;
 
