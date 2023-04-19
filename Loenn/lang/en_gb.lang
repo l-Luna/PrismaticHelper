@@ -59,9 +59,12 @@ entities.PrismaticHelper/Boombox.attributes.description.big=Big Boomboxes are la
 entities.PrismaticHelper/Boombox.attributes.description.direction=(TODO) Which direction the Boombox should boost you in and attach from.
 entities.PrismaticHelper/Boombox.attributes.description.attached=Whether the Boombox should attach to solids.
 
-# Heater
+# Heater/Freezer
 entities.PrismaticHelper/Heater.placements.name.heater=Heater
 entities.PrismaticHelper/Freezer.placements.name.freezer=Freezer
+
+# Heatwave Transition Controller
+entities.PrismaticHelper/HeatwaveTransitionController.placements.name.controller=Heatwave Transition Controller
 
 # Triggers
 
