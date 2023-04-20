@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Sprites>
-	<PrismaticHelper_crushblock_face path="PrismaticHelper/cassetteKevin/" start="idle">
-      <Center/>
-      <Loop id="idle" path="idle_face" delay="0.08"/>
-      <Anim id="hurt" path="hurt" frames="3-12" delay="0.08" goto="idle"/>
-      <Anim id="hit" path="hit" delay="0.08"/>
-      <Loop id="left" path="hit_left" delay="0.08"/>
-      <Loop id="right" path="hit_right" delay="0.08"/>
-      <Loop id="up" path="hit_up" delay="0.08"/>
-      <Loop id="down" path="hit_down" delay="0.08"/>
-  </PrismaticHelper_crushblock_face>
-  
-  <PrismaticHelper_giant_crushblock_face path="PrismaticHelper/cassetteKevin/" start="idle">
-      <Center/>
-      <Loop id="idle" path="giant_block" frames="0" delay="0.08"/>
-      <Anim id="hurt"  path="giant_block" frames="8-12" delay="0.08" goto="idle"/>
-      <Anim id="hit" path="giant_block" frames="0-5" delay="0.08"/>
-      <Loop id="right" path="giant_block" frames="6,7"  delay="0.08"/>
-  </PrismaticHelper_giant_crushblock_face>
+    <PrismaticHelper_crushblock_face path="PrismaticHelper/cassetteKevin/" start="idle">
+        <Center/>
+        <Loop id="idle" path="idle_face" delay="0.08"/>
+        <Anim id="hurt" path="hurt" frames="3-12" delay="0.08" goto="idle"/>
+        <Anim id="hit" path="hit" delay="0.08"/>
+        <Loop id="left" path="hit_left" delay="0.08"/>
+        <Loop id="right" path="hit_right" delay="0.08"/>
+        <Loop id="up" path="hit_up" delay="0.08"/>
+        <Loop id="down" path="hit_down" delay="0.08"/>
+    </PrismaticHelper_crushblock_face>
+
+    <PrismaticHelper_giant_crushblock_face path="PrismaticHelper/cassetteKevin/" start="idle">
+        <Center/>
+        <Loop id="idle" path="giant_block" frames="0" delay="0.08"/>
+        <Anim id="hurt" path="giant_block" frames="8-12" delay="0.08" goto="idle"/>
+        <Anim id="hit" path="giant_block" frames="0-5" delay="0.08"/>
+        <Loop id="right" path="giant_block" frames="6,7" delay="0.08"/>
+    </PrismaticHelper_giant_crushblock_face>
+
+    <PrismaticHelper_ice path="PrismaticHelper/temperatureBlocks/ice/iceblock" start="idle">
+        <Loop id="idle" path="" frames="1" delay="0.08" />
+        <Anim id="disappear" path="" frames="2-5" delay="0.08" goto="blank" />
+        <Loop id="blank" path="" frames="7" delay="0.08" />
+        <Anim id="appear" path="" frames="8-12" delay="0.08" goto="idle" />
+    </PrismaticHelper_ice>
+
+    <PrismaticHelper_steam path="PrismaticHelper/temperatureBlocks/steam/steamblock" start="idle">
+        <Loop id="idle" path="" frames="1" delay="0.08" />
+        <Anim id="disappear" path="" frames="2-5" delay="0.08" goto="blank" />
+        <Loop id="blank" path="" frames="7" delay="0.08" />
+        <Anim id="appear" path="" frames="8-12" delay="0.08" goto="idle" />
+    </PrismaticHelper_steam>
 </Sprites>
