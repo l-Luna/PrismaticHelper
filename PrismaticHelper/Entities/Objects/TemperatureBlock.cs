@@ -71,6 +71,7 @@ public class TemperatureBlock : Solid{
 		if(Activated && TimeLeft <= 0){
 			TimeLeft = 0;
 			Activated = false;
+			StartShaking(0.2f);
 			var level = SceneAs<Level>();
 			// check if any other freezers/heaters are still running instead of inturrupting them,
 			var similar = level.Tracker.GetEntities<TemperatureBlock>()
@@ -93,20 +94,27 @@ public class TemperatureBlock : Solid{
 	}
 
 	public override void Render(){
+		Vector2 realPos = Position;
+		Position += Shake;
+		
 		base.Render();
 		if(IsFreezer){
 			Draw.Rect(Collider, Color.SlateBlue); // for now
 			Draw.Rect(Position, Width, Height * (TimeLeft / MaxTime), Color.Blue);
 		}
+
+		Position = realPos;
 	}
 
 	protected DashCollisionResults OnDash(Player player, Vector2 direction){
+		bool ignore = false;
+		
 		if(!Activated){
 			var level = SceneAs<Level>();
 			Previous = level.CoreMode;
 			// if any temp blocks of the opposite type were activated *and* any wanted to change the core mode back, just turn them off
 			// and don't activate
-			var different = level.Tracker.GetEntities<TemperatureBlock>()
+			ignore = level.Tracker.GetEntities<TemperatureBlock>()
 				.Cast<TemperatureBlock>()
 				.Any(x => x.Target != Target && x.Activated && x.Previous != x.Target);
 			
@@ -115,18 +123,21 @@ public class TemperatureBlock : Solid{
 				level.CoreMode = Target;
 				switching = false;
 			}
-			
-			if(different)
-				return DashCollisionResults.Rebound;
 		}
-		
-		TimeLeft = MaxTime;
-		Activated = true;
+
+		if(!ignore){
+			TimeLeft = MaxTime;
+			Activated = true;
+		}
+
+		StartShaking(0.2f);
 		return DashCollisionResults.Rebound;
 	}
 
 	protected void OnCoreModeSwitch(CoreMode next){
 		if(!switching){
+			if(Activated)
+				StartShaking(0.2f);
 			Activated = false;
 			TimeLeft = 0;
 			// but don't switch back core mode
