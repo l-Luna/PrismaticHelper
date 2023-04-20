@@ -1,5 +1,11 @@
 ﻿local drawableNinePatch = require("structs.drawable_nine_patch")
 
+local ninePatchOptions = {
+    mode = "fill",
+    borderMode = "repeat",
+    fillMode = "repeat"
+}
+
 local heater = {}
 
 heater.name = "PrismaticHelper/Heater"
@@ -14,12 +20,7 @@ heater.placements = {
     }
 }
 
-local heaterTexture = "PrismaticHelper/heater/boilerplate"
-local ninePatchOptions = {
-    mode = "fill",
-    borderMode = "repeat",
-    fillMode = "repeat"
-}
+local heaterTexture = "PrismaticHelper/temperatureBlocks/boilerplate"
 
 function heater.sprite(room, entity)
     local x, y, width, height = entity.x or 0, entity.y or 0, entity.width or 0, entity.height or 0
@@ -32,8 +33,6 @@ end
 local freezer = {}
 
 freezer.name = "PrismaticHelper/Freezer"
-freezer.fillColor = {0.1, 0.2, 0.7, 0.6}
-freezer.borderColor = {0.1, 0.2, 0.7, 0.4}
 freezer.placements = {
     name = "freezer",
     data = {
@@ -42,5 +41,15 @@ freezer.placements = {
         maxTime = 7
     }
 }
+
+local freezerTexture = "PrismaticHelper/temperatureBlocks/icepack"
+
+function freezer.sprite(room, entity)
+    local x, y, width, height = entity.x or 0, entity.y or 0, entity.width or 0, entity.height or 0
+
+    local ninePatch = drawableNinePatch.fromTexture(freezerTexture, ninePatchOptions, x, y, width, height)
+
+    return ninePatch:getDrawableSprite()
+end
 
 return { heater, freezer }

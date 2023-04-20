@@ -33,34 +33,34 @@ public class TemperatureBlock : Solid{
 		OnDashCollide = OnDash;
 		Add(new CoreModeListener(OnCoreModeSwitch));
 
-		if(IsHeater){
-			string sprite = "PrismaticHelper/heater/boilerplate";
-			
-			// corners
-			AddImage(sprite, 0, 0, 0, 0, 8, 8);
-			AddImage(sprite, data.Width - 8, 0, 16, 0, 8, 8);
-			AddImage(sprite, 0, data.Height - 8, 0, 16, 8, 8);
-			AddImage(sprite, data.Width - 8, data.Height - 8, 16, 16, 8, 8);
-			for(int i = 1; i < data.Width / 8 - 1; i++){
-				// top/bottom row
-				AddImage(sprite, i * 8, 0, 8, 0, 8, 8);
-				AddImage(sprite, i * 8, data.Height - 8, 8, 16, 8, 8);
-			}
-			for(int i = 1; i < data.Height / 8 - 1; i++){
-				// left/right column
-				AddImage(sprite, 0, i * 8, 0, 8, 8, 8);
-				AddImage(sprite, data.Width - 8, i * 8, 16, 8, 8, 8);
-			}
-			for(int i = 1; i < data.Width / 8 - 1; i++){
-				for(int j = 1; j < data.Height / 8 - 1; j++){
-					// centre
-					AddImage(sprite, i * 8, j * 8, 8, 8, 8, 8);
-				}
-			}
+		string sprite = "PrismaticHelper/temperatureBlocks/" + (IsHeater ? "boilerplate" : "icepack");
 
-			foreach(var heats in HeatImages){
-				heats.Color = Color.Transparent;
+		// corners
+		AddImage(sprite, 0, 0, 0, 0, 8, 8);
+		AddImage(sprite, data.Width - 8, 0, 16, 0, 8, 8);
+		AddImage(sprite, 0, data.Height - 8, 0, 16, 8, 8);
+		AddImage(sprite, data.Width - 8, data.Height - 8, 16, 16, 8, 8);
+		for(int i = 1; i < data.Width / 8 - 1; i++){
+			// top/bottom row
+			AddImage(sprite, i * 8, 0, 8, 0, 8, 8);
+			AddImage(sprite, i * 8, data.Height - 8, 8, 16, 8, 8);
+		}
+
+		for(int i = 1; i < data.Height / 8 - 1; i++){
+			// left/right column
+			AddImage(sprite, 0, i * 8, 0, 8, 8, 8);
+			AddImage(sprite, data.Width - 8, i * 8, 16, 8, 8, 8);
+		}
+
+		for(int i = 1; i < data.Width / 8 - 1; i++){
+			for(int j = 1; j < data.Height / 8 - 1; j++){
+				// centre
+				AddImage(sprite, i * 8, j * 8, 8, 8, 8, 8);
 			}
+		}
+
+		foreach(var heats in HeatImages){
+			heats.Color = Color.Transparent;
 		}
 	}
 
@@ -96,13 +96,7 @@ public class TemperatureBlock : Solid{
 	public override void Render(){
 		Vector2 realPos = Position;
 		Position += Shake;
-		
 		base.Render();
-		if(IsFreezer){
-			Draw.Rect(Collider, Color.SlateBlue); // for now
-			Draw.Rect(Position, Width, Height * (TimeLeft / MaxTime), Color.Blue);
-		}
-
 		Position = realPos;
 	}
 
