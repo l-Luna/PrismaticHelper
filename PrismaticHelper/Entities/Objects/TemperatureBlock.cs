@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Celeste;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
@@ -18,6 +19,7 @@ public class TemperatureBlock : Solid{
 	protected CoreMode Previous;
 	protected float TimeLeft = 0;
 	protected bool Activated = false;
+	protected List<Image> HeatImages = new();
 
 	private bool switching = false;
 
@@ -30,6 +32,36 @@ public class TemperatureBlock : Solid{
 
 		OnDashCollide = OnDash;
 		Add(new CoreModeListener(OnCoreModeSwitch));
+
+		if(IsHeater){
+			string sprite = "PrismaticHelper/heater/boilerplate";
+			
+			// corners
+			AddImage(sprite, 0, 0, 0, 0, 8, 8);
+			AddImage(sprite, data.Width - 8, 0, 16, 0, 8, 8);
+			AddImage(sprite, 0, data.Height - 8, 0, 16, 8, 8);
+			AddImage(sprite, data.Width - 8, data.Height - 8, 16, 16, 8, 8);
+			for(int i = 1; i < data.Width / 8 - 1; i++){
+				// top/bottom row
+				AddImage(sprite, i * 8, 0, 8, 0, 8, 8);
+				AddImage(sprite, i * 8, data.Height - 8, 8, 16, 8, 8);
+			}
+			for(int i = 1; i < data.Height / 8 - 1; i++){
+				// left/right column
+				AddImage(sprite, 0, i * 8, 0, 8, 8, 8);
+				AddImage(sprite, data.Width - 8, i * 8, 16, 8, 8, 8);
+			}
+			for(int i = 1; i < data.Width / 8 - 1; i++){
+				for(int j = 1; j < data.Height / 8 - 1; j++){
+					// centre
+					AddImage(sprite, i * 8, j * 8, 8, 8, 8, 8);
+				}
+			}
+
+			foreach(var heats in HeatImages){
+				heats.Color = Color.Transparent;
+			}
+		}
 	}
 
 	public override void Update(){
@@ -52,12 +84,20 @@ public class TemperatureBlock : Solid{
 				foreach(var block in similar)
 					block.Previous = Previous;
 		}
+
+		float fraction = TimeLeft / MaxTime;
+		var heatColor = Color.White * fraction;
+		foreach(var heat in HeatImages){
+			heat.Color = heatColor;
+		}
 	}
 
 	public override void Render(){
 		base.Render();
-		Draw.Rect(Collider, IsFreezer ? Color.SlateBlue : Color.SlateGray); // for now
-		Draw.Rect(Position, Width, Height * (TimeLeft / MaxTime), IsFreezer ? Color.Blue : Color.Red);
+		if(IsFreezer){
+			Draw.Rect(Collider, Color.SlateBlue); // for now
+			Draw.Rect(Position, Width, Height * (TimeLeft / MaxTime), Color.Blue);
+		}
 	}
 
 	protected DashCollisionResults OnDash(Player player, Vector2 direction){
@@ -91,5 +131,16 @@ public class TemperatureBlock : Solid{
 			TimeLeft = 0;
 			// but don't switch back core mode
 		}
+	}
+
+	protected void AddImage(string sprite, int x, int y, int tx, int ty, int width, int height){
+		Add(new Image(GFX.Game[sprite].GetSubtexture(tx, ty, width, height)){
+			Position = new(x, y)
+		});
+		var heat = new Image(GFX.Game[sprite + "_heat"].GetSubtexture(tx, ty, width, height)){
+			Position = new(x, y)
+		};
+		Add(heat);
+		HeatImages.Add(heat);
 	}
 }
