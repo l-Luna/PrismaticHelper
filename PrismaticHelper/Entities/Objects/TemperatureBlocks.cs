@@ -11,8 +11,7 @@ using CoreMode = Session.CoreModes;
 
 [Tracked]
 [CustomEntity("PrismaticHelper/Heater", "PrismaticHelper/Freezer")]
-public class TemperatureBlock : Solid{
-	
+public class TemperatureControlBlock : Solid{
 	protected CoreMode Target;
 	protected float MaxTime;
 
@@ -26,14 +25,14 @@ public class TemperatureBlock : Solid{
 	public bool IsFreezer => Target == CoreMode.Cold;
 	public bool IsHeater => Target == CoreMode.Hot;
 
-	public TemperatureBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, false){
+	public TemperatureControlBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, false){
 		MaxTime = data.Float("maxTime", 7);
 		Target = data.Name == "PrismaticHelper/Heater" ? CoreMode.Hot : CoreMode.Cold;
 
 		OnDashCollide = OnDash;
 		Add(new CoreModeListener(OnCoreModeSwitch));
 
-		string sprite = "PrismaticHelper/temperatureBlocks/" + (IsHeater ? "boilerplate" : "icepack");
+		string sprite = "PrismaticHelper/temperatureBlocks/" + (IsHeater ? "boilerplate" : "freezer");
 
 		// corners
 		AddImage(sprite, 0, 0, 0, 0, 8, 8);
@@ -74,8 +73,8 @@ public class TemperatureBlock : Solid{
 			StartShaking(0.2f);
 			var level = SceneAs<Level>();
 			// check if any other freezers/heaters are still running instead of inturrupting them,
-			var similar = level.Tracker.GetEntities<TemperatureBlock>()
-				.Cast<TemperatureBlock>()
+			var similar = level.Tracker.GetEntities<TemperatureControlBlock>()
+				.Cast<TemperatureControlBlock>()
 				.Where(x => x != this && x.Target == Target && x.Activated)
 				.ToList();
 			if(similar.Count == 0)
@@ -102,16 +101,16 @@ public class TemperatureBlock : Solid{
 
 	protected DashCollisionResults OnDash(Player player, Vector2 direction){
 		bool ignore = false;
-		
+
 		if(!Activated){
 			var level = SceneAs<Level>();
 			Previous = level.CoreMode;
 			// if any temp blocks of the opposite type were activated *and* any wanted to change the core mode back, just turn them off
 			// and don't activate
-			ignore = level.Tracker.GetEntities<TemperatureBlock>()
-				.Cast<TemperatureBlock>()
+			ignore = level.Tracker.GetEntities<TemperatureControlBlock>()
+				.Cast<TemperatureControlBlock>()
 				.Any(x => x.Target != Target && x.Activated && x.Previous != x.Target);
-			
+
 			if(Target != Previous){
 				switching = true;
 				level.CoreMode = Target;
@@ -147,5 +146,92 @@ public class TemperatureBlock : Solid{
 		};
 		Add(heat);
 		HeatImages.Add(heat);
+	}
+}
+
+[CustomEntity("PrismaticHelper/IceBlock", "PrismaticHelper/SteamBlock")]
+public class TemperatureDependentBlock : Solid{
+	
+	protected CoreMode Required;
+	protected float TimeActive = 0;
+
+	public bool IsIce => Required == CoreMode.Cold;
+	public bool IsSteam => Required == CoreMode.Hot;
+	
+	public TemperatureDependentBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, false){
+		Required = data.Name == "PrismaticHelper/SteamBlock" ? CoreMode.Hot : CoreMode.Cold;
+		
+		Add(new CoreModeListener(OnCoreModeSwitch));
+		
+		string sprite = "PrismaticHelper/temperatureBlocks/" + (IsIce ? "ice/iceblock01" : "steam/steamblock01");
+		var rng = Calc.Random;
+
+		// corners
+		AddImage(sprite, 0, 0, 8, 8, 8, 8);
+		AddImage(sprite, data.Width - 8, 0, 48, 8, 8, 8);
+		AddImage(sprite, 0, data.Height - 8, 8, 48, 8, 8);
+		AddImage(sprite, data.Width - 8, data.Height - 8, 48, 48, 8, 8);
+		for(int i = 1; i < data.Width / 8 - 1; i++){
+			// top/bottom row
+			AddImage(sprite, i * 8, 0, 16 + rng.Next(3) * 8, 8, 8, 8);
+			AddImage(sprite, i * 8, data.Height - 8, 16 + rng.Next(3) * 8, 48, 8, 8);
+		}
+
+		for(int i = 1; i < data.Height / 8 - 1; i++){
+			// left/right column
+			AddImage(sprite, 0, i * 8, 8, 16 + rng.Next(3) * 8, 8, 8);
+			AddImage(sprite, data.Width - 8, i * 8, 48, 16 + rng.Next(3) * 8, 8, 8);
+		}
+
+		for(int i = 1; i < data.Width / 8 - 1; i++){
+			for(int j = 1; j < data.Height / 8 - 1; j++){
+				// centre
+				AddImage(sprite, i * 8, j * 8, 16 + rng.Next(3) * 8, 16 + rng.Next(3) * 8, 8, 8);
+			}
+		}
+	}
+
+	public override void Added(Scene scene){
+		base.Added(scene);
+
+		Collidable = SceneAs<Level>().CoreMode == Required;
+	}
+
+	protected void OnCoreModeSwitch(CoreMode next){
+		Collidable = next == Required;
+
+		if(!Collidable){
+			Level level = SceneAs<Level>();
+			Vector2 center = Center;
+			for(int x = 0; x < Width; x += 4)
+				for(int y = 0; y < Height; y += 4){
+					Vector2 position = Position + new Vector2(x + 2, y + 2) + Calc.Random.Range(-Vector2.One * 2f, Vector2.One * 2f);
+					ParticleType particle = IsIce ? IceBlock.P_Deactivate : FireBarrier.P_Deactivate;
+					level.Particles.Emit(particle, position, (position - center).Angle());
+				}
+		}
+	}
+
+	public override void Update(){
+		base.Update();
+
+		if(!Collidable)
+			TimeActive = 0;
+		else
+			TimeActive += Engine.DeltaTime;
+		
+		
+	}
+
+	public override void Render(){
+		if(Collidable)
+			base.Render();
+	}
+	
+	protected void AddImage(string sprite, int x, int y, int tx, int ty, int width, int height){
+		Add(new Image(GFX.Game[sprite].GetSubtexture(tx, ty, width, height)){
+			Position = new(x, y),
+			Color = Color.White * 0.7f
+		});
 	}
 }

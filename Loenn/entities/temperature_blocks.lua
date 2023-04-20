@@ -52,4 +52,46 @@ function freezer.sprite(room, entity)
     return ninePatch:getDrawableSprite()
 end
 
-return { heater, freezer }
+local ninePatchOptions2nd = {
+    mode = "fill",
+    borderMode = "repeat",
+    fillMode = "repeat"
+}
+
+local steam = {}
+
+steam.name = "PrismaticHelper/SteamBlock"
+steam.placements = {
+    name = "steam",
+    data = {
+        width = 8,
+        height = 8
+    }
+}
+
+local steamTexture = "PrismaticHelper/temperatureBlocks/steam/steamblock01"
+
+function steam.sprite(room, entity)
+    local x, y, width, height = entity.x or 0, entity.y or 0, entity.width or 0, entity.height or 0
+    return drawableNinePatch.fromTexture(steamTexture, ninePatchOptions2nd, x, y, width, height):getDrawableSprite()
+end
+
+local ice = {}
+
+ice.name = "PrismaticHelper/IceBlock"
+ice.placements = {
+    name = "ice",
+    data = {
+        width = 8,
+        height = 8
+    }
+}
+
+local iceTexture = "PrismaticHelper/temperatureBlocks/ice/iceblock01"
+
+function ice.sprite(room, entity)
+    local x, y, width, height = entity.x or 0, entity.y or 0, entity.width or 0, entity.height or 0
+    return drawableNinePatch.fromTexture(iceTexture, ninePatchOptions2nd, x, y, width, height):getDrawableSprite()
+end
+
+return { heater, freezer, steam, ice }

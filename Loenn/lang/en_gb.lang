@@ -63,6 +63,10 @@ entities.PrismaticHelper/Boombox.attributes.description.attached=Whether the Boo
 entities.PrismaticHelper/Heater.placements.name.heater=Heater
 entities.PrismaticHelper/Freezer.placements.name.freezer=Freezer
 
+# Steam/Ice
+entities.PrismaticHelper/SteamBlock.placements.name.steam=Steam Block
+entities.PrismaticHelper/IceBlock.placements.name.ice=Ice Block
+
 # Heatwave Transition Controller
 entities.PrismaticHelper/HeatwaveTransitionController.placements.name.controller=Heatwave Transition Controller
 
