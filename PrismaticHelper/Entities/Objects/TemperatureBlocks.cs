@@ -31,6 +31,7 @@ public class TemperatureControlBlock : Solid{
 
 		OnDashCollide = OnDash;
 		Add(new CoreModeListener(OnCoreModeSwitch));
+		Add(new TransitionListener{ OnOutBegin = OnRoomTransition});
 
 		string sprite = "PrismaticHelper/temperatureBlocks/" + (IsHeater ? "boilerplate" : "freezer");
 
@@ -134,6 +135,12 @@ public class TemperatureControlBlock : Solid{
 			Activated = false;
 			TimeLeft = 0;
 			// but don't switch back core mode
+		}
+	}
+
+	protected void OnRoomTransition(){
+		if(Activated && Previous != Target){
+			SceneAs<Level>().CoreMode = Previous;
 		}
 	}
 
