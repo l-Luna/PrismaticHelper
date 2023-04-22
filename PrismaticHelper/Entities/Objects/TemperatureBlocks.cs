@@ -180,6 +180,31 @@ public class TemperatureDependentBlock : Solid{
 		Sprite.Play(Collidable ? "idle" : "blank");
 	}
 
+	public override void Update(){
+		base.Update();
+
+		if(Collidable){
+			var player = CollideFirst<Player>();
+			if(player != null){
+				bool wiggled = false;
+				void Wiggle(int offX, int offY){
+					if(!wiggled && !player.CollideCheck<Solid>(player.Position + new Vector2(offX, offY))){
+						player.Position += new Vector2(offX, offY);
+						wiggled = true;
+					}
+				}
+				
+				for(int offY = -4; offY <= 4; ++offY)
+					Wiggle(0, offY);
+				for(int offX = -4; offX <= 4; ++offX)
+					Wiggle(offX, 0);
+
+				if(!wiggled)
+					player.Die(Vector2.Zero);
+			}
+		}
+	}
+
 	protected void OnCoreModeSwitch(CoreMode next){
 		var wasCollidable = Collidable;
 		Collidable = next == Required;
