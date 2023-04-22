@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Celeste;
 using Celeste.Mod.Entities;
@@ -150,7 +149,7 @@ public class TemperatureControlBlock : Solid{
 	}
 }
 
-[Tracked()]
+[Tracked]
 [CustomEntity("PrismaticHelper/IceBlock", "PrismaticHelper/SteamBlock")]
 public class TemperatureDependentBlock : Solid{
 	
@@ -171,7 +170,7 @@ public class TemperatureDependentBlock : Solid{
 
 	public override void Awake(Scene scene){
 		base.Awake(scene);
-		NinePatch.CreateConnectedNinepatch(this, Sprite, NinePatch.TileSpec.Extended);
+		NinePatch.CreateConnectedNinepatch(this, Sprite, NinePatch.TileSpec.Extended, e => e.Required == Required);
 	}
 
 	public override void Added(Scene scene){
@@ -200,11 +199,5 @@ public class TemperatureDependentBlock : Solid{
 
 		if(Collidable && !wasCollidable)
 			Sprite.Play("appear");
-	}
-	
-	protected void AddImage(int x, int y, int tx, int ty, int width, int height){
-		Add(new Subsprite(Sprite, new Rectangle(tx, ty, width, height)){
-			Position = new(x, y)
-		});
 	}
 }

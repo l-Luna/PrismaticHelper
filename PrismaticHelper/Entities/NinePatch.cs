@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Celeste;
 using Microsoft.Xna.Framework;
@@ -84,22 +85,24 @@ public static class NinePatch{
 		}
 	}
 
-	public static void CreateConnectedNinepatch(Entity e, Sprite master, TileSpec spec){
+	public static void CreateConnectedNinepatch<T>(T e, Sprite master, TileSpec spec, Predicate<T> isSimilar = default)
+		where T : Solid
+	{
 		master.Visible = false;
 		for(float x = e.Left; x < (double)e.Right; x += 8f){
 			for(float y = e.Top; y < (double)e.Bottom; y += 8f){
-				bool left = CheckForSame(x - 8, y, e);
-				bool right = CheckForSame(x + 8, y, e);
-				bool up = CheckForSame(x, y - 8, e);
-				bool down = CheckForSame(x, y + 8, e);
+				bool left = CheckForSame(x - 8, y, e, isSimilar);
+				bool right = CheckForSame(x + 8, y, e, isSimilar);
+				bool up = CheckForSame(x, y - 8, e, isSimilar);
+				bool down = CheckForSame(x, y + 8, e, isSimilar);
 				if(left && right && up && down){
-					if(!CheckForSame(x + 8, y - 8, e)) // inner corner, up-right showing
+					if(!CheckForSame(x + 8, y - 8, e, isSimilar)) // inner corner, up-right showing
 						AddSubsprite(x, y, spec, InnerUR, e, master);
-					else if(!CheckForSame(x - 8, y - 8, e)) // inner corner, up-left showing
+					else if(!CheckForSame(x - 8, y - 8, e, isSimilar)) // inner corner, up-left showing
 						AddSubsprite(x, y, spec, InnerUL, e, master);
-					else if(!CheckForSame(x + 8, y + 8, e)) // inner corner, down-right showing
+					else if(!CheckForSame(x + 8, y + 8, e, isSimilar)) // inner corner, down-right showing
 						AddSubsprite(x, y, spec, InnerDR, e, master);
-					else if(!CheckForSame(x - 8, y + 8, e)) // inner corner, down-left showing
+					else if(!CheckForSame(x - 8, y + 8, e, isSimilar)) // inner corner, down-left showing
 						AddSubsprite(x, y, spec, InnerDL, e, master);
 					else
 						AddSubsprite(x, y, spec, Inner, e, master); // centre
@@ -123,9 +126,13 @@ public static class NinePatch{
 		}
 	}
 
-	public static bool CheckForSame(float x, float y, Entity r){
+	public static bool CheckForSame<T>(float x, float y, T r, Predicate<T> isSimilar)
+		where T : Solid
+	{
 		return r.Scene.Tracker.Entities[r.GetType()]
-			.Cast<Solid>().Any(entity => entity.Collider.Collide(new Rectangle((int)x, (int)y, 8, 8)));
+			.Cast<T>()
+			.Where(e => isSimilar?.Invoke(e) ?? true)
+			.Any(entity => entity.Collider.Collide(new Rectangle((int)x, (int)y, 8, 8)));
 	}
 
 	public static void AddSubsprite(float x, float y, TileSpec spec, TilePart part, Entity e, Sprite master){
