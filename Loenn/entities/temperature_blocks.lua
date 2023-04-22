@@ -9,8 +9,7 @@ local ninePatchOptions = {
 local heater = {}
 
 heater.name = "PrismaticHelper/Heater"
-heater.fillColor = {0.7, 0.2, 0.1, 0.6}
-heater.borderColor = {0.7, 0.2, 0.1, 0.4}
+heater.minimumSize = {16, 16}
 heater.placements = {
     name = "heater",
     data = {
@@ -33,6 +32,7 @@ end
 local freezer = {}
 
 freezer.name = "PrismaticHelper/Freezer"
+freezer.minimumSize = {16, 16}
 freezer.placements = {
     name = "freezer",
     data = {
@@ -61,6 +61,7 @@ local ninePatchOptions2nd = {
 local steam = {}
 
 steam.name = "PrismaticHelper/SteamBlock"
+steam.minimumSize = {16, 16}
 steam.placements = {
     name = "steam",
     data = {
@@ -79,6 +80,7 @@ end
 local ice = {}
 
 ice.name = "PrismaticHelper/IceBlock"
+ice.minimumSize = {16, 16}
 ice.placements = {
     name = "ice",
     data = {

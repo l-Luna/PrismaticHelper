@@ -150,6 +150,7 @@ public class TemperatureControlBlock : Solid{
 	}
 }
 
+[Tracked()]
 [CustomEntity("PrismaticHelper/IceBlock", "PrismaticHelper/SteamBlock")]
 public class TemperatureDependentBlock : Solid{
 	
@@ -166,34 +167,11 @@ public class TemperatureDependentBlock : Solid{
 		Sprite.Color = Color.White * 0.6f;
 		Sprite.Visible = false;
 		Add(Sprite);
-		AddImages(data.Width, data.Height);
 	}
 
-	private void AddImages(int width, int height){
-		Random rng = Calc.Random;
-		
-		// corners
-		AddImage(0, 0, 8, 8, 8, 8);
-		AddImage(width - 8, 0, 48, 8, 8, 8);
-		AddImage(0, height - 8, 8, 48, 8, 8);
-		AddImage(width - 8, height - 8, 48, 48, 8, 8);
-		for(int i = 1; i < width / 8 - 1; i++){
-			// top/bottom row
-			AddImage(i * 8, 0, 16 + rng.Next(3) * 8, 8, 8, 8);
-			AddImage(i * 8, height - 8, 16 + rng.Next(3) * 8, 48, 8, 8);
-		}
-
-		for(int i = 1; i < height / 8 - 1; i++){
-			// left/right column
-			AddImage(0, i * 8, 8, 16 + rng.Next(3) * 8, 8, 8);
-			AddImage(width - 8, i * 8, 48, 16 + rng.Next(3) * 8, 8, 8);
-		}
-
-		for(int i = 1; i < width / 8 - 1; i++)
-			for(int j = 1; j < height / 8 - 1; j++){
-				// centre
-				AddImage(i * 8, j * 8, 16 + rng.Next(3) * 8, 16 + rng.Next(3) * 8, 8, 8);
-			}
+	public override void Awake(Scene scene){
+		base.Awake(scene);
+		NinePatch.CreateConnectedNinepatch(this, Sprite, NinePatch.TileSpec.Extended);
 	}
 
 	public override void Added(Scene scene){
