@@ -10,10 +10,13 @@ namespace PrismaticHelper.Entities.Objects;
 [CustomEntity("PrismaticHelper/CustomHangingLamp")]
 public class CustomHangingLamp : HangingLamp{
 
-	private readonly DynamicData selfData;
+	protected readonly DynamicData selfData;
+	protected StaticMover mover;
+	protected Vector2 lastPos;
 	
 	public CustomHangingLamp(EntityData e, Vector2 position) : base(e, e.Position + position){
 		selfData = new DynamicData(this);
+		lastPos = Position;
 		
 		string sprite = e.Attr("sprite");
 		if(!string.IsNullOrWhiteSpace(sprite)){
@@ -44,7 +47,7 @@ public class CustomHangingLamp : HangingLamp{
 
 		bool attached = e.Bool("attached");
 		if(attached)
-			Add(new StaticMover{
+			Add(mover = new StaticMover{
 				SolidChecker = solid => CollideCheckOutside(solid, Position - Vector2.UnitY)
 			});
 
@@ -58,5 +61,13 @@ public class CustomHangingLamp : HangingLamp{
 		vertexLight.StartRadius = e.Float("glowStartRadius", 24);
 		vertexLight.EndRadius = e.Float("glowEndRadius", 48);
 		selfData.Get<BloomPoint>("bloom").Radius = e.Float("glowEndRadius", 48);
+	}
+
+	public override void Update(){
+		base.Update();
+		
+		if(mover != null)
+			selfData.Set("speed", selfData.Get<float>("speed") + (Position - lastPos).X * -0.35f);
+		lastPos = Position;
 	}
 }
