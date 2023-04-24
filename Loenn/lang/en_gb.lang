@@ -70,6 +70,14 @@ entities.PrismaticHelper/IceBlock.placements.name.ice=Ice Block
 # Heatwave Transition Controller
 entities.PrismaticHelper/HeatwaveTransitionController.placements.name.controller=Heatwave Transition Controller
 
+# Custom Hanging Lamp
+entities.PrismaticHelper/CustomHangingLamp.placements.name.hanging_lamp=Custom Hanging Lamp
+entities.PrismaticHelper/CustomHangingLamp.attributes.description.attached=Whether the lamp should attach to solids above it.
+entities.PrismaticHelper/CustomHangingLamp.attributes.description.sprite=The texture the lamp should use, relative to Atlases/Gameplay.
+entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowColour=The colour of the lamp's light.
+entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowStartRadius=The inner radius of the lamp's light, within which it is strongest.
+entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowEndRadius=The outer radius of the lamp's light, after which it is transparent.
+
 # Triggers
 
 # Underwater Interaction
