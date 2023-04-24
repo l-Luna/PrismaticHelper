@@ -13,7 +13,7 @@ customHangingLamp.placements = {
         height = 16,
         attached = false,
         sprite = "",
-        --glowColour = "ffffff",
+        glowColour = "ffffff",
         glowStartRadius = 24,
         glowEndRadius = 48
     }

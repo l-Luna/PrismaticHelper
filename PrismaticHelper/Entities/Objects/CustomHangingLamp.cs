@@ -49,8 +49,6 @@ public class CustomHangingLamp : HangingLamp{
 			});
 
 		var vertexLight = selfData.Get<VertexLight>("light");
-		// TODO: doesn't work
-		
 		Color glowColour = e.HexColor("glowColour", Color.White);
 		if(glowColour != Color.White){
 			vertexLight.Color = glowColour;
