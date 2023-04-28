@@ -1,5 +1,6 @@
 ﻿using Celeste;
 using Microsoft.Xna.Framework;
+using PrismaticHelper.Entities.Objects;
 
 namespace PrismaticHelper.Entities;
 
@@ -17,6 +18,6 @@ public class PlayerStates{
 
 	private static void OnPlayerConstruct(On.Celeste.Player.orig_ctor orig, Player self, Vector2 position, PlayerSpriteMode spritemode){
 		orig(self, position, spritemode);
-		MarbleState = self.StateMachine.AddState(null);
+		MarbleState = self.StateMachine.AddState(MarbleBooster.MarbleUpdate, null, MarbleBooster.MarbleBegin, MarbleBooster.MarbleEnd);
 	}
 }
