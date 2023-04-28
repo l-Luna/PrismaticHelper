@@ -22,12 +22,9 @@ public class RotatingParallax : Backdrop{
 		Scale = e.AttrFloat("scale", 1);
 		FadeIn = e.AttrBool("fadeIn");
 
-		Position.X = e.AttrFloat("x");
-		Position.Y = e.AttrFloat("y");
-		Scroll.X = e.AttrFloat("scrollX");
-		Scroll.Y = e.AttrFloat("scrollY");
-		Speed.X = e.AttrFloat("speedX");
-		Speed.Y = e.AttrFloat("speedY");
+		Position = e.AttrPos();
+		Scroll = e.AttrVec("scroll");
+		Speed = e.AttrVec("speed");
 	}
 
 	public override void Update(Scene scene){
