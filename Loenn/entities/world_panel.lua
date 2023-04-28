@@ -1,5 +1,3 @@
-local depths = require("utils.depths")
-
 local world_panel = {}
 
 world_panel.name = "PrismaticHelper/WorldPanel"
