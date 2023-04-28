@@ -96,7 +96,6 @@ public static class CutsceneTriggers{
 		Register("camera_zoom_back", (player, level, param) => cameraZoomBack(level, GetFloatParam(param, 0, 1)));
 
 		static IEnumerator cameraZoom(Player player, Level level, float zoom, float duration, string easer){
-			//return level.ZoomTo(new Vector2(320f, 180f) / 2f, zoom, duration);
 			// similar to Level.ZoomTo, but allows for custom easers
 			player.ForceCameraUpdate = false;
 			Ease.Easer ease = GetEaseByName(easer);
