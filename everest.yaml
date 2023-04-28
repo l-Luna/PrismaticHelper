@@ -1,5 +1,5 @@
 ﻿- Name: PrismaticHelper
-  Version: 1.10
+  Version: 1.10.1
   DLL: PrismaticHelper/bin/Debug/net452/PrismaticHelper.dll
   Dependencies:
     - Name: Everest
@@ -7,3 +7,5 @@
   OptionalDependencies:
     - Name: SpeedrunTool
       Version: 3.20.0
+    - Name: CelesteTAS
+      Version: 3.4.5
