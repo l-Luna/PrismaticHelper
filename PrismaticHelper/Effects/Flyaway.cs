@@ -12,7 +12,7 @@ namespace PrismaticHelper.Effects;
 public class Flyaway : Backdrop{
 	
 	public readonly int Limit;
-	public readonly float Chance, SpawnDistance, BaseScale, BonusScale, BaseAlpha;
+	public readonly float Chance, SpawnDistance, BaseScale, BonusScale, BaseAlpha, RotationSpeed;
 	public new readonly float Speed;
 	public readonly bool CanFlipX, CanFlipY, ScaleAlpha;
 	public readonly Vector2 Centre;
@@ -32,6 +32,7 @@ public class Flyaway : Backdrop{
 		
 		Chance = e.AttrFloat("chance", 0.5f);
 		Speed = e.AttrFloat("speed", 1);
+		RotationSpeed = e.AttrFloat("rotationSpeed", 0);
 		SpawnDistance = e.AttrFloat("spawnDistance", 1.5f);
 		BaseScale = e.AttrFloat("baseScale", 1f);
 		BonusScale = e.AttrFloat("bonusScale", 0.5f);
@@ -53,9 +54,11 @@ public class Flyaway : Backdrop{
 		base.Update(scene);
 		foreach(var prop in props.ToArray()){
 			var dist = (prop.position - Centre).LengthSquared();
-			if((Speed > 0 && dist < 5 * 5) || (Speed < 0 && dist > Centre.LengthSquared() + 20))
+			if((Speed > 0 && dist < 5 * 5) || (Speed < 0 && dist > Centre.LengthSquared() * 1.3))
 				props.Remove(prop);
 			prop.position += (Centre - prop.position) * Engine.DeltaTime * Speed;
+			if(RotationSpeed != 0)
+				prop.position = (prop.position - Centre).Rotate(Engine.DeltaTime * RotationSpeed) + Centre;
 		}
 
 		if(props.Count < Limit)

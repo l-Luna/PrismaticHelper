@@ -10,6 +10,7 @@ flyaway.defaultData = {
     limit = 170,
     chance = 0.5,
     speed = 1,
+    rotationSpeed = 0,
     spawnDistance = 1.5,
     baseScale = 1,
     bonusScale = 0.5,
