@@ -10,13 +10,12 @@ namespace PrismaticHelper.Effects;
 
 [CustomBackdrop("PrismaticHelper/Flyaway")]
 public class Flyaway : Backdrop{
-
-	private static readonly Vector2 Centre = new(160, 90);
-
+	
 	public readonly int Limit;
 	public readonly float Chance, SpawnDistance, BaseScale, BonusScale, BaseAlpha;
 	public new readonly float Speed;
 	public readonly bool CanFlipX, CanFlipY, ScaleAlpha;
+	public readonly Vector2 Centre;
 	
 	protected readonly List<Prop> props = new();
 	protected readonly List<MTexture> propSprites;
@@ -41,14 +40,20 @@ public class Flyaway : Backdrop{
 		CanFlipX = e.AttrBool("canFlipX", true);
 		CanFlipY = e.AttrBool("canFlipY", true);
 		ScaleAlpha = e.AttrBool("scaleAlpha", true);
-		
+
+		Centre = e.AttrVec("centre", new(160, 90));
+
+		if(SpawnDistance <= 0.05f)
+			SpawnDistance = 0.05f;
+
 		propSprites = GFX.Game.GetAtlasSubtextures(e.Attr("textures"));
 	}
 
 	public override void Update(Scene scene){
 		base.Update(scene);
 		foreach(var prop in props.ToArray()){
-			if((prop.position - Centre).LengthSquared() < 5 * 5)
+			var dist = (prop.position - Centre).LengthSquared();
+			if((Speed > 0 && dist < 5 * 5) || (Speed < 0 && dist > Centre.LengthSquared() + 20))
 				props.Remove(prop);
 			prop.position += (Centre - prop.position) * Engine.DeltaTime * Speed;
 		}

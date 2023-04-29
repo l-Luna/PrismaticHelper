@@ -17,7 +17,10 @@ flyaway.defaultData = {
     
     canFlipX = true,
     canFlipY = true,
-    scaleAlpha = true
+    scaleAlpha = true,
+    
+    centreX = 160,
+    centreY = 90
 }
 
 return flyaway
