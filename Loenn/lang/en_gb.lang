@@ -78,6 +78,9 @@ entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowColour=The
 entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowStartRadius=The inner radius of the lamp's light, within which it is strongest.
 entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowEndRadius=The outer radius of the lamp's light, after which it is transparent.
 
+# Marble Booster
+entities.PrismaticHelper/MarbleBooster.placements.name.booster=Marble Booster
+
 # Triggers
 
 # Underwater Interaction
@@ -90,14 +93,17 @@ triggers.PrismaticHelper/UnderwaterInteractionTrigger.placements.descriptions.tr
 style.effects.PrismaticHelper/Flyaway.name=Flyaway
 style.effects.PrismaticHelper/Flyaway.description.limit=The maximum number of objects that may be created at once.
 style.effects.PrismaticHelper/Flyaway.description.chance=The chance of an object being created every frame.
-style.effects.PrismaticHelper/Flyaway.description.speed=The speed that objects fly towards the centre of the screen at, as a multiplier.
-style.effects.PrismaticHelper/Flyaway.description.spawnDistance=The distance from the centre of the screen that objects spawn at, as a multiple of the screen's diagonal size.
+style.effects.PrismaticHelper/Flyaway.description.speed=The speed that objects fly towards the centre at, as a multiplier.
+style.effects.PrismaticHelper/Flyaway.description.rotationSpeed=The speed that objects fly around the centre in a circle at, as a multiplier.
+style.effects.PrismaticHelper/Flyaway.description.spawnDistance=The distance from the centre that objects spawn at, as a multiple of the screen's diagonal size.
 style.effects.PrismaticHelper/Flyaway.description.baseScale=How much objects are scaled compared to their texture size, at the edges of the screen.
 style.effects.PrismaticHelper/Flyaway.description.bonusScale=The maximum amount that an object's scale can be randomly increased by.
 style.effects.PrismaticHelper/Flyaway.description.baseAlpha=The alpha of objects. If Scale Alpha is enabled, this refers to their alpha at the screen's edges.
 style.effects.PrismaticHelper/Flyaway.description.canFlipX=Whether objects can be randomly flipped horizontally.
 style.effects.PrismaticHelper/Flyaway.description.canFlipY=Whether objects can be randomly flipped vertically.
-style.effects.PrismaticHelper/Flyaway.description.scaleAlpha=Whether the opacity of objects should decrease as they approach the centre of the screen, multiplied by their scale.
+style.effects.PrismaticHelper/Flyaway.description.scaleAlpha=Whether the opacity of objects should decrease as they approach the centre, multiplied by their scale.
+style.effects.PrismaticHelper/Flyaway.description.centreX=The X position on-screen of the centre of this flyaway. Defaults to 160 (middle of screen).
+style.effects.PrismaticHelper/Flyaway.description.centreY=The Y position on-screen of the centre of this flyaway. Defaults to 90 (middle of screen).
 
 # Rotating Parallax
 style.effects.PrismaticHelper/RotatingParallax.name=Rotating Parallax

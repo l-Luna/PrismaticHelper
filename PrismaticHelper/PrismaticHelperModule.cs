@@ -20,6 +20,7 @@ public class PrismaticHelperModule : EverestModule{
 		WorldPanels.Load();
 		UnderwaterInteractionTrigger.Load();
 		PlayerStates.Load();
+		MarbleBooster.Load();
 	}
 
 	public override void Unload(){
@@ -29,6 +30,7 @@ public class PrismaticHelperModule : EverestModule{
 		WorldPanels.Unload();
 		UnderwaterInteractionTrigger.Unload();
 		PlayerStates.Unload();
+		MarbleBooster.Unload();
 
 		Stencils.Unload();
 	}
