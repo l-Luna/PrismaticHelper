@@ -34,6 +34,9 @@ public class MarbleBooster : Entity{
 	public static int MarbleUpdate(Player self){
 		if(!self.OnGround())
 			self.Speed.Y += GRAVITY * Engine.DeltaTime;
+		else{
+			self.Speed.X -= self.Speed.X * 0.05f * Engine.DeltaTime;
+		}
 
 		return PlayerStates.MarbleState;
 	}
