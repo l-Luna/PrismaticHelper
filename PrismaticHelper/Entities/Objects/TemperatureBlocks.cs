@@ -185,6 +185,10 @@ public class TemperatureDependentBlock : Solid{
 
 		Collidable = SceneAs<Level>().CoreMode == Required;
 		Sprite.Play(Collidable ? "idle" : "blank");
+		if(Collidable)
+			EnableStaticMovers();
+		else
+			DisableStaticMovers();
 	}
 
 	public override void Update(){
