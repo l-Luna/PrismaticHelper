@@ -32,4 +32,13 @@
         <Loop id="blank" path="" frames="7" delay="0.08" />
         <Anim id="appear" path="" frames="8-12" delay="0.08" goto="idle" />
     </PrismaticHelper_steam>
+    
+    <PrismaticHelper_speed_berry path="PrismaticHelper/collectables/speedBerry/" start="idle">
+        <Center />
+        
+        <Loop id="idle" path="Idle_g" frames="0-9" delay="0.08" />
+        <Anim id="collect" path="collect_g" frames="0-3" delay="0.08" />
+        <Anim id="explode" path="explode" frames="0-7" delay="0.08" />
+        <Anim id="transition" path="transition_b" frames="0-11" delay="0.08" />
+    </PrismaticHelper_speed_berry>
 </Sprites>

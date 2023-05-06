@@ -78,8 +78,9 @@ entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowColour=The
 entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowStartRadius=The inner radius of the lamp's light, within which it is strongest.
 entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowEndRadius=The outer radius of the lamp's light, after which it is transparent.
 
-# Marble Booster
-entities.PrismaticHelper/MarbleBooster.placements.name.booster=Marble Booster
+# Speed Berry
+entities.PrismaticHelper/SpeedBerry.placements.name.berry=Speed Berry
+entities.PrismaticHelper/SpeedBerry.attributes.description.time=The number of seconds the player has to collect this speed berry.\nBased on chapter time, which begins on chapter start and ends on chapter end, regardless of when this berry was picked up.
 
 # Triggers
 
