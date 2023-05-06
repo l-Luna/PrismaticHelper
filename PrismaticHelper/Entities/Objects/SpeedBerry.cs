@@ -72,6 +72,9 @@ public class SpeedBerry : Strawberry{
 
 	protected void TimeUp(){
 		RemoveSelf();
+		SceneAs<Level>().Add(new SpeedBerryExplosion{
+			Position = Position
+		});
 		// don't use LoseFollower since we don't want the return animation
 		if(Follower.Leader is Leader leader)
 			leader.Followers.Remove(Follower);
@@ -113,6 +116,30 @@ public class SpeedBerry : Strawberry{
 
 			if(entity.Grabbed || left.Ticks < 0)
 				fadeOut = MathHelper.Lerp(fadeOut, 0, 0.1f);
+		}
+	}
+
+	public class SpeedBerryExplosion : Entity{
+
+		protected float fadeOut = 1;
+		protected bool startFade = false;
+		protected Sprite sprite;
+		
+		public SpeedBerryExplosion(){
+			sprite = GFX.SpriteBank.Create("PrismaticHelper_speed_berry");
+			sprite.Play("explode");
+			sprite.OnFinish = _ => startFade = true;
+			Add(sprite);
+		}
+
+		public override void Update(){
+			base.Update();
+
+			if(startFade)
+				fadeOut = MathHelper.Lerp(fadeOut, 0, 0.1f);
+			if(fadeOut <= 0)
+				RemoveSelf();
+			sprite.Color = Color.White * fadeOut;
 		}
 	}
 }

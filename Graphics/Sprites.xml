@@ -38,7 +38,7 @@
         
         <Loop id="idle" path="Idle_g" frames="0-9" delay="0.08" />
         <Anim id="collect" path="collect_g" frames="0-3" delay="0.08" />
-        <Anim id="explode" path="explode" frames="0-7" delay="0.08" />
-        <Anim id="transition" path="transition_b" frames="0-11" delay="0.08" />
+        <Anim id="explode" path="explode_" frames="0-7" delay="0.08" />
+        <Anim id="transition" path="transition_b" frames="0-11" delay="0.1" />
     </PrismaticHelper_speed_berry>
 </Sprites>
