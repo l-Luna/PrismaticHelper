@@ -228,7 +228,7 @@ public static class CutsceneTriggers{
 			Audio.Play("event:/char/badeline/maddy_split", p.Position);
 			Vector2 target = p.Center + new Vector2(xOffset, yOffset);
 			baddy.Sprite.Scale.X = Math.Sign(target.X - p.X) * (facePlayer ? -1 : 1);
-			return baddy.FloatTo(target, 1, faceDirection: false);
+			return baddy.FloatTo(target, 1, faceDirection: false /* read: don't change the direction after we just did */);
 		}
 
 		Register("baddy_split", (player, level, param) => baddySplit(level, player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0), GetStringParam(param, 2, "true").Equals("true")));
