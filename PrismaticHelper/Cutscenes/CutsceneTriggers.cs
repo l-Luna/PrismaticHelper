@@ -204,16 +204,18 @@ public static class CutsceneTriggers{
 
 		// baddy controls
 
-		static IEnumerator baddyAppear(Level l, Player p, float xOffset, float yOffset){
+		static IEnumerator baddyAppear(Level l, Player p, float xOffset, float yOffset, bool facePlayer){
 			if(baddy != null && baddy.Scene == Engine.Scene)
 				baddy.Vanish();
-			baddy = new BadelinePuppet(p.Center + new Vector2(xOffset, yOffset), "baddy");
+			var target = p.Center + new Vector2(xOffset, yOffset);
+			baddy = new BadelinePuppet(target, "baddy");
 			l.Add(baddy);
 			baddy.Appear(l);
+			baddy.Sprite.Scale.X = Math.Sign(target.X - p.X) * (facePlayer ? -1 : 1);
 			yield return null;
 		}
 
-		Register("baddy_appear", (player, level, param) => baddyAppear(level, player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0)));
+		Register("baddy_appear", (player, level, param) => baddyAppear(level, player, GetFloatParam(param, 0, 0), GetFloatParam(param, 1, 0), GetStringParam(param, 2, "true").Equals("true")));
 
 		static IEnumerator baddySplit(Level l, Player p, float xOffset, float yOffset, bool facePlayer){
 			if(baddy != null && baddy.Scene == Engine.Scene)
@@ -244,7 +246,7 @@ public static class CutsceneTriggers{
 		static IEnumerator baddyLook(bool left){
 			if(baddy == null)
 				yield break;
-			baddy.Sprite.X = left ? -1 : 1;
+			baddy.Sprite.Scale.X = left ? -1 : 1;
 			yield return null;
 		}
 
