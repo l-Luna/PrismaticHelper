@@ -6,7 +6,7 @@ namespace PrismaticHelper.Entities;
 
 public class PlayerStates{
 
-	public static int MarbleState = -1;
+	//public static int MarbleState = -1;
 	
 	public static void Load(){
 		On.Celeste.Player.ctor += OnPlayerConstruct;
@@ -18,6 +18,6 @@ public class PlayerStates{
 
 	private static void OnPlayerConstruct(On.Celeste.Player.orig_ctor orig, Player self, Vector2 position, PlayerSpriteMode spritemode){
 		orig(self, position, spritemode);
-		MarbleState = self.StateMachine.AddState(MarbleBooster.MarbleUpdate, null, MarbleBooster.MarbleBegin, MarbleBooster.MarbleEnd);
+		//MarbleState = self.StateMachine.AddState(MarbleBooster.MarbleUpdate, null, MarbleBooster.MarbleBegin, MarbleBooster.MarbleEnd);
 	}
 }
