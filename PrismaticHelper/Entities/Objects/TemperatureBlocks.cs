@@ -178,18 +178,13 @@ public class TemperatureDependentBlock : Solid{
 
 	public override void Awake(Scene scene){
 		base.Awake(scene);
+		
+		var enabled = SceneAs<Level>().CoreMode == Required;
+		CheckStaticMovers(enabled);
+		Sprite.Play(enabled ? "idle" : "blank");
+		Collidable = enabled;
+		
 		NinePatch.CreateConnectedNinepatch(this, Sprite, NinePatch.TileSpec.Extended, e => e.Required == Required);
-	}
-
-	public override void Added(Scene scene){
-		base.Added(scene);
-
-		Collidable = SceneAs<Level>().CoreMode == Required;
-		Sprite.Play(Collidable ? "idle" : "blank");
-		if(Collidable)
-			EnableStaticMovers();
-		else
-			DisableStaticMovers();
 	}
 
 	public override void Update(){
@@ -236,5 +231,14 @@ public class TemperatureDependentBlock : Solid{
 
 		if(Collidable && !wasCollidable)
 			Sprite.Play("appear");
+		
+		CheckStaticMovers(Collidable);
+	}
+	
+	private void CheckStaticMovers(bool enabled){
+		if(enabled)
+			EnableStaticMovers();
+		else
+			DisableStaticMovers();
 	}
 }
