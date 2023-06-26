@@ -125,6 +125,7 @@ public class TemperatureControlBlock : Solid{
 		}
 
 		StartShaking(0.2f);
+		Audio.Play("event:/new_content/game/10_farewell/fusebox_hit_1", Position);
 		return DashCollisionResults.Rebound;
 	}
 
