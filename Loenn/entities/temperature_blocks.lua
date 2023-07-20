@@ -1,4 +1,5 @@
 ﻿local drawableNinePatch = require("structs.drawable_nine_patch")
+local ninepatchPlusPlus = require("mods").requireFromPlugin("libraries.ninepatch_plusplus")
 
 local ninePatchOptions = {
     mode = "fill",
@@ -74,7 +75,7 @@ local steamTexture = "PrismaticHelper/temperatureBlocks/steam/steamblock01"
 
 function steam.sprite(room, entity)
     local x, y, width, height = entity.x or 0, entity.y or 0, entity.width or 0, entity.height or 0
-    return drawableNinePatch.fromTexture(steamTexture, ninePatchOptions2nd, x, y, width, height):getDrawableSprite()
+    return ninepatchPlusPlus.drawableSprite(ninepatchPlusPlus.specs.Extended, steamTexture, x, y, width, height)
 end
 
 local ice = {}
@@ -93,7 +94,7 @@ local iceTexture = "PrismaticHelper/temperatureBlocks/ice/iceblock01"
 
 function ice.sprite(room, entity)
     local x, y, width, height = entity.x or 0, entity.y or 0, entity.width or 0, entity.height or 0
-    return drawableNinePatch.fromTexture(iceTexture, ninePatchOptions2nd, x, y, width, height):getDrawableSprite()
+    return ninepatchPlusPlus.drawableSprite(ninepatchPlusPlus.specs.Extended, iceTexture, x, y, width, height)
 end
 
 return { heater, freezer, steam, ice }
