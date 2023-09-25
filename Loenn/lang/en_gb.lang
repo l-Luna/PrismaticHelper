@@ -82,6 +82,11 @@ entities.PrismaticHelper/CustomHangingLamp.attributes.description.glowEndRadius=
 entities.PrismaticHelper/SpeedBerry.placements.name.berry=Speed Berry
 entities.PrismaticHelper/SpeedBerry.attributes.description.time=The number of seconds the player has to collect this speed berry.\nBased on chapter time, which begins on chapter start and ends on chapter end, regardless of when this berry was picked up.
 
+# Cassette Berry
+entities.PrismaticHelper/CassetteBerry.placements.name.normal=Cassette Berry
+entities.PrismaticHelper/CassetteBerry.placements.name.winged=Cassette Berry (Winged)
+entities.PrismaticHelper/CassetteBerry.placements.name.distracted=Cassette Berry (Winged, Distracted)
+
 # Triggers
 
 # Underwater Interaction
