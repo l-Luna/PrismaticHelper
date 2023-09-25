@@ -20,25 +20,59 @@
     </PrismaticHelper_giant_crushblock_face>
 
     <PrismaticHelper_ice path="PrismaticHelper/temperatureBlocks/ice/iceblock" start="idle">
-        <Loop id="idle" path="" frames="1" delay="0.08" />
-        <Anim id="disappear" path="" frames="2-5" delay="0.08" goto="blank" />
-        <Loop id="blank" path="" frames="7" delay="0.08" />
-        <Anim id="appear" path="" frames="8-12" delay="0.08" goto="idle" />
+        <Loop id="idle" path="" frames="1" delay="0.08"/>
+        <Anim id="disappear" path="" frames="2-5" delay="0.08" goto="blank"/>
+        <Loop id="blank" path="" frames="7" delay="0.08"/>
+        <Anim id="appear" path="" frames="8-12" delay="0.08" goto="idle"/>
     </PrismaticHelper_ice>
 
     <PrismaticHelper_steam path="PrismaticHelper/temperatureBlocks/steam/steamblock" start="idle">
-        <Loop id="idle" path="" frames="1" delay="0.08" />
-        <Anim id="disappear" path="" frames="2-5" delay="0.08" goto="blank" />
-        <Loop id="blank" path="" frames="7" delay="0.08" />
-        <Anim id="appear" path="" frames="8-12" delay="0.08" goto="idle" />
+        <Loop id="idle" path="" frames="1" delay="0.08"/>
+        <Anim id="disappear" path="" frames="2-5" delay="0.08" goto="blank"/>
+        <Loop id="blank" path="" frames="7" delay="0.08"/>
+        <Anim id="appear" path="" frames="8-12" delay="0.08" goto="idle"/>
     </PrismaticHelper_steam>
-    
+
     <PrismaticHelper_speed_berry path="PrismaticHelper/collectables/speedBerry/" start="idle">
-        <Center />
-        
-        <Loop id="idle" path="Idle_g" frames="0-9" delay="0.08" />
-        <Anim id="collect" path="collect_g" frames="0-3" delay="0.08" />
-        <Anim id="explode" path="explode_" frames="0-7" delay="0.08" />
-        <Anim id="transition" path="transition_b" frames="0-11" delay="0.1" />
+        <Center/>
+
+        <Loop id="idle" path="Idle_g" frames="0-9" delay="0.08"/>
+        <Anim id="collect" path="collect_g" frames="0-3" delay="0.08"/>
+        <Anim id="explode" path="explode_" frames="0-7" delay="0.08"/>
+        <Anim id="transition" path="transition_b" frames="0-11" delay="0.1"/>
     </PrismaticHelper_speed_berry>
+
+    <PrismaticHelper_cas_berry_blue path="PrismaticHelper/collectables/cassette_berries/cas_berry_blue/" start="idle">
+        <Center/>
+
+        <Loop id="idle" path="normal" delay=".1" frames="0-6,0-6,0-6,0-6,0-7"/>
+        <Loop id="deactive" path="deactive/normal" delay=".1" frames="0-6"/>
+        <Loop id="noFlash" path="normal" delay=".1" frames="0-6"/>
+        <Anim id="collect" path="normal" delay=".07" frames="7-11"/>
+        <Loop id="flap" path="wings" delay=".08" frames="0-8,0-8,0-7,9"/>
+        <Loop id="flap_deactive" path="deactive/wings" delay=".08" frames="0-8,0-8,0-7,9"/>
+
+        <Anim id="fade0" path="normal" delay=".08" frames="12-14,14*10,15-19"/>
+        <Anim id="fade1" path="normal" delay=".07" frames="20-22,22*10,23-26"/>
+        <Anim id="fade2" path="normal" delay=".07" frames="28-30,30*10,31-34"/>
+        <Anim id="fade3" path="normal" delay=".07" frames="36-38,38*10,39-42"/>
+        <Anim id="fade4" path="normal" delay=".07" frames="44-46,46*10,47-50"/>
+        <Anim id="fade5" path="normal" delay=".07" frames="52,53,54,53,54,53,54,53,54,53,54,53,54-59"/>
+        <Anim id="fade_wow" path="wow/normal" delay=".1" frames="52-66"/>
+    </PrismaticHelper_cas_berry_blue>
+    
+    <PrismaticHelper_cas_berry_rose path="PrismaticHelper/collectables/cassette_berries/cas_berry_rose/" copy="PrismaticHelper_cas_berry_blue"/>
+    <PrismaticHelper_cas_berry_sun path="PrismaticHelper/collectables/cassette_berries/cas_berry_sun/" copy="PrismaticHelper_cas_berry_blue"/>
+    <PrismaticHelper_cas_berry_malachite path="PrismaticHelper/collectables/cassette_berries/cas_berry_malachite/" copy="PrismaticHelper_cas_berry_blue"/>
+    
+    <PrismaticHelper_cas_ghostberry_blue path="PrismaticHelper/collectables/cassette_ghostberries/cas_berry_blue/" copy="PrismaticHelper_cas_berry_blue"/>
+    <PrismaticHelper_cas_ghostberry_rose path="PrismaticHelper/collectables/cassette_ghostberries/cas_berry_rose/" copy="PrismaticHelper_cas_berry_blue"/>
+    <PrismaticHelper_cas_ghostberry_sun path="PrismaticHelper/collectables/cassette_ghostberries/cas_berry_sun/" copy="PrismaticHelper_cas_berry_blue"/>
+    <PrismaticHelper_cas_ghostberry_malachite path="PrismaticHelper/collectables/cassette_ghostberries/cas_berry_malachite/" copy="PrismaticHelper_cas_berry_blue"/>
+    
+    <PrismaticHelper_cas_headphones path="PrismaticHelper/collectables/cassette_berries/cas_headphones/" start="idle">
+        <Center/>
+
+        <Loop id="idle" path="headphones" delay=".08" frames="0-8,0-8,0-7,9"/>
+    </PrismaticHelper_cas_headphones>
 </Sprites>
