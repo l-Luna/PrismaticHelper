@@ -78,7 +78,7 @@ public class Flyaway : Backdrop{
 			var scale = prop.scale * ((Centre - prop.position).Length() / Centre.Length());
 			prop.texture.DrawCentered(
 				prop.position,
-				Color.White * FadeAlphaMultiplier * (ScaleAlpha ? scale : 1) * BaseAlpha,
+				Color * FadeAlphaMultiplier * (ScaleAlpha ? scale : 1) * BaseAlpha,
 				new Vector2(scale * (prop.flipX ? -1 : 1), scale * (prop.flipY ? -1 : 1))
 			);
 		}
