@@ -11,7 +11,7 @@ public class CassetteBerry : Strawberry{
 	protected int Index = 0;
 	protected bool Distracted = false;
 	
-	protected bool Collectable = true;
+	protected bool Collectable = false;
 	protected bool IsGhost = false;
 
 	protected Sprite Sprite, Headphones;
@@ -21,27 +21,9 @@ public class CassetteBerry : Strawberry{
 		Distracted = data.Bool("distracted");
 		
 		Add(new CassetteListener{
-			OnBeat = idx => {
-				Collectable = idx == Index;
-				Sprite spr = Get<Sprite>();
-				if(Collectable){
-					if(spr.CurrentAnimationID == "deactive") spr.Play("idle");
-					if(spr.CurrentAnimationID == "flap_deactive"){
-						spr.Play("flap");
-						Headphones?.Play("idle", restart: true);
-					}
-				}else{
-					if(spr.CurrentAnimationID == "idle") spr.Play("deactive");
-					if(spr.CurrentAnimationID == "flap"){
-						spr.Play("flap_deactive");
-						Headphones?.Play("idle", restart: true);
-					}
-				}
-
-				var bloom = Get<BloomPoint>();
-				if(bloom != null)
-					bloom.Alpha = Golden || Moon || IsGhost || !Collectable ? .5f : 1;
-			}
+			OnBeat = OnBeat,
+			OnSilentBeat = OnBeat,
+			OnFinish = OnFinish
 		});
 		
 		PlayerCollider pc = Get<PlayerCollider>();
@@ -85,6 +67,9 @@ public class CassetteBerry : Strawberry{
 		}
 		var oldFrameChange = Sprite.OnFrameChange;
 		Sprite.OnFrameChange = id => oldFrameChange(id == "flap_deactive" ? "flap" : id);
+		
+		// visually appear uncollectable when cassette beats never happen
+		UpdateSprite();
 	}
 
 	public override void Update(){
@@ -95,5 +80,36 @@ public class CassetteBerry : Strawberry{
 			Headphones.Scale = Sprite.Scale;
 			Headphones.Rate = Sprite.Rate;
 		}
+	}
+	
+	private void OnBeat(int idx){
+		Collectable = idx == Index;
+		UpdateSprite();
+	}
+
+	private void OnFinish(){
+		Collectable = false;
+		UpdateSprite();
+	}
+
+	private void UpdateSprite(){
+		Sprite spr = Get<Sprite>();
+		if(Collectable){
+			if(spr.CurrentAnimationID == "deactive") spr.Play("idle");
+			if(spr.CurrentAnimationID == "flap_deactive"){
+				spr.Play("flap");
+				Headphones?.Play("idle", restart: true);
+			}
+		} else{
+			if(spr.CurrentAnimationID == "idle") spr.Play("deactive");
+			if(spr.CurrentAnimationID == "flap"){
+				spr.Play("flap_deactive");
+				Headphones?.Play("idle", restart: true);
+			}
+		}
+
+		var bloom = Get<BloomPoint>();
+		if(bloom != null)
+			bloom.Alpha = Golden || Moon || IsGhost || !Collectable ? .5f : 1;
 	}
 }
