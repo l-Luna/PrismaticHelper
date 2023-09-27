@@ -78,5 +78,6 @@
     
     <PrismaticHelper_amalgamated_cassette_block path="PrismaticHelper/amalgam/" start="idle">
         <Loop id="idle" path="solid"/>
+        <Loop id="pressed" path="pressed"/>
     </PrismaticHelper_amalgamated_cassette_block>
 </Sprites>

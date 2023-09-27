@@ -50,6 +50,7 @@ public class AmalgamatedCassetteBlock : Solid{
 		scene.Add(side = new BoxSide(this));
 
 		Add(sprite = GFX.SpriteBank.Create("PrismaticHelper_amalgamated_cassette_block"));
+		sprite.Play("pressed");
 		NinePatch.CreateConnectedNinepatch(this, sprite, NinePatch.TileSpec.CassetteLike, block =>
 			block.Indices.Intersect(Indices).Count() == Indices.Count);
 	}
@@ -105,10 +106,12 @@ public class AmalgamatedCassetteBlock : Solid{
 		base.Update();
 		if(activated && !Collidable){
 			Collidable = true;
+			sprite.Play("idle");
 			ShiftSize(-1);
 			scaleWiggler.Start();
 		}else if(!activated && Collidable){
 			Collidable = false;
+			sprite.Play("pressed");
 			ShiftSize(1);
 		}
 	}
