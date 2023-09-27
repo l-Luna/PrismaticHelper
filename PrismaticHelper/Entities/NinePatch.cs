@@ -48,7 +48,7 @@ public static class NinePatch{
 					[TopRight] = new() { new(16, 0) },
 					[Right] = new() { new(16, 8) },
 					[BottomRight] = new() { new(16, 16) },
-					[Bottom] = new() { new(8, 18) },
+					[Bottom] = new() { new(8, 16) },
 					[BottomLeft] = new() { new(0, 16) },
 					[Left] = new() { new(0, 8) },
 					[Inner] = new() { new(8, 8) }
