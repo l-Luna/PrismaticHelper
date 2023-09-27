@@ -109,7 +109,7 @@ public class AmalgamatedCassetteBlock : Solid{
 	public override void Update(){
 		base.Update();
 		Player p = Scene.Tracker.GetEntity<Player>();
-		if(activated && !Collidable && (p == null || !group.Group.Any(e => e.CollideCheck(p)))){
+		if(activated && !Collidable && (p == null || !group.Group.Any(e => e.Collider.Collide(p)))){
 			Collidable = true;
 			sprite.Play("idle");
 			ShiftSize(-1);

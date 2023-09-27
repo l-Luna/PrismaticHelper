@@ -29,6 +29,7 @@ public class Grouped<E> : Component
 
 		if(Leader == null){
 			Leader = self;
+			Group.Add(self);
 			CheckForSame(self);
 		}
 	}
