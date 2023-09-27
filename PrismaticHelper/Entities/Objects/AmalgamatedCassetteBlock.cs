@@ -19,6 +19,7 @@ public class AmalgamatedCassetteBlock : Solid{
 	protected BoxSide side;
 	protected Sprite sprite;
 	protected Grouped<AmalgamatedCassetteBlock> group;
+	protected LightOcclude occluder;
 	protected int curIndex;
 	protected bool activated;
 	protected int blockHeight = 0;
@@ -48,6 +49,8 @@ public class AmalgamatedCassetteBlock : Solid{
 		Add(group = new(){
 			IsSimilar = IsSimilar
 		});
+		
+		Add(occluder = new LightOcclude());
 	}
 
 	public override void Awake(Scene scene){
@@ -119,6 +122,22 @@ public class AmalgamatedCassetteBlock : Solid{
 			sprite.Play("pressed");
 			ShiftSize(1);
 		}
+
+		if(!Collidable)
+			Depth = 8990;
+		else{
+			Player entity = Scene.Tracker.GetEntity<Player>();
+			if(entity != null && entity.Top >= Bottom - 1)
+				Depth = 10;
+			else
+				Depth = -10;
+		}
+
+		foreach(StaticMover staticMover in staticMovers)
+			staticMover.Entity.Depth = Depth + 1;
+		side.Depth = Depth + 5;
+		side.Visible = blockHeight > 0;
+		occluder.Visible = Collidable;
 	}
 
 	private void PreBeat(int idx){
