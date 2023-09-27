@@ -75,4 +75,8 @@
 
         <Loop id="idle" path="headphones" delay=".08" frames="0-8,0-8,0-7,9"/>
     </PrismaticHelper_cas_headphones>
+    
+    <PrismaticHelper_amalgamated_cassette_block path="PrismaticHelper/amalgam/" start="idle">
+        <Loop id="idle" path="solid"/>
+    </PrismaticHelper_amalgamated_cassette_block>
 </Sprites>
