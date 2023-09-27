@@ -60,6 +60,23 @@ public class AmalgamatedCassetteBlock : Solid{
 		Add(sprite = GFX.SpriteBank.Create("PrismaticHelper_amalgamated_cassette_block"));
 		sprite.Play("pressed");
 		NinePatch.CreateConnectedNinepatch(this, sprite, NinePatch.TileSpec.CassetteLike, IsSimilar);
+
+		Color c = Colors.FirstOrDefault();
+		foreach(StaticMover staticMover in staticMovers){
+			switch(staticMover.Entity){
+				case Spikes spikes:
+					spikes.EnabledColor = c;
+					spikes.DisabledColor = Colours.darken(c);
+					spikes.VisibleWhenDisabled = true;
+					spikes.SetSpikeColor(c);
+					break;
+				case Spring spring:
+					spring.DisabledColor = Colours.darken(c);
+					spring.VisibleWhenDisabled = true;
+					break;
+			}
+		}
+		DisableStaticMovers();
 	}
 
 	public override void Render(){
@@ -114,11 +131,13 @@ public class AmalgamatedCassetteBlock : Solid{
 		Player p = Scene.Tracker.GetEntity<Player>();
 		if(activated && !Collidable && (p == null || !group.Group.Any(e => e.Collider.Collide(p)))){
 			Collidable = true;
+			EnableStaticMovers();
 			sprite.Play("idle");
 			ShiftSize(-1);
 			scaleWiggler.Start();
 		}else if(!activated && Collidable){
 			Collidable = false;
+			DisableStaticMovers();
 			sprite.Play("pressed");
 			ShiftSize(1);
 		}
