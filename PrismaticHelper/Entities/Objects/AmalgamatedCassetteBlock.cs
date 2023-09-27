@@ -163,12 +163,14 @@ public class AmalgamatedCassetteBlock : Solid{
 	private bool IsSimilar(AmalgamatedCassetteBlock block) => block.Indices.Intersect(Indices).Count() == Indices.Count;
 
 	protected sealed class BoxSide : Entity{
+		private static readonly Color tint = Calc.HexToColor("667da5");
+		
 		private readonly AmalgamatedCassetteBlock block;
 
 		public BoxSide(AmalgamatedCassetteBlock block){
 			this.block = block;
 		}
 
-		public override void Render() => Draw.Rect(block.X, block.Y + block.Height - 8, block.Width, 8 + block.blockHeight, Colours.darken(block.CurColor()));
+		public override void Render() => Draw.Rect(block.X, block.Y + block.Height - 8, block.Width, 8 + block.blockHeight, Colours.mul(block.CurColor(), tint));
 	}
 }
