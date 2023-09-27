@@ -15,12 +15,13 @@ public class AmalgamatedCassetteBlock : Solid{
 	protected readonly List<int> Indices = new();
 	protected readonly List<Color> Colors = new();
 
-	protected int curIndex;
 	protected Wiggler scaleWiggler;
-	protected bool activated;
 	protected BoxSide side;
-	protected int blockHeight = 0;
 	protected Sprite sprite;
+	protected Grouped<AmalgamatedCassetteBlock> group;
+	protected int curIndex;
+	protected bool activated;
+	protected int blockHeight = 0;
 
 	public AmalgamatedCassetteBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, false){
 		Collidable = false;
@@ -43,6 +44,10 @@ public class AmalgamatedCassetteBlock : Solid{
 			},
 			OnFinish = () => activated = false
 		});
+		
+		Add(group = new(){
+			IsSimilar = IsSimilar
+		});
 	}
 
 	public override void Awake(Scene scene){
@@ -51,8 +56,7 @@ public class AmalgamatedCassetteBlock : Solid{
 
 		Add(sprite = GFX.SpriteBank.Create("PrismaticHelper_amalgamated_cassette_block"));
 		sprite.Play("pressed");
-		NinePatch.CreateConnectedNinepatch(this, sprite, NinePatch.TileSpec.CassetteLike, block =>
-			block.Indices.Intersect(Indices).Count() == Indices.Count);
+		NinePatch.CreateConnectedNinepatch(this, sprite, NinePatch.TileSpec.CassetteLike, IsSimilar);
 	}
 
 	public override void Render(){
@@ -104,7 +108,8 @@ public class AmalgamatedCassetteBlock : Solid{
 
 	public override void Update(){
 		base.Update();
-		if(activated && !Collidable){
+		Player p = Scene.Tracker.GetEntity<Player>();
+		if(activated && !Collidable && (p == null || !group.Group.Any(e => e.CollideCheck(p)))){
 			Collidable = true;
 			sprite.Play("idle");
 			ShiftSize(-1);
@@ -135,6 +140,8 @@ public class AmalgamatedCassetteBlock : Solid{
 	}
 
 	private Color CurColor() => curIndex < Colors.Count ? Colors[curIndex] : Colors.LastOrDefault();
+	
+	private bool IsSimilar(AmalgamatedCassetteBlock block) => block.Indices.Intersect(Indices).Count() == Indices.Count;
 
 	protected sealed class BoxSide : Entity{
 		private readonly AmalgamatedCassetteBlock block;
