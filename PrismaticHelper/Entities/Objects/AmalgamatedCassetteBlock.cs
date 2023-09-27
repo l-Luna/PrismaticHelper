@@ -40,8 +40,8 @@ public class AmalgamatedCassetteBlock : Solid{
 			OnBeat = OnBeat,
 			OnSilentBeat = i => {
 				OnBeat(i);
-				if(!activated)
-					ShiftSize(2);
+				if(activated)
+					ShiftSize(-1);
 			},
 			OnFinish = () => activated = false
 		});

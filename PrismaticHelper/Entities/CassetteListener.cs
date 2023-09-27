@@ -52,7 +52,7 @@ public class CassetteListener : Component{
 	private static void CsSilentActive(On.Celeste.CassetteBlockManager.orig_SilentUpdateBlocks orig, CassetteBlockManager self){
 		orig(self);
 		foreach(var listener in self.Scene.Tracker.GetComponents<CassetteListener>().Cast<CassetteListener>())
-			listener.OnBeat?.Invoke(DynamicData.For(self).Get<int>("currentIndex"));
+			listener.OnSilentBeat?.Invoke(DynamicData.For(self).Get<int>("currentIndex"));
 	}
 	
 	private static void CsFinish(On.Celeste.CassetteBlockManager.orig_StopBlocks orig, CassetteBlockManager self){
