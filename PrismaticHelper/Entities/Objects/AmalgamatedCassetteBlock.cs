@@ -80,14 +80,18 @@ public class AmalgamatedCassetteBlock : Solid{
 	}
 
 	public override void Render(){
+		int stretch = (int)(scaleWiggler.Value * 2);
+		Rectangle area = new Rectangle(Collider.Bounds.X, Collider.Bounds.Y - stretch, Collider.Bounds.Width, Collider.Bounds.Height + stretch);
+		Camera cam = SceneAs<Level>().Camera;
+		if(!area.Intersects(new Rectangle((int)cam.X, (int)cam.Y, (int)(cam.Right - cam.X), (int)(cam.Bottom - cam.Y))))
+			return;
+		
 		Draw.SpriteBatch.End();
 		Engine.Graphics.GraphicsDevice.SetRenderTarget(Stencils.MaskRenderTarget);
 		Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
 		GameplayRenderer.Begin();
 		
 		// the mask...
-		int stretch = (int)(scaleWiggler.Value * 2);
-		Rectangle area = new Rectangle(Collider.Bounds.X, Collider.Bounds.Y - stretch, Collider.Bounds.Width, Collider.Bounds.Height + stretch);
 		bool first = true;
 		for(var i = 0; i < Indices.Count; i++){
 			Color c = Colors.Count > i ? Colors[i] : Color.White;
