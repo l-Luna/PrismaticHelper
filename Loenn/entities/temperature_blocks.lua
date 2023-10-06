@@ -67,7 +67,8 @@ steam.placements = {
     name = "steam",
     data = {
         width = 8,
-        height = 8
+        height = 8,
+        movesWithWind = false
     }
 }
 
@@ -86,7 +87,8 @@ ice.placements = {
     name = "ice",
     data = {
         width = 8,
-        height = 8
+        height = 8,
+        movesWithWind = false
     }
 }
 

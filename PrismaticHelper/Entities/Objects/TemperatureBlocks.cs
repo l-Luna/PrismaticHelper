@@ -161,14 +161,17 @@ public class TemperatureControlBlock : Solid{
 [CustomEntity("PrismaticHelper/IceBlock", "PrismaticHelper/SteamBlock")]
 public class TemperatureDependentBlock : Solid{
 	
+	protected bool MovesWithWind;
+	
 	protected CoreMode Required;
 	protected Sprite Sprite;
-
+	
 	public bool IsIce => Required == CoreMode.Cold;
 	public bool IsSteam => Required == CoreMode.Hot;
 	
 	public TemperatureDependentBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, false){
 		Required = data.Name == "PrismaticHelper/SteamBlock" ? CoreMode.Hot : CoreMode.Cold;
+		MovesWithWind = data.Bool("movesWithWind");
 		Add(new CoreModeListener(OnCoreModeSwitch));
 		Sprite = GFX.SpriteBank.Create("PrismaticHelper_" + (IsIce ? "ice" : "steam"));
 		Sprite.Color = Color.White * 0.6f;
@@ -191,6 +194,14 @@ public class TemperatureDependentBlock : Solid{
 		base.Update();
 
 		if(Collidable){
+			if(MovesWithWind){
+				Vector2 wind = SceneAs<Level>().Wind;
+				if(wind != Vector2.Zero){
+					MoveHCollideSolids(wind.X * Engine.DeltaTime, false);
+					MoveVCollideSolids(wind.Y * Engine.DeltaTime, false);
+				}
+			}
+
 			var player = CollideFirst<Player>();
 			if(player != null){
 				bool wiggled = false;
