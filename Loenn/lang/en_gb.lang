@@ -87,6 +87,9 @@ entities.PrismaticHelper/CassetteBerry.placements.name.normal=Cassette Berry
 entities.PrismaticHelper/CassetteBerry.placements.name.winged=Cassette Berry (Winged)
 entities.PrismaticHelper/CassetteBerry.placements.name.distracted=Cassette Berry (Winged, Distracted)
 
+# Amalgamated Cassette Block
+entities.PrismaticHelper/AmalgamatedCassetteBlock.name.amalgam=Amalgamated Cassette Block
+
 # Triggers
 
 # Underwater Interaction
