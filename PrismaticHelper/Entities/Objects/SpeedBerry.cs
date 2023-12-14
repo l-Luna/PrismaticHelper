@@ -108,7 +108,7 @@ public class SpeedBerry : Strawberry{
 			var chapterTime = TimeSpan.FromTicks(l.Session.Time);
 			var left = TimeSpan.FromSeconds(entity.seconds) - chapterTime;
 
-			var text = left.ToString("mm\\:ss\\.ffff");
+			var text = $"{left:mm:ss.ffff}";
 			if(left.Ticks < 0)
 				text = "-" + text;
 

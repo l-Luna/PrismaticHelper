@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net452</TargetFrameworks>
+    <TargetFramework>.net7.0</TargetFramework>
     <AssemblyName>PrismaticHelper</AssemblyName>
     <RootNamespace>PrismaticHelper</RootNamespace>
     <LangVersion>10</LangVersion>
@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <Reference Include="Celeste">
-      <HintPath>..\..\..\Celeste.exe</HintPath>
+      <HintPath>..\..\..\Celeste.dll</HintPath>
     </Reference>
     <Reference Include="FNA">
       <HintPath>..\..\..\FNA.dll</HintPath>
