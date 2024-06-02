@@ -1,5 +1,5 @@
 ﻿- Name: PrismaticHelper
-  Version: 1.11.0
+  Version: 1.12.0
   DLL: PrismaticHelper/bin/Debug/.net7.0/PrismaticHelper.dll
   Dependencies:
     - Name: Everest
