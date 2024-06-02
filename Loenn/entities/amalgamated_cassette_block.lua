@@ -17,4 +17,5 @@ function amalgam.fillColor(_, entity)
     return utils.getColor(string.sub(colors, 1, 6))
 end 
 
-return amalgam
+--return amalgam
+return nil
