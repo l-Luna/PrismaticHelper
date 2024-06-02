@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Celeste;
 using Celeste.Mod.Entities;
@@ -125,7 +126,9 @@ public class TemperatureControlBlock : Solid{
 		}
 
 		StartShaking(0.2f);
-		Audio.Play("event:/new_content/game/10_farewell/fusebox_hit_1", Position);
+		SoundSource hitSfx;
+		Add(hitSfx = new SoundSource("event:/new_content/game/10_farewell/fusebox_hit_1"));
+		Add(new Coroutine(StopLater(hitSfx)));
 		return DashCollisionResults.Rebound;
 	}
 
@@ -154,6 +157,11 @@ public class TemperatureControlBlock : Solid{
 		};
 		Add(heat);
 		HeatImages.Add(heat);
+	}
+
+	private static IEnumerator StopLater(SoundSource i){
+		yield return 2f;
+		i.Stop(); 
 	}
 }
 
