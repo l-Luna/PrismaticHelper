@@ -15,13 +15,16 @@ public class AttachedWatchtower : Lookout{
 	
 	private bool enabled = true;
 	private StaticMover mover;
+
+	private Vector2 renderOffset;
 	
 	public AttachedWatchtower(EntityData data, Vector2 offset) : base(data, offset){
 		Add(mover = new StaticMover{
 			SolidChecker = solid => CollideCheckOutside(solid, Position + Vector2.UnitY),
 			JumpThruChecker = jumpThru => CollideCheckOutside(jumpThru, Position + Vector2.UnitY),
 			OnEnable = OnEnable,
-			OnDisable = OnDisable
+			OnDisable = OnDisable,
+			OnShake = OnShake
 		});
 	}
 
@@ -40,6 +43,13 @@ public class AttachedWatchtower : Lookout{
 			talkComponentUi.Visible = !CollideCheck<Solid>() && enabled;
 	}
 
+	public override void Render(){
+		Vector2 pos0 = Position;
+		Position += renderOffset;
+		base.Render();
+		Position = pos0;
+	}
+
 	private void OnEnable(){
 		Visible = enabled = true;
 		DynamicData.For(this).Get<Sprite>("sprite").Color = Color.White;
@@ -52,4 +62,6 @@ public class AttachedWatchtower : Lookout{
 		else
 			Visible = false;
 	}
+	
+	private void OnShake(Vector2 diff) => renderOffset += diff;
 }
