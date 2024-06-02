@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Celeste;
 using Celeste.Mod.Meta;
@@ -37,6 +38,7 @@ public static class CutsceneTriggers{
 	
 	private static BadelinePuppet baddy; // :3
 
+	[SuppressMessage("ReSharper", "MoveLocalFunctionAfterJumpStatement")]
 	public static void Load(){
 		
 		ParserHooks.LoadHooks();
@@ -420,8 +422,8 @@ public static class CutsceneTriggers{
 		}
 
 		string clean = id?.Trim()?.ToLower() ?? "";
-		if(Triggers.ContainsKey(clean))
-			return () => Triggers[clean](player, level, p);
+		if(Triggers.TryGetValue(clean, out var trigger))
+			return () => trigger(player, level, p);
 		return nothing;
 	}
 
